@@ -1,0 +1,761 @@
+html{
+    height: 100%;
+    font-family: Arial;
+}
+
+body{
+    height: 100%;
+    margin-top: 0;
+    padding: 0px 0px;
+    padding-bottom: 0px;
+    /*background-color: rgb(64, 64, 167,1);*/
+    background-color: rgb(203, 221, 231);
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 0px;
+
+    /*border: solid;
+    border-color: blueviolet;*/
+}
+
+h1,h2{
+    text-align: center;
+}
+
+h1.blue{
+    color: rgb(238, 244, 248);
+}
+
+#MainContainer, #ErrorContainer, #ProfileContainer, #MainContainerP, #MainContainerPC, #MainContainerT, #MainContainerF, #MainContainerE{
+    margin: 25px auto;
+	width: 90%;
+    padding: 25px;
+    margin-top: 75px;
+	border-width: 0px 2px; 
+    background-color: white;
+    border-radius: 2vw;
+}
+
+#MainContainer {
+	
+    
+    color: black;
+    /*box-shadow: 5px 5px 10px 2px rgba(41, 41, 107, 0.9);*/
+
+   
+    display: flex;
+}
+
+
+#ErrorContainer {
+    background-color: rgb(255, 0, 0);
+    border: solid;
+    border-width: 3px;
+    border-color: rgb(148, 13, 13);
+    
+    color: white;
+    /*box-shadow: 5px 5px 10px 2px rgba(41, 41, 107, 0.9);*/
+
+    text-align: center;
+   
+    display: flex;
+}
+
+/*----------------PROFILE----------*/
+
+
+#ProfileContainer {
+    border-radius: 2vw;
+    
+    color: black;
+    /*box-shadow: 5px 5px 10px 2px rgba(41, 41, 107, 0.9);*/
+    font-family: Arial, Helvetica;
+   
+
+}
+
+#MainContainerP {
+	margin: 25px auto;
+	width: 90%;
+    min-height: 33%;
+    
+    margin-top: none;
+    margin-bottom: none;
+
+    color: black;
+    /*box-shadow: 5px 5px 10px 2px rgba(41, 41, 107, 0.9);*/
+
+   
+    display: flex;
+    flex-direction: row;
+    
+}
+
+
+.divP{
+    display: flex;
+    flex-direction: row;
+}
+
+.buttonPDiv{
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+    width: 60%;
+}
+
+.buttonP{
+    width: 50%;
+    text-align: center;
+    border: none;
+    
+}
+
+#MainContainerPC {
+	margin: 25px auto;
+	width: 90%;
+  
+    
+    margin-top: none;
+    margin-bottom: none;
+
+    color: black;
+    /*box-shadow: 5px 5px 10px 2px rgba(41, 41, 107, 0.9);*/
+
+   
+    display: flex;
+    
+}
+
+#MainContainerT {
+	
+    height: 65%;
+	border-width: 0px 2px; 
+    margin-top: 1vw;
+    color: black;
+    /*box-shadow: 5px 5px 10px 2px rgba(41, 41, 107, 0.9);*/
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+}
+
+select.post{
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2vw;
+    width: auto;
+    
+}
+
+select.title{
+    background-color: rgb(245, 245, 245);
+    font-size: 2.7vw;
+    border: none;
+
+
+}
+
+textarea.post{
+    width: 100%;
+    height: 90%;
+    resize:none
+}
+
+#MainContainerF {
+    
+    color: black;
+    
+   /* box-shadow: 5px 5px 10px 2px rgba(41, 41, 107, 0.9);*/
+}
+
+.formF{
+    display: flex;
+    flex-direction: column;
+    
+}
+
+input.line{
+    width : 100%;
+    padding: 1vw 0px;
+    margin-bottom: 2vw;
+    margin-top: 0.1vw;
+    
+   
+    border: solid;
+    border-width: 0.2vw;
+    border-color: lightgray;
+}
+
+input[type=submit]{
+
+    font-size: 2vw;
+    width: 100%;
+    border: none;
+    padding: 1vw 0px;
+    background-color: rgb(34, 56, 68);
+    color: white;
+    text-align: center;
+    
+}
+
+input[type=submit]:hover{
+    background-color: rgb(50, 82, 99);
+
+}
+
+button.line:hover{
+    background-color: #b9ab8d;
+}
+
+
+#MainContainerE {
+
+    margin-top: 75px;
+
+    
+    color: black;
+    /*box-shadow: 5px 5px 10px 2px rgba(41, 41, 107, 0.9);*/
+
+   
+  
+}
+
+img.pic{
+    display: inline-block;
+    width: 20%;
+    height: auto;
+    border-radius: 50%;
+
+    margin-left: 1%;
+    margin-top: 3%;
+    margin-bottom: 3%;
+    margin-right: 2%;
+}
+
+.con2{
+    display: flex;
+}
+
+.con{
+    display: inline-block;
+    
+    width: 75%;
+    
+    padding: 0px;
+    margin-right: 3%;
+    margin-top: 3%;
+    margin-bottom: 3%;
+
+}
+
+.name{
+    width: 100%;
+    height: 22%;
+    margin-bottom: 0%;
+
+    font-size: 5vw;
+}
+
+.nickname{
+    text-align: bo;
+    width: 100%;
+    height: 15%;
+    margin-bottom: 1%;
+
+    border-bottom: solid;
+    border-color: rgb(64, 64, 167,1);
+    color: lightslategray;
+    font-size: 3vw;
+}
+
+.tagArea{
+    padding-bottom: 10px;
+    /*display: inline-block;
+    border-color: #000000;
+    border: solid;*/
+    width: 100%;
+    height: 45%;
+    overflow: auto;
+    
+}
+
+.tag, .tagEdit{
+    font-size: 2vw;
+    display: inline-block;
+}
+
+.tag a, .tagEdit a{
+    background-color: #779ecb;
+  
+    border-radius: 30vw;
+    display: inline-block;
+    margin-left: 3px;
+    margin-top: 5px;
+    max-height: auto;
+    max-width: auto;
+    padding: 5px 7px;
+    color: white;
+    text-decoration: none;
+    
+}
+
+.tag{
+
+}
+
+.tagEdit{
+    font-size: 2.1vw;
+    position: fixed;
+    bottom: 2.1%;
+    right: 10px;
+    padding: 7px 9px;
+    
+}
+
+
+/*VERIFIER PK TAG FREQUENCE EST DECALE*/
+
+.tagAvailable, .tagExperience, .tagFrequence, .tagUnAvailable{
+    font-size: 1.62vw;
+    display: inline-block;
+    
+    border-radius: 30vw;
+    
+    margin-left: 0.15vw;
+    margin-right: 0.15vw;
+    margin-top: 5px;
+    
+    max-height: auto;
+    max-width: auto;
+    padding: 5px 7px;
+    color: #ffffff;
+    text-decoration: none;
+    
+}
+h1{
+    margin-top: 2vw;
+    margin-bottom: 0.1vw;
+    text-align: center;
+}
+
+.tagAvailable{
+    background-color: #779ecb;
+    /*background-color: rgb(139, 226, 146);*/
+}
+
+.tagUnAvailable{
+    background-color: #779ecb;
+    
+    /*background-color: #ff6961;*/
+}
+
+.tagExperience{
+    background-color: #779ecb;
+}
+
+.tagFrequence{
+    background-color: #5c7999;
+}
+
+
+.tag a:hover{
+    background-color: #3b699e;
+}
+
+
+.side {
+  
+    width: 40%;
+    display: flex;
+    
+    margin: auto;
+    border-radius: 8%;
+    border-bottom: solid;
+    color: #779ecb;
+      
+}
+    
+    /* Style the links inside the navigation bar */
+    .side a {
+        
+      width: 50%;
+      color: #779ecb;
+      float: left;
+      
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      font-size: 17px;
+      
+    }
+    
+    /* Change the color of links on hover */
+    .side a:hover {
+      background-color: #ecebeb;
+      color: black;
+    }
+    
+    /* Add a color to the active/current link */
+    .side a.active {
+    color: #779ecb;
+    text-decoration: underline;
+    text-underline-offset: 0.7vw;
+    text-decoration-thickness: 0.30vw;
+    }
+
+
+
+
+.introContainer{
+    
+    padding: 0px;
+    margin-bottom: 17px;
+}
+
+
+.conhobby{
+    display: inline-block;
+    width: 40%;
+    height: auto;
+    padding: none;
+   
+    
+    
+}
+
+.titlehobby{
+    text-align: center;
+    
+    width: 100%;
+    height: 25%;
+    padding: none;
+    border-bottom: solid;
+    border-color: rgb(64, 64, 167,1);
+}
+
+.charahobby{
+    width: 100%;
+    height: 65%;
+    margin-top: 1%;
+    overflow: auto;
+    
+}
+
+img.hobby{
+    display: inline-block;
+    width: 55%;
+    
+    height: auto;
+    
+    border-radius: 4vw;
+    
+    
+    margin-left: 22.5%;
+    margin-right: 22.5%;
+    
+    margin-top: 2%;
+    margin-bottom: 3%;
+}
+
+img.hobby2{
+   
+    width: 55%;
+    height: auto;
+  
+    border-radius: 4vw;
+    padding: 0.3%;
+
+    
+    
+    margin: auto auto;
+}
+
+.backdescription{
+    display: inline-block;
+    height: auto;
+    width: 90%;
+    border: solid;
+
+}
+
+img.addPost{
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    padding: 3px;
+    border-radius: 50%;
+    
+    height: 50px;
+    width: 50px;
+    
+
+}
+
+img.addPost:hover{
+    background-color: rgb(255, 255, 255);
+}
+
+img.reaction{
+    position: fixed;
+
+    border-radius: 50%;
+    padding: 3px;
+    height: 50px;
+    width: 50px;
+    
+
+}
+
+img.reaction:hover{
+    background-color: rgb(255, 255, 255);
+}
+
+img.addPost2{
+    position: fixed;
+    bottom: 1.1%;
+    right: 70px;
+    border-radius: 50%;
+    padding: 3px;
+    
+    width: 5%;
+    height: auto;
+    
+
+}
+img.addPost3{
+    position: absolute;
+    
+    left: 88%;
+    
+    
+    border-radius: 50%;
+    padding: 3px;
+   
+    width: 50px;
+    height: auto;
+
+}
+
+img.addPost2:hover{
+    background-color: rgb(255, 255, 255);
+}
+
+img.addPost3:hover{
+    background-color: rgb(255, 255, 255);
+}
+
+
+/*-----TAG-----*/
+
+
+
+.con{
+    width: 90%;
+    height: 90%;
+    margin-top: 0;
+    
+    margin-left: auto;
+    margin-right: auto;
+    vertical-align: middle;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /*KEEP IN MIND*/
+
+
+
+ 
+}
+    
+
+
+.headline{
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+    padding: 0vw;
+    display: flex;
+    
+    
+}
+
+.void{
+    width: 45%;
+
+}
+.full{
+    width: 75%;
+    
+    gap: 0vw;
+    display: block;
+}
+
+
+
+.tagselect{
+    width: 55%;
+    border-radius: 0vw;
+    border: none;
+    font-size: 2vw;
+    display: inline-block;
+    margin-right: 0vw;
+    background-color: white;
+}
+
+.tagbutton{
+    width: 43%;
+    margin-left: 0vw;
+    display: inline-block;
+    background-color: #779ecb;
+    border: none;
+    color:  rgb(238, 244, 248);
+   
+    
+    font-size: 2vw;
+}
+
+button.tagbutton:hover{
+    background-color: #3b699e;
+}
+
+/*put in another container*/
+form.index{
+    width: 40%;
+    height: 30%;
+    display: flex;
+   
+    /*box-shadow: 5px 5px 10px 2px rgba(41, 41, 107, 0.9);*/
+}
+form.index button{
+    background-color: rgb(29, 29, 119);
+    color: white;
+    border: none;
+    width: 25%;
+}
+
+form.index input{
+    width: 75%;
+}
+
+.line{
+    margin: 0 auto;
+    width: 90%;
+    height: 10%;
+    
+    border-bottom: solid;
+    border-color: lightgray;
+    
+    display: flex;
+    
+}
+
+.field, .fieldtext, .fieldpic, .available, .fieldots, .available{
+    text-align: center;
+    display: inline-block;
+    font-size: 2vw;
+    
+    
+}
+
+.fieldtext{
+    width: 20%;
+    vertical-align: middle;
+    margin: auto; 
+}
+
+.fieldtext a{
+    text-decoration: none;
+    color: black;
+}
+
+.fieldtext a:hover{
+    text-decoration: underline;
+}
+
+
+
+
+.fieldpic{
+    width: 10%;
+    display: flex;
+
+}
+
+.fieldots{
+    vertical-align: middle;
+    width: 10%;
+    margin: auto;
+    font-size: 3vw;
+    color: rgb(44, 44, 44);
+}
+
+.dots{
+    
+}
+
+.dots:hover{
+   
+    color:  lightgray;
+
+}
+
+.optionModal{
+    background-color: lightgray;
+    display: none;
+    z-index: 9;
+}
+
+
+
+.profilepic{
+    height: 75%;
+    width: auto;
+    border-radius: 50%;
+   
+    margin: auto auto;
+
+}
+
+.available{
+    width: 20%;
+    vertical-align: middle;
+    margin: auto; 
+}
+
+
+
+.tagt{
+    font-size: 2vw;
+    display: inline-block;
+    background-color: lightgray;
+    border: solid;
+    border-color: black;
+    border-width: 2px;
+    border-radius: 20%;
+    display: inline-block;
+    margin-left: 5px;
+    margin-top: 5px;
+    max-height: auto;
+    max-width: auto;
+    padding: 2px 5px;
+    color: #000000;
+    text-decoration: none;
+    /*box-shadow: 3px 3px 3px 1px rgba(0, 0, 0, 0.2);*/
+}
+
+/*-----INDEX-----*/
+
+
+
+
+.linePost{
+    width: 100%;
+    border-bottom: solid;
+    border-color: lightgray;
+}
+
+.confirm{
+    display: inline-block;
+}
+
+
