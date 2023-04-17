@@ -34,9 +34,9 @@ visited by the suer -->
         }
 
         if($active == 3){
-            echo '<a class="active" href="">Actualités</a>';
+            echo '<a class="active" href="">Discover</a>';
         }else{
-            echo '<a href="">Actualités</a>';
+            echo '<a href="">Discover</a>';
         }
         
         /*If login cookies are set, the navigation bar gets the option to logout */
