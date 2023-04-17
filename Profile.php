@@ -2,6 +2,7 @@
 
 include("databaseFunctions.php");
 include("fileFunctions.php");
+echo '<script type="text/javascript" src="./profile.js"></script>';
 ConnectDatabase();
 
 /*Allows topnav to know which link to highlight */
@@ -84,7 +85,7 @@ switch($_GET["SIDE"]){
             while($row = $result->fetch_assoc()){
                 /*RECUP LE NOMBRE DE LIKE */
                 /*Beginning of post container */
-                echo '<div id="MainContainerP">';
+                echo '<div id="MainContainerP" >';
                 /* TODO : MAKE LINKS SPANS ? 
                  * If user is the owner of the page, they get the option to edit or delete their posts
                  */
@@ -113,12 +114,13 @@ switch($_GET["SIDE"]){
                         }
                     echo '
                     </div>
-                    <div class="charahobby">';
+                    <div  class="description">';
         
                     /*Checks if user decided to add a description to their hobby */
                     if($row["DESCRIPTION"]){
-                        echo'<h4>Descritpion</h4>
-                        <p>'.$row["DESCRIPTION"].'</p>';
+                        echo'
+                        <h4>Descritpion</h4>
+                        <p >'.$row["DESCRIPTION"].'</p>';
                     }else{
                         /*if user has decided to not add a description display message : */
                         echo '<p style="color:gray"><i>This user does not seem to have any description for this hobby</i></p>';
@@ -129,13 +131,13 @@ switch($_GET["SIDE"]){
                 if(!$row["IMAGE"]){
 
                     /*gets default image corresponding to the hobby, see fileFunctions.php */
-                    $default = getDefault($row, 1);
+                    $default = getDefault($row["TYPEID"], 1);
 
                     $error = $default[0];
                     $image = $default[1];
 
                     if($error == NULL){
-                        echo '<img class="hobby2" src="./Images/'.$image.'">
+                        echo '<img class="hobby2" src="./Images/'.$image.'" onclick="zoomImage(this)">
                        
                     </div>';
                     }else{
@@ -143,7 +145,7 @@ switch($_GET["SIDE"]){
                     }
                     
                 } else{
-                    echo' <img class="hobby2" src="./uploads/'.$row["IMAGE"].'">
+                    echo' <img class="hobby2" src="./uploads/'.$row["IMAGE"].'" onclick="zoomImage(this)">
                        
                     </div>';
                 }
@@ -164,19 +166,23 @@ switch($_GET["SIDE"]){
             /*Gets tags user can use to filter curent page's posts (these tags are hobbies present in the current page's owner's hobbies) */
             $status = getAvailableTags(2);
 
+           
+    
             /*If page's owner has more than two hobbies, display Select to filter post */
             if($status[2]>1){
-                echo '
-                <div class="headline">
-                <div class="void"></div>
-                <form name="value" action="./Profile.php" method="get">
-                <input type="hidden" name="ID" value="'.$_GET["ID"].'">
-                <input type="hidden" name="SIDE" value="'.$_GET["SIDE"].'">
-                <select id="TAG" name="TAG">';
-
                 $tags = $status[0];
                 $IDs = $status[1];
                 $index = 0;
+                echo '
+                <div class="headline">
+                <div class="void"></div>
+                <div class="full">
+                    <form name="value" action="./Profile.php" method="get">
+                    <input type="hidden" name="ID" value="'.$_GET["ID"].'">
+                    <input type="hidden" name="SIDE" value="'.$_GET["SIDE"].'">
+                    <select class="tagselect" id="TAG" name="TAG">';
+
+               
                 
                         foreach($IDs as &$value){
                              /* if $_GET["TAG"] is equal to the idea of the current tag, this tag will be the starter value of the Select*/
@@ -195,11 +201,10 @@ switch($_GET["SIDE"]){
                             echo '<option value="none">None</option>';
                         }
                         
-            echo '    
-            
-                </select>
-                <button type="submit">test</button>
-                </form>
+              echo '</select>
+                    <button class="tagbutton" type="submit">Filter</button>
+                    </form>
+                    </div>
                 </div>';
             }
             
@@ -207,8 +212,7 @@ switch($_GET["SIDE"]){
 
             while($row = $result->fetch_assoc()){
                 $count += 1;
-                echo '<div id="MainContainerP">';
-                echo $row["LIKES"];
+          echo '<div id="MainContainerP2" >';
                 if(isset($_COOKIE["ID"]) && isset($_COOKIE["ID"])){
                     if($_COOKIE["ID"]==$_GET["ID"]){
                         echo '<a title="Edit Post" href="./EditPost.php?ID='.$row["ID"].'&SIDE=2"><img src="./Images/Edit.png" class="addPost3"></a>';
@@ -216,36 +220,86 @@ switch($_GET["SIDE"]){
                     }
                 }
                 echo '
-                <div class="divP">
-                <div class="conhobby">
-                    <div class="titlehobby">
-                        <h1>'.$row["NOM"].'</h1>';
-                        if($row["MODIFIED"]==1){
-                            echo '<h2>(Modifié le AJOUTER DATE)</h2>';
-                        }
+                    <div class="divP" style="border:solid">
+                        <div class="conhobby">
+                            <div class="titlehobby" >
+                                <h1>'.$row["NOM"].'</h1>';
+                                if($row["MODIFIED"]==1){
+                                    echo '<h2>(Modifié le AJOUTER DATE)</h2>';
+                                }
                     echo '
-                    </div>
-                    <div class="charahobby">
+                            </div>
+                            <div  class="description">
                         ';
-                    if($row["DESCRIPTION"]){
-                        echo'<h4>Descritpion</h4>
-                        <p>'.$row["DESCRIPTION"].'</p>';
-                    }else{
-                        echo '<p style="color:gray"><i>This user does not seem to have any description for this post</i></p>';
+                                if($row["DESCRIPTION"]){
+                                    echo'<h4>Descritpion</h4>
+                                         <p>'.$row["DESCRIPTION"].'</p>';
+                                }else{
+                                    echo '<p style="color:gray"><i>This user does not seem to have any description for this post</i></p>';
                     
-                    }
+                                }
              echo ' 
-                    </div>
-                </div>' ;  
+                            </div>
+                        </div>
+                
+                
+                     <div id="potentialGrid'.$row["ID"].'" class="potentialGrid">' ;  
+                    $images = array("IMAGE1", "IMAGE2", "IMAGE3", "IMAGE4");  
+                    $countImage = 0;
+                    foreach($images as &$image){
+                        
+                        if($row[$image]!=NULL){
+                            $countImage++;
+                            echo '<img id="imagePost'.$row["ID"].'&'.$countImage.'" class="regularImage" src="./uploads/'.$row[$image].'" onclick="zoomImage(this)">';
+                        }
+                    }
                     
+                    if($countImage > 1){
+                        echo '<script>resizeImages('.$row["ID"].', '.$countImage.');</script>';
+                    }elseif($countImage==0){
+                        $default = getDefault($row["TYPEID"], 1);
+
+                        $error = $default[0];
+                        $image = $default[1];
+    
+                        if($error == NULL){
+                            echo '<img id="imagePost'.$row["ID"].'&1" class="regularImage" src="./Images/'.$image.'" onclick="zoomImage(this)">
+                           
+                        ';
+                        }else{
+                            /*TODO */
+                        }
+                    }
+                    echo '</div>
+                    </div>';
+                
+                   /* if($row["IMAGE"]!=NULL){
+                echo'   <div id="potentialGrid'.$row["ID"].'" class="gridImage">
+                            <img id="imagePost'.$row["ID"].''.$count.'" class="gridImageComponent" src="./uploads/'.$row["IMAGE"].'">
+                            <img id="imagePost'.$row["ID"].''.$count.'" class="gridImageComponent" src="./uploads/'.$row["IMAGE"].'">
+                            <img id="imagePost'.$row["ID"].''.$count.'" class="gridImageComponent" src="./uploads/'.$row["IMAGE"].'">
+                            <img id="imagePost'.$row["ID"].''.$count.'" class="gridImageComponent" src="./uploads/'.$row["IMAGE"].'">
+                        </div>
+                    </div> ';
+                    }else{
+                 echo'   <div id="potentialGrid'.$row["ID"].'" class="gridImage">
+                            <img id="imagePost'.$row["ID"].''.$count.'" class="gridImageComponent"  src="./Images/Filler3.png">
+                            <img id="imagePost'.$row["ID"].''.$count.'" class="gridImageComponent"  src="./Images/Filler3.png">
+                            <img id="imagePost'.$row["ID"].''.$count.'" class="gridImageComponent"  src="./Images/Filler3.png">
+                            <img id="imagePost'.$row["ID"].''.$count.'" class="gridImageComponent"  src="./Images/Filler3.png">
+                        </div>
+                    </div> ';
+                    }*/
+                
+               
+
+                
                 /*TROUVER MEILLEUR MOYEN D'UPLOAD DES NULLS */
-                if(!$row["IMAGE"] || $row["IMAGE"]=="NULL"){
-                    echo '<img class="hobby2" src="./Images/Filler3.png"> 
-                    </div>';
+                /*if(!$row["IMAGE"] || $row["IMAGE"]=="NULL"){
+                    
                 } else{
-                    echo' <img class="hobby2" src="./uploads/'.$row["IMAGE"].'">
-                    </div>';
-                }
+                    
+                }*/
                 
                 
  
@@ -256,7 +310,6 @@ switch($_GET["SIDE"]){
                 <button class="buttonP" style="border-right:solid" id="button'.$row["ID"].'" onclick="like('.$row["ID"].')">Likes '.$row["LIKES"].'</button>
                 <button id="buttonComments'.$row["ID"].'" class="buttonP" onclick="openComments('.$row["ID"].')">Show Comments</button>
                 </div>
-
                 <div style="border:solid" class="history" name="historyComments'.$row["ID"].'" id="historyComments'.$row["ID"].'"></div>';
                 if(isset($_COOKIE["ID"])){
                     echo '<div id="input'.$row["ID"].'" style="display:none">
@@ -279,6 +332,8 @@ switch($_GET["SIDE"]){
         break;
 }
 
+
+
 /*Checks if user is connected*/ 
 if(isset( $_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE["ID"])){
     /*if user is the owner of the page, gives the option to add a hobby or post something */
@@ -297,189 +352,22 @@ if(isset( $_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE[
     echo '<a href="./newPost.php?ID='.$_GET["ID"].'"><img src="./Images/Message.png" class="addPost"></a>';
 }
 
+
+echo '<div id="Modal" class="imageModal">
+
+<!-- The Close Button -->
+<span class="close">&times;</span>
+
+<!-- Modal Content (The Image) -->
+<img class="imageOfModal" id="ModalImage">
+
+<!-- Modal Caption (Image Text) -->
+<div id="caption"></div>
+</div>';
+
 ?>
 
 
-<script>
-/*Mostly xmlhttp request allowing us to comment, like posts and fetch comments without having to reload the page */
-/*Allow user to comment a post
-number : ID of the post under which comment is being posted */
-function uploadComment(number){
-
-    /*If textbox is empty, does nothing */
-    if(document.getElementById("commentZone"+number).value == ""){
-        return;
-      }
-      
-      var xmlhttp = new XMLHttpRequest();
-      /*once request is done :  */
-      xmlhttp.onreadystatechange=function(){
-        if(this.readyState==4 && this.status==200){
-        /*Empties textbox */
-          document.getElementById("commentZone"+number).value = "";
-          /*Add new comment to comments already being displayed 
-           *The request will generate a php echo, this php echo will be accessible through this.responseText (meaning we display the php echo)
-           */
-          document.getElementById("historyComments"+number).innerHTML += this.responseText;
-          
-          
-        }
-      }
-      /*Sends the request via post to avoid cluttering url with useless information */
-      xmlhttp.open("post", "messageFunctions.php", true);
-      xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-      /*Parameters allows us to pass information to a "post" request
-       *action: behavior the messageFunctions.php page will take
-       *ID : ID of the post
-       *msg : text of the comment
-       */
-      var parameters = "action=comment&ID="+number+"&msg="+document.getElementById("commentZone"+number).value
-     
-      /*Start the request*/
-      xmlhttp.send(parameters);
-}
-
-/*Delete comment
- * Can only be done by the owner of the comment
- * Amelioration Ideas : Add options to report comment ?
- * Create an admin role that can delete any comment ?
- */
-function destroyComment(number){
-
-    var xmlhttp = new XMLHttpRequest();
-
-    xmlhttp.onreadystatechange=function(){
-      if(this.readyState==4 && this.status==200){
-        /*this.responseText can only be an error, if is null, there is no error
-         * To avoid reloading all the comments, just the deleted comment is being removes via remove()
-         */
-        if(this.responseText != null)
-        document.getElementById("comment"+number).remove();  
-        else alert(this.responseText);    
-      }
-    }
-
-    xmlhttp.open("post", "messageFunctions.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-   
-    var parameters = "action=destroyComment&ID="+number;
-    xmlhttp.send(parameters);
-
-}
-
-/* Allow user to like a post
- * TODO toggle likes button, and checks if user hasn't already liked, disable button until function is done
- */
-function like(number){
-    
-    var xmlhttp = new XMLHttpRequest();
-    document.getElementById("button"+number).disbled = true;
-    xmlhttp.onreadystatechange=function(){
-      if(this.readyState==4 && this.status==200){
-        /*calculate new value of number of likes */
-        var add = parseInt(document.getElementById("post"+number).value) + 1;
-        
-        /*change displayed value of numbers of like */
-        document.getElementById("post"+number).value = add;
-        document.getElementById("button"+number).innerHTML ="Likes "+  document.getElementById("post"+number).value;
-
-        /*change behavior of like button 
-         * IMPORTANT : it is necessary to encapsulate the new behavior of the button in a function (){}, other wise the page will just execute the function
-         */
-        document.getElementById("button"+number).disbled = false;
-        document.getElementById("button"+number).onclick = function () {dislike(number);}
-      }
-    }
-
-    xmlhttp.open("post", "messageFunctions.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    
-    var parameters = "action=like&ID="+number;
-    xmlhttp.send(parameters);
-
-
-}
-
-/* Allow user to dislike a post
- * TODO toggle likes button, and checks if user hasn't already liked, disable button until function is done
- */
-function dislike(number){
-
-    /*Disable button to prevent bug where user can like multiple times by clicking the button
-     * multiple times in very short intervals
-     */
-    document.getElementById("button"+number).disabled = true;
-
-    var xmlhttp = new XMLHttpRequest();
-
-    
-
-    xmlhttp.onreadystatechange=function(){
-        if(this.readyState==4 && this.status==200){
-            var substract = parseInt(document.getElementById("post"+number).value) - 1;
-        
-            document.getElementById("post"+number).value = substract;
-            document.getElementById("button"+number).innerHTML ="Likes "+  document.getElementById("post"+number).value;
-            document.getElementById("button"+number).disabled = false;
-            document.getElementById("button"+number).onclick = function () {like(number);}
-        }
-    }
-
-    xmlhttp.open("post", "messageFunctions.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    
-    var parameters = "action=dislike&ID="+number;
-    xmlhttp.send(parameters);
-
-}
-
-
-/*Hid comments of post of ID=number */
-function closeComments(number){
-    
-    /*hides comment */
-    document.getElementById("historyComments"+number).style.display="none";
-    /*change text and behavior and text of button */
-    document.getElementById("buttonComments"+number).innerHTML = "Show Comments";
-    /*changes behavior of button */
-    document.getElementById("buttonComments"+number).onclick = function() {
-        /*displays comments but does not reload them
-         * TODO : is this the better solution ?
-         */
-        document.getElementById("historyComments"+number).style.display = "block";
-        /*changes behavior of button */
-        document.getElementById("buttonComments"+number).onclick = function() {closeComments(number)};
-        /*changes text of button */
-        document.getElementById("buttonComments"+number).innerHTML = "Hide Comments";};
-}
-
-/*Open comments for the first time, loading them from the SQL database */
-function openComments(number){
-    
-    var xmlhttp = new XMLHttpRequest();
-
-    xmlhttp.onreadystatechange = function(){
-        if(this.readyState==4 && this.status==200){
-            /*makes comment container visible */
-            document.getElementById("historyComments"+number).style.display = "block";
-            /*Sets content of comment container */
-            document.getElementById("historyComments"+number).innerHTML = this.responseText;
-            document.getElementById("input"+number).style.display = "block";
-            /*Change text and behavior of the open comment button */
-            document.getElementById("buttonComments"+number).onclick = function() {closeComments(number)};
-            document.getElementById("buttonComments"+number).innerHTML = "Hide Comments";
-        }
-    }
-
-    xmlhttp.open("post", "messageFunctions.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    
-    var parameters = "action=displayComments&ID="+number;
-    xmlhttp.send(parameters);
-}
-
-</script>
 <?php
 include("Footer.php");
 DisconnectDatabase();
