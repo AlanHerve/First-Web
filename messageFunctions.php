@@ -1,10 +1,45 @@
 <?php 
 include("databaseFunctions.php");
+
 ConnectDatabase();
 
 /*REMPLACER CA PAR UN SWITCH */
 if(isset($_REQUEST["action"])){
-    if ($_REQUEST["action"]=="display"){
+
+    switch($_REQUEST["action"]){
+        case "display" : displayMessages();
+            break;
+        case "post" : sendMessage();
+            break;
+        case "comment" : sendComment();
+            break;
+        case "fetch" : getInterlocutors();
+            break;
+        case "add" : addInterlocutor();
+            break;
+        case "check" : checkInterlocutor();
+            break;
+        case "identify" : getName();
+            break;
+        case "like" : like(1);
+            break;
+        case "dislike" : like(2);
+            break;
+        case "displayComments" : displayComments();
+            break;
+        case "destroyComments" : destroy(1);
+            break;
+        case "destroyMessage" : destroy(2);
+            break;
+        case "default" : 
+            include("fileFunctions.php");
+            echoDefault();
+            
+            break;
+    }
+
+
+   /* if ($_REQUEST["action"]=="display"){
         displayMessages($_REQUEST["ID"]);
     }elseif($_REQUEST["action"]=="post"){
         sendMessage($_REQUEST["ID"]);
@@ -29,14 +64,26 @@ if(isset($_REQUEST["action"])){
         destroy(2);
     }elseif($_REQUEST["action"]=="comment"){
         sendComment();
-    }
+    }*/
 }else{
 
 }
 
 DisconnectDatabase();
 
+function echoDefault(){
 
+    $status = getDefault($_REQUEST["type"], 1);
+    $error = $status[0];
+    $img = $status[1];
+
+    if($error==NULL){
+        echo "./Images/".$img;
+    }else{
+        echo 'error';
+    }
+
+}
 
 function destroy($mode){
     global $conn;
@@ -112,7 +159,7 @@ function like($case){
         $query = $query."LIKES-1";
     }
     $query= $query." WHERE ID=".$_REQUEST["ID"];
-    echo '<script>console.log('.$query.');</script>';
+    
     $result = $conn->query($query);
 
     if(!$result){
@@ -156,13 +203,13 @@ function sendComment(){
     }
 }
 
-function sendMessage($ID){
+function sendMessage(){
     
     global $conn;
     $error = NULL;
 
     if(isset($_REQUEST["msg"])){
-        $query = "INSERT INTO messages (ID, OWNER1, OWNER2, CONTENT) VALUES (NULL, ".$_COOKIE["ID"].", ".$ID.", '".SecurizeString_ForSQL($_REQUEST["msg"])."')";
+        $query = "INSERT INTO messages (ID, OWNER1, OWNER2, CONTENT) VALUES (NULL, ".$_COOKIE["ID"].", ".$_REQUEST["ID"].", '".SecurizeString_ForSQL($_REQUEST["msg"])."')";
         $result = $conn->query($query);
 
     if(!$result){
@@ -190,7 +237,7 @@ function sendMessage($ID){
 
     }
     }else{
-        echo'<script>console.log("erreur");</script>';
+        /*TODO */
     }
 
     return $error;
@@ -204,12 +251,12 @@ function sendTest(){
     $result = $conn->query($query);
 }
 
-function getMessages($ID){
+function getMessages(){
     global $conn;
 
     $error = NULL;
 
-    $query = "SELECT * FROM messages WHERE (OWNER1=".$_COOKIE["ID"]." AND OWNER2=".$ID.") OR (OWNER1=".$ID." AND OWNER2=".$_COOKIE["ID"].")";
+    $query = "SELECT * FROM messages WHERE (OWNER1=".$_COOKIE["ID"]." AND OWNER2=".$_REQUEST["ID"].") OR (OWNER1=".$_REQUEST["ID"]." AND OWNER2=".$_COOKIE["ID"].")";
     
     $result = $conn->query($query);
 
@@ -223,9 +270,9 @@ function getMessages($ID){
     return array($error, $result);
 }
 
-function displayMessages($ID){
+function displayMessages(){
     
-    $result = getMessages($ID);
+    $result = getMessages($_REQUEST["ID"]);
     $message = $result[1];
         $error = NULL;
     if($result[0]!=NULL){
@@ -270,6 +317,10 @@ function checkInterlocutor(){
 
     $error = NULL;
 
+    if($_REQUEST["tocheck"] == $_COOKIE["ID"]){
+        echo 'identity';
+    }else{
+
     $query = "SELECT * FROM messages WHERE OWNER1=".$_REQUEST["tocheck"]." OR OWNER2=".$_REQUEST["tocheck"];
     $result = $conn->query($query);
 
@@ -281,6 +332,8 @@ function checkInterlocutor(){
         }
     }else{
         echo 'error';
+    }
+
     }
 }
 

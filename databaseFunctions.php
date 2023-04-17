@@ -104,11 +104,17 @@ function suppressPost($mode){
 
         $result = $conn->query($query);
 
+        $query = "DELETE FROM comments WHERE POST=".$_GET["ID"];
+
         break;
     }
 
     if(!$result){
         $error = "NO FILE TO DELETE OR COULDN'T DELETE FILE";
+    }elseif($mode==2){
+        $result = $conn->query($query);
+
+        if(!$result) $error = "ERROR IN DELETING COMMENTS";
     }
 
     return $error;
@@ -158,10 +164,16 @@ function newPost($mode){
 
     $error = NULL;
 
+
+             $values = $_POST["Nom"];
+
+            /*separates the name of the hobby from its value */
+            $values_explode = explode('|', $values);
+
         if($mode==1){
             /*if mode == 1, uploads a hobby into the user's account*/
             //check if the image user wants to upload is valid
-            checkFile("fileToUpload");
+            $good = checkFile("fileToUpload1");
 
             if($_POST["available"]!="No"){
                 $present = 1;
@@ -171,60 +183,71 @@ function newPost($mode){
                 $content=$_POST["content"];
             }
 
-            $values = $_POST["Nom"];
-
-            /*separates the name of the hobby from its value */
-            $values_explode = explode('|', $values);
-        
+            
             /*if user is uploading an image */
-            if(isset($_FILES["fileToUpload"]["name"])){
-                $query = "INSERT INTO hobby_post (ID, NOM, EXPERIENCE, FREQUENCY, AVAILABLE, IMAGE, OWNER, DESCRIPTION, TYPEID) VALUES
-                (NULL, \"".$values_explode[1]."\", \"".$_POST["experience"]."\", \"".$_POST["frequence"]."\", ".$present.", '".$_FILES["fileToUpload"]["name"]."', ".$_POST["owner"].", \"".SecurizeString_ForSQL($content)."\", ".$values_explode[0].")";
+            
+            if(isset($_FILES["fileToUpload1"]["name"]) && $good!=NULL){
+                $query = "INSERT INTO hobby_post (ID, NOM, EXPERIENCE, FREQUENCY, AVAILABLE, IMAGE1, OWNER, DESCRIPTION, TYPEID) VALUES
+                (NULL, \"".$values_explode[1]."\", \"".$_POST["experience"]."\", \"".$_POST["frequence"]."\", ".$present.", '".$_FILES["fileToUpload1"]["name"]."', ".$_POST["owner"].", \"".SecurizeString_ForSQL($content)."\", ".$values_explode[0].")";
+            }elseif(isset($_FILES["fileToUpload1"]["name"]) && $_FILES["fileToUpload1"]["name"]!="" && $good == NULL){
+                $error = "FILE TYPE IS NOT OF ACCEPTABLE TYPE";
             }else{
-                $query = "INSERT INTO hobby_post (ID, NOM, EXPERIENCE, FREQUENCY, AVAILABLE, IMAGE, OWNER, DESCRIPTION, TYPEID) VALUES
+                
+                $query = "INSERT INTO hobby_post (ID, NOM, EXPERIENCE, FREQUENCY, AVAILABLE, IMAGE1, OWNER, DESCRIPTION, TYPEID) VALUES
                 (NULL, \"".$values_explode[1]."\", \"".$_POST["experience"]."\", \"".$_POST["frequence"]."\", ".$present.", NULL, ".$_POST["owner"].", \"".SecurizeString_ForSQL($content)."\", ".$values_explode[0].")";
             }
 
-            $result = $conn->query($query);
+            if($error == NULL){
+                $result = $conn->query($query);
 
-        if(!$result){
-            $error = "FAILED UPLOADING THE POST, PLEASE TRY AGAIN";
-        }
+                if(!$result){
+                    $error = "FAILED UPLOADING THE POST, PLEASE TRY AGAIN";
+                }
+            }
+            
         }else{
 
             /*Upload a regular post */
             $present = 0;
-            $files = array("fileToUpload", "fileToUpload2", "fileToUpload3", "fileToUpload4");
-            $good = array();
-            foreach ($files as &$file){
-                /*if users uploads a file, checkFile returns the name of the file */
-                array_push($good, checkFile($file));
-            }
+            
         
             $content = NULL;
             if($_POST["content"]!=""){
                 $content=$_POST["content"];
             }
 
-            $values = $_POST["Nom"];
-            $values_explode = explode('|', $values);
+            
 
-            $query = "INSERT INTO regular_post (ID, NOM, IMAGE, IMAGE2, IMAGE3, IMAGE4, OWNER, DESCRIPTION, TYPEID) VALUES
+            
+
+            $query = "INSERT INTO regular_post (ID, NOM, IMAGE1, IMAGE2, IMAGE3, IMAGE4, OWNER, DESCRIPTION, TYPEID) VALUES
             (NULL, \"".$values_explode[1]."\",";
         
-            foreach ($good as &$test){
-                if($test!=NULL){
-                    $query = $query." \"".$test."\",";
-                }else{
-                    $query = $query." NULL,";
-                }
-            }
+        for ($i=1; $i<=4; $i++){
+            $good = checkFile("fileToUpload".$i);
 
-            $query = $query." ".$_POST["owner"].", \"".$content."\", ".$values_explode[0].")";
+            if(isset($_FILES["fileToUpload".$i]["name"]) && $good!=NULL){
+                $query = $query."'".SecurizeString_ForSQL($_FILES["fileToUpload".$i]["name"])."', ";
+                $redirect = true;
+            }elseif($good == NULL && $_FILES["fileToUpload".$i]["name"]!=""){
+                $error = "FILE TYPE IS NOT OF ACCEPTABLE TYPE";
+                $redirect = false;
+            }else{
+                $query = $query."NULL, ";
+                $redirect = true;
+            }
+           
+        }
+
+            /*echo "       ff  ".$_POST["Nom"];*/
+
+            echo 'VALUES :'.$values_explode[0]."<br>";
+            $query = $query." ".$_COOKIE["ID"].", \"".$content."\", ".$values_explode[0].")";
 
             $result = $conn->query($query);
 
-            $redirect = "Location:Profile2.php";
+            echo $query;
+           
 
         }
 
@@ -241,6 +264,9 @@ function newPost($mode){
 function editPost($mode){
     
     global $conn;
+
+
+    echo 'WOOOO';
 
     $error = NULL;
     $redirect = false;
@@ -279,7 +305,7 @@ function editPost($mode){
                     $query = $query."EXPERIENCE='".$_POST["experience"]."',";
                     $redirect = true;
                 }
-                echo '<p><br><br>1<br>'.$query.'</p>';
+                
             
             }
     
@@ -291,7 +317,7 @@ function editPost($mode){
                     $query = $query."AVAILABLE='0',";
                     $redirect = true;
                 }
-            echo '<p><br><br>2<br>'.$query.'</p>';
+            
             }
     
             if(isset($_POST["frequence"])){
@@ -299,7 +325,7 @@ function editPost($mode){
                     $query = $query."FREQUENCY='".$_POST["frequence"]."',";
                     $redirect = true;
                 }
-            echo '<p><br><br>3<br>'.$query.'</p>';
+            
             }
     
             if(isset($_POST["content"])){
@@ -307,9 +333,24 @@ function editPost($mode){
                     $query = $query."DESCRIPTION='".SecurizeString_ForSQL($_POST["content"])."'";
                     $redirect = true;
                 }
-            echo '<p><br> row: '.$row["DESCRIPTION"].'<br>4<br>'.$_POST["content"].'</p>';
             
             }
+
+
+            $good = checkFile("fileToUpload1");
+
+            if(isset($_FILES["fileToUpload1"]["name"]) && $good!=NULL){
+                $query = $query."IMAGE='".SecurizeString_ForSQL($_FILES["fileToUpload1"]["name"])."'";
+                $redirect = true;
+            }elseif($good == NULL && $_FILES["fileToUpload1"]["name"]!=""){
+                $error = "FILE TYPE IS NOT OF ACCEPTABLE TYPE";
+                $redirect = false;
+            }elseif($_POST["deleteImage1"]==0){
+                $query = $query."IMAGE=NULL ";
+                $redirect = true;
+            }
+
+           // if()
 
             $length = strlen($query) - 1;
 
@@ -320,14 +361,15 @@ function editPost($mode){
             if($redirect){
                 $query = $query."WHERE ID=".$_GET["ID"];
                 $result = $conn->query($query);
-            if(!$result){
-                $error = "COULD NOT UPDATE";
-            }
+                if(!$result){
+                    $error = "COULD NOT UPDATE";
+                }
             }
 
-            echo $query;
+            
 
         }else{
+            
         $query = "SELECT * FROM regular_post WHERE OWNER=".$_COOKIE["ID"]." AND ID=".$_GET["ID"];
         $result=$conn->query($query);
         $row = $result->fetch_assoc();
@@ -335,11 +377,7 @@ function editPost($mode){
         $query = "UPDATE regular_post
         SET ";
     
-        $files = array("fileToUpload", "fileToUpload2", "fileToUpload3", "fileToUpload4");
-        $good = array();
-        foreach ($files as &$file){
-            array_push($good, checkFile($file));
-        }
+        
         /*MODIFIER LES IMAGES*/
     
         if(isset($_POST["content"])){
@@ -347,27 +385,45 @@ function editPost($mode){
                 $query = $query."DESCRIPTION='".SecurizeString_ForSQL($_POST["content"])."'";
                 $redirect = true;
             }
-            echo '<p><br> row: '.$row["DESCRIPTION"].'<br>4<br>'.$_POST["content"].'</p>';
             
         }
-        if($redirect){
-            echo '<p>papaya<br>ture</p>';
-        }else{
-            echo '<p>papaya<br>false</p>';
-        }
+
+
         
+        
+        for ($i=1; $i<=$_POST["numberOfImage"]; $i++){
+            $good = checkFile("fileToUpload".$i);
+
+            if(isset($_FILES["fileToUpload".$i]["name"]) && $good!=NULL){
+                $query = $query."IMAGE".$i."='".SecurizeString_ForSQL($_FILES["fileToUpload".$i]["name"])."'";
+                $redirect = true;
+            }elseif($good == NULL && $_FILES["fileToUpload".$i]["name"]!=""){
+                $error = "FILE TYPE IS NOT OF ACCEPTABLE TYPE";
+                $redirect = false;
+            }elseif($_POST["deleteImage".$i]==0){
+                $query = $query."IMAGE".$i."=NULL,";
+                $redirect = true;
+            }
+           
+        }
+            
+
+        $length = strlen($query) - 1;
+        if($query[$length]==",") $query[$length]=" ";
 
         $query = $query."WHERE ID=".$_GET["ID"];
 
-        echo $query;
-
-        $result = $conn->query($query);
+        if($redirect){
+            $result = $conn->query($query);
+        }
         
     }
 
     
 
     }
+
+    echo $query;
 
     return array($error, $row);
 
@@ -394,7 +450,7 @@ function editPost2(){
         $query = "UPDATE regular_post
         SET ";
     
-        $files = array("fileToUpload", "fileToUpload2", "fileToUpload3", "fileToUpload4");
+        $files = array("fileToUpload1", "fileToUpload2", "fileToUpload3", "fileToUpload4");
         $good = array();
         foreach ($files as &$file){
             array_push($good, checkFile($file));
@@ -491,6 +547,7 @@ function getAvailableTags($mode){
 
 
     if($mode==1){
+        echo 'mode 1 <br>';
         $query = "SELECT * FROM hobby_post WHERE OWNER=".$_GET["ID"];
     }else{
         $query = "SELECT * FROM regular_post WHERE OWNER=".$_GET["ID"];
@@ -499,39 +556,20 @@ function getAvailableTags($mode){
     
 
     $tags = array();
-        $IDs = array();
+    $IDs = array();
 
     $result = $conn->query($query);
-    $query = "SELECT NOM, ID FROM hobby_list WHERE ID IN (";
-
-    while($row = $result->fetch_assoc()){
-    
-        $query = $query.$row["TYPEID"].",";
-    }
-
-    $length = strlen($query) - 1;
-    if($query[$length]=="("){
-        
-        $error = "NOTHING WAS FOUND PLEASE SELECT AT LEAST A HOBBY BEFORE TRYING TO POST ANYTHING";
-        
-    }else{
-        $query[$length] = ")";
-        $result = $conn->query($query);
-        
-
-    
-
+            
     while($row = $result->fetch_assoc()){     
-        $found += 1;           
-        array_push($tags, $row["NOM"]);
-        array_push($IDs, $row["ID"]);
+        if(!in_array($row["TYPEID"], $IDs)){
+            array_push($tags, $row["NOM"]);
+            array_push($IDs, $row["TYPEID"]);
+            $found += 1;  
+        }
+           
     }  
-    }
-
     
-
-    
-   
+ 
 
     return array($tags, $IDs, $found, $error);
 

@@ -7,6 +7,8 @@ function checkFile($file_name){
     $already = 0;
     $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
     
+
+
     $return_value = NULL;
     // Check if image file is a actual image or fake image
 
@@ -47,10 +49,11 @@ function checkFile($file_name){
         echo "<p>Sorry, your file was not uploaded.</p>";
         // if everything is ok, try to upload file
       } else {
-        if (move_uploaded_file($_FILES[$file_name]["tmp_name"], $target_file)) {
+        if (move_uploaded_file($_FILES[$file_name]["tmp_name"], $target_file) && $already==0) {
           echo "<p>The file ". htmlspecialchars( basename( $_FILES[$file_name]["name"])). " has been uploaded.</p>";
           $return_value = htmlspecialchars( basename( $_FILES[$file_name]["name"]));
         }elseif($already == 1){
+          echo 'already';
           $return_value = $_FILES[$file_name]["tmp_name"];
         } else {
           echo "<p>Sorry, there was an error uploading your file.</p>";
@@ -59,7 +62,7 @@ function checkFile($file_name){
       } 
 
     }else{
-      echo '<p>shalalais</p>';
+      
     }
   
     return $return_value;
@@ -69,7 +72,7 @@ function checkFile($file_name){
 /*Get default picture of a hobby
 $mode : gets hobby ID either from type of post or from the url
  */
-function getDefault($row, $mode){
+function getDefault($type, $mode){
 
   global $conn;
 
@@ -78,7 +81,7 @@ function getDefault($row, $mode){
   $image = NULL;
 
   if($mode==1){
-    $query = "SELECT IMAGE FROM hobby_list WHERE ID=".$row["TYPEID"];
+    $query = "SELECT IMAGE FROM hobby_list WHERE ID=".$type;
   }else{
     $query = "SELECT IMAGE FROM hobby_list WHERE ID=".$_GET["TAG"];
   }
@@ -96,6 +99,8 @@ function getDefault($row, $mode){
   }else{
     $error = "COULD NOT LOAD DATABASE"; 
   }
+
+
 
   return array($error, $image);
 
