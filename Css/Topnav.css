@@ -9,6 +9,7 @@
     
     overflow: hidden;
     box-shadow: 1px 0px 10px 0.7px rgba(123, 123, 134, 0.9);
+    z-index: 999;
     
   }
   

@@ -1,18 +1,26 @@
 html{
-    height: 100%;
+    
     font-family: Arial;
+    
+    padding: 0px;
+    margin: 0px;
 }
 
 body{
-    height: 100%;
+    
+    
+    /*background-color: rgb(64, 64, 167,1);*/
+    background-color: rgb(203, 221, 231);
+
+    padding: 0px;
+    margin: 0px;
+/*
     margin-top: 0;
     padding: 0px 0px;
     padding-bottom: 0px;
-    /*background-color: rgb(64, 64, 167,1);*/
-    background-color: rgb(203, 221, 231);
     margin-left: 0;
     margin-right: 0;
-    margin-bottom: 0px;
+    margin-bottom: 0px;*/
 
     /*border: solid;
     border-color: blueviolet;*/
@@ -26,7 +34,7 @@ h1.blue{
     color: rgb(238, 244, 248);
 }
 
-#MainContainer, #ErrorContainer, #ProfileContainer, #MainContainerP, #MainContainerPC, #MainContainerT, #MainContainerF, #MainContainerE{
+#MainContainer, #ErrorContainer, #ProfileContainer, #MainContainerP, #MainContainerP2, #MainContainerPC, #MainContainerT, #MainContainerF, #MainContainerE{
     margin: 25px auto;
 	width: 90%;
     padding: 25px;
@@ -74,7 +82,11 @@ h1.blue{
 
 }
 
-#MainContainerP {
+.contact{
+    border: none;
+}
+
+#MainContainerP, #MainContainerP2 {
 	margin: 25px auto;
 	width: 90%;
     min-height: 33%;
@@ -87,8 +99,16 @@ h1.blue{
 
    
     display: flex;
-    flex-direction: row;
     
+    
+}
+
+#MainContainerP2{
+    flex-direction: column;
+}
+
+#MainContainerP{
+    flex-direction: row;
 }
 
 
@@ -130,6 +150,7 @@ h1.blue{
 #MainContainerT {
 	
     height: 65%;
+    
 	border-width: 0px 2px; 
     margin-top: 1vw;
     color: black;
@@ -187,19 +208,38 @@ input.line{
     border-color: lightgray;
 }
 
-input[type=submit]{
+
+
+input[type=submit], .buttonContact, .optionLine{
 
     font-size: 2vw;
-    width: 100%;
+    
     border: none;
     padding: 1vw 0px;
-    background-color: rgb(34, 56, 68);
+    background-color: #5c7999;
     color: white;
     text-align: center;
     
 }
 
-input[type=submit]:hover{
+.optionLine{
+    margin: 0px 1%;
+    
+}
+
+.optionLine:hover{
+    background-color: rgb(48, 78, 94);
+}
+
+input[type=submit]{
+    width: 100%;
+}
+
+.buttonContact{
+    width: 20%;
+}
+
+input[type=submit]:hover, .buttonContact:hover{
     background-color: rgb(50, 82, 99);
 
 }
@@ -331,8 +371,11 @@ img.pic{
     padding: 5px 7px;
     color: #ffffff;
     text-decoration: none;
-    
+    margin: auto;   
 }
+
+
+
 h1{
     margin-top: 2vw;
     margin-bottom: 0.1vw;
@@ -458,18 +501,7 @@ img.hobby{
     margin-bottom: 3%;
 }
 
-img.hobby2{
-   
-    width: 55%;
-    height: auto;
-  
-    border-radius: 4vw;
-    padding: 0.3%;
 
-    
-    
-    margin: auto auto;
-}
 
 .backdescription{
     display: inline-block;
@@ -640,8 +672,8 @@ form.index input{
 .line{
     margin: 0 auto;
     width: 90%;
-    height: 10%;
-    
+   
+    padding: 0px;
     border-bottom: solid;
     border-color: lightgray;
     
@@ -658,6 +690,7 @@ form.index input{
 }
 
 .fieldtext{
+    
     width: 20%;
     vertical-align: middle;
     margin: auto; 
@@ -676,8 +709,21 @@ form.index input{
 
 
 .fieldpic{
+    
+    
     width: 10%;
     display: flex;
+   
+
+}
+
+.profilepic{
+    position:static;
+    width: 55%;
+    border-radius: 50%;
+    padding: 5%;
+   
+    margin: auto;
 
 }
 
@@ -688,6 +734,8 @@ form.index input{
     font-size: 3vw;
     color: rgb(44, 44, 44);
 }
+
+
 
 .dots{
     
@@ -700,21 +748,19 @@ form.index input{
 }
 
 .optionModal{
-    background-color: lightgray;
+    
+    margin-top: 0px;
+    margin-left: 2%;
+    padding: 0px;
+    position: absolute;
+    
     display: none;
     z-index: 9;
 }
 
 
 
-.profilepic{
-    height: 75%;
-    width: auto;
-    border-radius: 50%;
-   
-    margin: auto auto;
 
-}
 
 .available{
     width: 20%;
@@ -742,6 +788,102 @@ form.index input{
     text-decoration: none;
     /*box-shadow: 3px 3px 3px 1px rgba(0, 0, 0, 0.2);*/
 }
+
+
+
+.gridImage{
+    margin: auto auto;
+    width: 55%;
+    height: auto;
+
+    
+    
+    display:grid;
+    grid-template-columns: 50% 50%;
+    grid-row: 50% 50%;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    border-top-left-radius: 4vw;
+    border-top-right-radius: 4vw;
+    padding: 0.3%;
+}
+
+.gridImageComponent{
+    width: 100%;
+    height: 100%;
+}
+
+.regularImage{
+    
+} 
+
+.potentialGrid{
+
+    width: 55%;
+    height: auto;
+    border-radius: 4vw;
+    margin: auto auto;
+}
+
+.potentialGrid > .regularImage{
+    border-radius: 4vw;
+    padding: 0.3%;
+
+    max-width: 100%;
+    max-height: 100%;
+    
+    width: 100%;
+    height: 100%;
+    margin: auto auto;
+}
+
+.description{
+    white-space: initial;
+    overflow: hidden;
+    
+   
+}
+
+.imageModal{
+
+    color: white;
+
+    display: none;
+    
+    top : 0px;
+    position: fixed;
+    z-index: 999;
+    
+    width: 1000%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.9);
+}
+
+.imageOfModal{
+    min-width: 350px;
+    width: 5%;
+    height: auto;
+    
+    
+}
+
+.uploadImagePrompt{
+    display:none;
+}
+  
+img.hobby2{
+   
+    width: 55%;
+    height: auto;
+  
+    border-radius: 4vw;
+    padding: 0.3%;
+
+    
+    
+    margin: auto auto;
+} 
+
 
 /*-----INDEX-----*/
 
