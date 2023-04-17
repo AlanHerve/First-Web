@@ -77,7 +77,68 @@ break;
 case 2:
 /*Confirmation for deleting a post */
 
-    echo '<div id="MainContainerP">
+echo '<div id="MainContainerP2" >';
+                if(isset($_COOKIE["ID"]) && isset($_COOKIE["ID"])){
+                    if($_COOKIE["ID"]==$_GET["ID"]){
+                        echo '<a title="Edit Post" href="./EditPost.php?ID='.$row["ID"].'&SIDE=2"><img src="./Images/Edit.png" class="addPost3"></a>';
+                        echo '<a title="Edit Post" href="./Confirm.php?ID='.$row["ID"].'&SIDE=2"><img src="./Images/Delete.png" class="addPost3" style="left:81%"></a>';
+                    }
+                }
+                echo '
+                    <div class="divP" style="border:solid">
+                        <div class="conhobby">
+                            <div class="titlehobby" >
+                                <h1>'.$row["NOM"].'</h1>';
+                                if($row["MODIFIED"]==1){
+                                    echo '<h2>(Modifié le AJOUTER DATE)</h2>';
+                                }
+                    echo '
+                            </div>
+                            <div  class="description">
+                        ';
+                                if($row["DESCRIPTION"]){
+                                    echo'<h4>Descritpion</h4>
+                                         <p>'.$row["DESCRIPTION"].'</p>';
+                                }else{
+                                    echo '<p style="color:gray"><i>This user does not seem to have any description for this post</i></p>';
+                    
+                                }
+             echo ' 
+                            </div>
+                        </div>
+                
+                
+                     <div id="potentialGrid'.$row["ID"].'" class="potentialGrid">' ;  
+                    $images = array("IMAGE1", "IMAGE2", "IMAGE3", "IMAGE4");  
+                    $countImage = 0;
+                    foreach($images as &$image){
+                        
+                        if($row[$image]!=NULL){
+                            $countImage++;
+                            echo '<img id="imagePost'.$row["ID"].'&'.$countImage.'" class="regularImage" src="./uploads/'.$row[$image].'" onclick="zoomImage(this)">';
+                        }
+                    }
+                    
+                    if($countImage > 1){
+                        echo '<script>resizeImages('.$row["ID"].', '.$countImage.');</script>';
+                    }elseif($countImage==0){
+                        $default = getDefault($row["TYPEID"], 1);
+
+                        $error = $default[0];
+                        $image = $default[1];
+    
+                        if($error == NULL){
+                            echo '<img id="imagePost'.$row["ID"].'&1" class="regularImage" src="./Images/'.$image.'" onclick="zoomImage(this)">
+                           
+                        ';
+                        }else{
+                            /*TODO */
+                        }
+                    }
+                    echo '</div>
+                    </div></div>';
+
+   /* echo '<div id="MainContainerP">
     <div class="conhobby">
         <div class="titlehobby">
             <h1>'.$row["NOM"].'</h1>';
@@ -98,14 +159,14 @@ case 2:
     </div>' ;  
         
     /*TROUVER MEILLEUR MOYEN D'UPLOAD DES NULLS */
-    if(!$row["IMAGE"] || $row["IMAGE"]=="NULL"){
+   /* if(!$row["IMAGE1"] || $row["IMAGE1"]=="NULL"){
         echo '<img class="hobby2" src="./Images/Filler3.png"> 
         
         </div>';
     } else{
         echo' <img class="hobby2" src="./uploads/'.$row["IMAGE"].'">
         </div>';
-    }
+    }*/
 
 break;
 }

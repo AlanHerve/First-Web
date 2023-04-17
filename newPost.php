@@ -16,11 +16,11 @@ if(!isset($_COOKIE["ID"]) || !isset($_GET["ID"]) || !isset($_GET["SIDE"])){
     /*MAKE SURE YOU CANT GO BACK TO NEW POST OR ERASE POST */
     if($error == NULL){
         $redirect = "Location:Profile.php?ID=".$_COOKIE["ID"]."&SIDE=".$_GET["SIDE"];
-       header($redirect);
+       //header($redirect);
        echo 'Success';
     }else{
         echo'<div id=ErrorContainer>
-			<p>'.$loginStatus[2].'</p>
+			<p>'.$error.'</p>
 		</div>';
     }
 
@@ -45,8 +45,9 @@ if($_GET["SIDE"]==1){
 
     echo '<div id="MainContainerP">
     <div>
-    <form style="border:solid" action="./newPost.php?ID='.$_GET["ID"].'&SIDE=1" method="POST" enctype="multipart/form-data">
+    <form id="myForm" style="border:solid" action="./newPost.php?ID='.$_GET["ID"].'&SIDE=1" method="POST" enctype="multipart/form-data">
     <input type="hidden" value="1" name = "newPost" id="newPost">
+    
     <input type="hidden" name="owner" id="owner" value="'.$_GET["ID"].'">';
     
 
@@ -66,20 +67,20 @@ echo ' <div class="conhobby" style="width:100%">
                    </select></h1>
                 <p class="tagExperience">
                 <select class="post"  name="experience">
-                    <option value="Debutant">Débutant</option>
-                    <option value="Avance">Avancé</option>
-                    <option value="Intermediaire">Intermédiaire</option>
+                    <option value="Debutant">Beginner</option>
+                    <option value="Avance">Intermediate</option>
+                    <option value="Intermediaire">Advanced</option>
                     <option value="Expert">Expert</option>
-                    <option value="Occasionnel">Occasionnel</option>
+                    <option value="Occasionnel">Casual</option>
                 </select></p>
                 <p class="tagFrequence">
                 <select class="post"  name="frequence">
-                    <option value="Quotidien">Quotidien</option>
-                    <option value="3-4/semaine">3-4/semaine</option>
-                    <option value="2-3/semaine">2-3/semaine</option>
-                    <option value="Hebdomadaire">Hebdomadaire</option>
-                    <option value="Mensuel">Mensuel</option>
-                    <option value="Rarement">Rarement</option>
+                    <option value="Quotidien">Daily</option>
+                    <option value="3-4/semaine">3-4/week</option>
+                    <option value="2-3/semaine">2-3/week</option>
+                    <option value="Hebdomadaire">Weekly</option>
+                    <option value="Mensuel">Monthly</option>
+                    <option value="Rarement">Rarely</option>
                 </select></p>';
             
           echo '<p class="tagAvailable">
@@ -91,29 +92,25 @@ echo ' <div class="conhobby" style="width:100%">
             </div>
         <div class="charahobby">
 
-            <textarea class="post" name="content" placeholder="Ecrivez ici une petite description si vous le souhaitez"></textarea>
+            <textarea maxlength="100" class="post" name="content" placeholder="Write here a description if you wish"></textarea>
 
         </div>
-        <label for="img">Une image pour illustrer :</label>
-        <input type="file" name="fileToUpload" id="fileToUpload">
         
-    </div>' ;  
         
-    
+    </div>
+   
+       
+        
+        
+        </div>
+        
 
+        <label for="img">An image to illustrate :</label>
+        <input type="file" name="fileToUpload1" id="fileToUpload1">
 
-        
-
-        
-  echo '
-        <input type="submit" value="Post">
+        </div>
         </form>
-        </div>
-        
-
-        <img class="hobby2" src="./Images/Filler3.png">
-
-        </div>';
+        <input type="submit" value="Post" form="myForm">';
         
 
    
@@ -121,17 +118,80 @@ echo ' <div class="conhobby" style="width:100%">
 
 
 }else{
-    echo '<div id=MainContainer>';
-
-
     $status = getAvailableTags(1);
     $tag_array = $status[0];
     $ID_array = $status[1];
     $error = $status[3];
 
-
     if($error==NULL){
 
+      /*  echo '
+        <div id="MainContainerP" >
+            <div class="divP">
+                <div class="conhobby">
+                    <div class="titlehobby">
+                        <h1><select name="Nom">';
+        
+                        foreach($tag_array as &$tag){
+                            $s = (string) $ID_array[$index];
+                            $p = (string) $tag;
+                            echo '<option value="'.$s.'|'.$p.'">'.$p.'</option>';
+                
+                        }
+            
+                    echo ' 
+                    </select></h1>
+                    </div>
+                    <div class="charahobby">
+             
+                    <textarea class="post" name="content" placeholder="Ecrivez ici une petite description si vous le souhaitez"></textarea>
+            
+                    </div>
+                </div> 
+            </div>
+        </div>';*/
+        
+        
+        
+
+        
+
+echo '
+<div id="MainContainerP">
+    <div class="divP">
+        <form id="myForm" action="./newPost.php?ID='.$_GET["ID"].'&SIDE=2" method="POST" enctype="multipart/form-data">
+        <input type="hidden" value="1" name = "newPost" id="newPost">
+        <div class="conhobby">
+            <div class="titlehobby">
+                <label for="Nom">Hobby :</label>
+                <h1><select name="Nom">';
+                    $index=0;
+                    foreach($tag_array as &$tag){
+                        $s = (string) $ID_array[$index];
+                        $p = (string) $tag;
+                        echo '<option value="'.$s.'|'.$p.'">'.$p.'</option>';
+                        $index++;
+                    }
+        
+                echo ' 
+                </select></h1>
+            </div>
+            <div class="charahobby">
+                <textarea maxlength="100" class="post" name="content" placeholder="Ecrivez ici une petite description si vous le souhaitez"></textarea>
+            </div>
+    
+</div>
+<div><label for="img">Up to 4 images to illustrate :</label>
+<input type="file" name="fileToUpload1" id="fileToUpload1">
+<input type="file" name="fileToUpload2" id="fileToUpload2">
+<input type="file" name="fileToUpload3" id="fileToUpload3">
+<input type="file" name="fileToUpload4" id="fileToUpload4"></div>
+</div>
+
+</div>';
+
+    /*
+    echo '<div id=MainContainer>';
         $index = 0;
 
         echo '<form action="./newPost.php?ID='.$_GET["ID"].'&SIDE=2" method="POST" enctype="multipart/form-data">
@@ -165,7 +225,7 @@ echo ' <div class="conhobby" style="width:100%">
 
         <button type="submit">test</button>
         </form>
-        ';
+        ';*/
 
 
 
@@ -183,6 +243,8 @@ echo ' <div class="conhobby" style="width:100%">
 
 
         echo '
+        </form>
+        <input type="submit" value="Post" form="myForm">
         </div>';
 }
 
