@@ -3,7 +3,7 @@
 <?php
 
 function addButton($var){
-  $button = '<button onclick="checkInterlocutor('.$var.')">test</button>';
+  $button = '<button value="contact" class="buttonContact" onclick="checkInterlocutor('.$var.')">Contact</button>';
     return $button;
 }
 
@@ -24,7 +24,8 @@ echo '
     <h1 id="titleChat">Chat</h1>
     <div class="history" name="people" id="people">
     </div>
-    <div class="history" name="history" id="history">
+    
+    <div class="history" name="history" id="historyMessages">
     </div> 
       <form class="form-container" id="Post">
 
@@ -50,18 +51,18 @@ echo '
   function destroyMessage(number){
    
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange=function(){
-      if(this.readyState==4 && this.status==200){
+    xmlhttp.onload = function(){
+      
         if(this.responseText != null)
         document.getElementById("message"+number).remove();  
         else alert(this.responseText);    
-      }
+      
     }
     xmlhttp.open("post", "messageFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
    
     var parameters = "action=destroyMessage&ID="+number;
-    console.log(parameters);
+   
    
     xmlhttp.send(parameters);
   }
@@ -69,23 +70,22 @@ echo '
   function checkInterlocutor(interlocutor){
 
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange=function(){
-      if(this.readyState==4 && this.status==200){
-        console.log("response "+this.responseText);
+    xmlhttp.onload = function(){
+      
+        
         if(this.responseText=="false"){
           addInterlocutor(interlocutor);
         }else if(this.responseText=="true"){
           var person = {name:null, value:interlocutor};
-
-          console.log("HERE " +person.value);
-
           changeInterlocutor(person, null);
           openForm();
+        }else if(this.responseText=="identity"){
+          alert("You can't contact yourself");
         }else{
-          console.log("error");
+          alert("error");
         }
 
-      }
+      
     }
     xmlhttp.open("post", "messageFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -99,12 +99,12 @@ function addInterlocutor(interlocutor){
 
 
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange=function(){
-      if(this.readyState==4 && this.status==200){
+    xmlhttp.onload = function(){
+      
         document.getElementById("people").innerHTML += this.responseText;
         var person = {name: null, value: interlocutor};
         changeInterlocutor(person);
-      }
+      
     }
     xmlhttp.open("post", "messageFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -116,10 +116,10 @@ function addInterlocutor(interlocutor){
   function getInterlocutor(value){
 
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange=function(){
-      if(this.readyState==4 && this.status==200){
+    xmlhttp.onload = function(){
+      
         document.getElementById("people").innerHTML = this.responseText;
-      }
+      
     }
     xmlhttp.open("post", "messageFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -160,8 +160,8 @@ function addInterlocutor(interlocutor){
     if(obj.name == null){
         /*If parameter does not specify the name of the user*/
         var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange=function(){
-        if(this.readyState==4 && this.status==200){
+        xmlhttp.onload = function(){
+        
           obj.name = this.responseText;
 
           /*store the ID and name of the interlocutor in the html of the page */
@@ -175,7 +175,7 @@ function addInterlocutor(interlocutor){
           displayMessages(obj.value);
           /*Referesh the list of possible interlocutors */
           getInterlocutor(obj.value);
-        }
+        
       }
       
       xmlhttp.open("post", "messageFunctions.php", true);
@@ -208,24 +208,30 @@ function addInterlocutor(interlocutor){
       return;
     }
 
+    
+
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange=function(){
-      if(this.readyState==4 && this.status==200){
-        console.log(this.responseText);
+    xmlhttp.onload = function(){
+      
+        
         /*var divElement = document.createElement("div");
         divElement.setAttribute('id',);
         divElement.setAttribute('class',);
         var parElement = document.createElement("par");
         const points = document.createTextNode("");
         document.getElementById("history").appendChild(divElement);*/
-        document.getElementById("history").innerHtml+=this.responseText;
+        
+        var history = document.getElementById("historyMessages");
+        history.innerHTML += this.responseText;
+        history.scrollTop = history.scrollHeight;
+        
         document.getElementById("msg").value = "";
         
 
         /*Store the name and ID of the last person you've sent a message to in the cookies, allow user to go back to that conversation after closing the website */
         document.cookie="interLocutorID="+document.getElementById("receiver").value;
         document.cookie="interLocutorName="+document.getElementById("receiverName").value;
-      }
+      
     }
 
 
@@ -242,10 +248,12 @@ function addInterlocutor(interlocutor){
   
     if(value!=null){
       var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange=function(){
-      if(this.readyState==4 && this.status==200){
-        document.getElementById("history").innerHTML = this.responseText;
-      }
+      xmlhttp.onload = function(){
+      
+        var history = document.getElementById("historyMessages");
+        history.innerHTML = this.responseText;
+        
+      
     }
     xmlhttp.open("post", "messageFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
