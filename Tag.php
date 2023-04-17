@@ -64,6 +64,7 @@ $result = $queryHobbyPosts[0];
 if($result!=NULL){
    
     echo '<div id="MainContainerT">';
+    
     if($name!=""){
         echo ' <h1>Hobby : '.$name.'</h1>';
     }
@@ -89,44 +90,50 @@ if($result!=NULL){
     
         $result2 = getLine($row["OWNER"]);
     
-        echo '<div class="line">
-        <div class="fieldpic">';
-        if($result2["avatar"]){
-            echo '<img class="profilepic" src="./Images/'.$result2["avatar"].'">';
-        }else{
-            echo '<img class="profilepic" src="./Images/img_avatar.png">';
-        }
+  echo '<div class="line">
+            <div class="fieldpic">';
+                if($result2["avatar"]){
+                    echo '<img class="profilepic" src="./Images/'.$result2["avatar"].'">';
+                }else{
+                    echo '<img class="profilepic" src="./Images/img_avatar.png">';
+                }
             
         echo '
-        </div>
-        <div class="fieldtext">
-           <a href="./Profile.php?ID='.$row["OWNER"].'">'.$result2["NOM"].'</a>
-        </div>
-        <div class="fieldtext">
-        <p class="tagExperience"  style="width:85%">'.$row["EXPERIENCE"].'</p>
-        </div>
-        <div class="fieldtext">
-        <p class="tagFrequence" style="width:85%">'.$row["FREQUENCY"].'</p>
-        </div>
+            </div>
+            <div class="fieldtext">
+                <a href="./Profile.php?ID='.$row["OWNER"].'">'.$result2["NOM"].'</a>
+            </div>
+            <div class="fieldtext">
+                <p class="tagExperience"  style="width:85%">'.$row["EXPERIENCE"].'</p>
+            </div>
+            <div class="fieldtext">
+                <p class="tagFrequence" style="width:85%">'.$row["FREQUENCY"].'</p>
+            </div>
         
-        <div class="available">
-            <div class="tag" style="width:100%">';
-            if($row["AVAILABLE"]==1){
-                echo '<p class="tagAvailable"  style="width:85%">Available</p>';
-            }else{
-                echo '<p class="tagUnAvailable"  style="width:85%">Not Available</p>';
-            }
+            <div class="fieldtext">';
+                if($row["AVAILABLE"]==1){
+                    echo '<p class="tagAvailable"  style="width:85%">Available</p>';
+                }else{
+                    echo '<p class="tagUnAvailable"  style="width:85%">Not Available</p>';
+                }
                 //TODO : fieldots
                 /*Modal giving additionnal options to the user */
         echo '        
-            </div>
+            
         </div>
-        <div class="fieldots">
-            <span class="dots" onclick="displayOptions('.$row["OWNER"].')" id="dots'.$row["OWNER"].'">&#xFE19;</span>';
-        if(isset($_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE["ID"]))
-           echo' <div class="optionModal" id="options'.$row["OWNER"].'" >
-           <p onclick="checkInterlocutor('.$row["OWNER"].')">
-           Contact</p></div>';
+        <div class="fieldots">';
+            
+        if(isset($_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE["ID"])){
+            echo' <span class="dots" onclick="displayOptions('.$row["OWNER"].', true)" id="dots'.$row["OWNER"].'">&#xFE19;</span>
+            <div class="optionModal" id="options'.$row["OWNER"].'" >
+                <p class="optionLine" onclick="checkInterlocutor('.$row["OWNER"].')">
+                    Contact
+                </p>
+            </div>';
+        }else{
+            echo '<span class="dots" onclick="displayOptions('.$row["OWNER"].', false)" id="dots'.$row["OWNER"].'">&#xFE19;</span>';
+        }
+           
     echo '
         </div>
     </div>';
@@ -167,22 +174,47 @@ if(isset( $_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE[
 
 <script>
 
-function displayOptions(number){
-    document.getElementById("dots"+number).style.color = "lightgray";
-    document.getElementById("options"+number).style.display = "block";
-    document.getElementById("dots"+number).onclick = function(){closeOptions(number);};
-    window.onclick = function(event){
-        /*When window registers a click, if target of click is not our modal, close options */
-        if(event.target != document.getElementById("dots"+number)){
-            closeOptions(number);
-        }
-    }
+function other(number, connected, opened){
+    closeOptions(opened, connected);
+    displayOptions(opened, connected);
 }
 
-function closeOptions(number){
+function displayOptions(number, connected){
+    if(connected){
+
+        /*var arrayOptions = document.getElementsByClassName("dots");
+
+        for(let i = 0; i < arrayOptions.length; i++){
+            if(arrayOptions[i].id!="dots"+number){
+                arrayOptions[i].onclick = function (){
+                    other(i, connected, number);
+                }
+            }
+        }*/
+
+        document.getElementById("dots"+number).style.color = "lightgray";
+        document.getElementById("options"+number).style.display = "block";
+        document.getElementById("dots"+number).onclick = function(){closeOptions(number, connected);};
+        window.onclick = function(event){
+       
+        /*When window registers a click, if target of click is not our modal, close options */
+            if(event.target != document.getElementById("dots"+number) ){
+                closeOptions(number, connected);
+            }
+       
+        }
+    }else{
+        alert("Please log in if you want to access options")
+    }
+    
+}
+
+function closeOptions(number, connected){
     document.getElementById("dots"+number).style.color = null;
     document.getElementById("options"+number).style.display = null;
-    document.getElementById("dots"+number).onclick = function(){displayOptions(number);};
+    document.getElementById("dots"+number).onclick = function(){displayOptions(number, connected);};
+
+    
 }
 
 
