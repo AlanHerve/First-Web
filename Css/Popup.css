@@ -7,9 +7,6 @@
 }
 
 
-.historyComments{
-  display:block;
-}
 
 .messageContainer1, .messageContainer2{
   width: 90%;
@@ -52,6 +49,7 @@
 }
 
 .open-button {
+    z-index: 3;
     background-color: #555;
     color: white;
     padding: 16px 20px;
