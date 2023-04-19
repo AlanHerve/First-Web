@@ -45,7 +45,7 @@ if(!$row){
 
 
 
-<div id="MainContainer">
+<div id=confirmPrompt>
 <?php
 echo '
 <form action="./EditProfile.php?ID='.$_GET["ID"].'" method="POST">

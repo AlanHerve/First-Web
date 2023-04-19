@@ -1,8 +1,11 @@
+<link rel="stylesheet" href="./Css/Post.css">
+<link rel="stylesheet" href="./Css/Profile.css">
+<script type="text/javascript" src="./profile.js"></script>
 <?php
 
 include("databaseFunctions.php");
 include("fileFunctions.php");
-echo '<script type="text/javascript" src="./profile.js"></script>';
+
 ConnectDatabase();
 
 /*Allows topnav to know which link to highlight */
@@ -85,14 +88,14 @@ switch($_GET["SIDE"]){
             while($row = $result->fetch_assoc()){
                 /*RECUP LE NOMBRE DE LIKE */
                 /*Beginning of post container */
-                echo '<div id="MainContainerP" >';
+                echo '<div id="MainContainerProfileSide1" >';
                 /* TODO : MAKE LINKS SPANS ? 
                  * If user is the owner of the page, they get the option to edit or delete their posts
                  */
                 if(isset($_COOKIE["ID"])){
                     if($_COOKIE["ID"]==$_GET["ID"]){
-                        echo '<a title="Edit Post" href="./EditPost.php?ID='.$row["ID"].'&SIDE=1"><img src="./Images/Edit.png" class="addPost3"></a>';
-                        echo '<a title="Edit Post" href="./Confirm.php?ID='.$row["ID"].'&SIDE=1"><img src="./Images/Delete.png" class="addPost3" style="left:81%"></a>';
+                        echo '<a title="Edit Post" href="./EditPost.php?ID='.$row["ID"].'&SIDE=1"><img src="./Images/Edit.png" class="circleButton"></a>';
+                        echo '<a title="Edit Post" href="./Confirm.php?ID='.$row["ID"].'&SIDE=1"><img src="./Images/Delete.png" class="circleButton" style="left:81%"></a>';
                     }
                 }
 
@@ -104,15 +107,16 @@ switch($_GET["SIDE"]){
          
                     <div class="titlehobby">
                         <h1>'.$row["NOM"].'</h1>
-                        <p class="tagExperience">'.$row["EXPERIENCE"].'</p><p class="tagFrequence">'.$row["FREQUENCY"].'</p>';
+                        <div class="tagPost"><p class="tagLightColor">'.$row["EXPERIENCE"].'</p><p class="tagDarkColor">'.$row["FREQUENCY"].'</p>';
 
                         /*Availability is stored in the SQL database as a binary value */
                         if($row["AVAILABLE"]==1){
-                            echo '<p class="tagAvailable">Available</p>';
+                            echo '<p class="tagLightColor">Available</p>';
                         }else{
-                            echo '<p class="tagUnAvailable">Not Available</p>';
+                            echo '<p class="tagLightColor">Not Available</p>';
                         }
                     echo '
+                    </div>
                     </div>
                     <div  class="description">';
         
@@ -123,7 +127,7 @@ switch($_GET["SIDE"]){
                         <p >'.$row["DESCRIPTION"].'</p>';
                     }else{
                         /*if user has decided to not add a description display message : */
-                        echo '<p style="color:gray"><i>This user does not seem to have any description for this hobby</i></p>';
+                        echo '<p class="descriptionText" style="color:gray"><i>This user does not seem to have any description for this hobby</i></p>';
                     }
                      echo '</div>
                      </div>' ;  
@@ -137,7 +141,7 @@ switch($_GET["SIDE"]){
                     $image = $default[1];
 
                     if($error == NULL){
-                        echo '<img class="hobby2" src="./Images/'.$image.'" onclick="zoomImage(this)">
+                        echo '<img class="uniqueImageHobby" src="./Images/'.$image.'" onclick="zoomImage(this)">
                        
                     </div>';
                     }else{
@@ -145,7 +149,7 @@ switch($_GET["SIDE"]){
                     }
                     
                 } else{
-                    echo' <img class="hobby2" src="./uploads/'.$row["IMAGE"].'" onclick="zoomImage(this)">
+                    echo' <img class="uniqueImageHobby" src="./uploads/'.$row["IMAGE"].'" onclick="zoomImage(this)">
                        
                     </div>';
                 }
@@ -212,15 +216,15 @@ switch($_GET["SIDE"]){
 
             while($row = $result->fetch_assoc()){
                 $count += 1;
-          echo '<div id="MainContainerP2" >';
+          echo '<div id="MainContainerProfileSide2" >';
                 if(isset($_COOKIE["ID"]) && isset($_COOKIE["ID"])){
                     if($_COOKIE["ID"]==$_GET["ID"]){
-                        echo '<a title="Edit Post" href="./EditPost.php?ID='.$row["ID"].'&SIDE=2"><img src="./Images/Edit.png" class="addPost3"></a>';
-                        echo '<a title="Edit Post" href="./Confirm.php?ID='.$row["ID"].'&SIDE=2"><img src="./Images/Delete.png" class="addPost3" style="left:81%"></a>';
+                        echo '<a title="Edit Post" href="./EditPost.php?ID='.$row["ID"].'&SIDE=2"><img src="./Images/Edit.png" class="circleButton"></a>';
+                        echo '<a title="Edit Post" href="./Confirm.php?ID='.$row["ID"].'&SIDE=2"><img src="./Images/Delete.png" class="circleButton" style="left:81%"></a>';
                     }
                 }
                 echo '
-                    <div class="divP" style="border:solid">
+                    <div class="divP">
                         <div class="conhobby">
                             <div class="titlehobby" >
                                 <h1>'.$row["NOM"].'</h1>';
@@ -233,9 +237,9 @@ switch($_GET["SIDE"]){
                         ';
                                 if($row["DESCRIPTION"]){
                                     echo'<h4>Descritpion</h4>
-                                         <p>'.$row["DESCRIPTION"].'</p>';
+                                         <p class="descriptionText">'.$row["DESCRIPTION"].'</p>';
                                 }else{
-                                    echo '<p style="color:gray"><i>This user does not seem to have any description for this post</i></p>';
+                                    echo '<p class="descriptionText" style="color:gray"><i>This user does not seem to have any description for this post</i></p>';
                     
                                 }
              echo ' 
@@ -304,17 +308,17 @@ switch($_GET["SIDE"]){
                 
  
                 echo '
-                <div class="buttonPDiv" ">
+                <div class="commentOrLikeButtonDiv" ">
             
                 <input type="hidden" name="post'.$row["ID"].'" id="post'.$row["ID"].'" value="'.$row["LIKES"].'">
-                <button class="buttonP" style="border-right:solid" id="button'.$row["ID"].'" onclick="like('.$row["ID"].')">Likes '.$row["LIKES"].'</button>
-                <button id="buttonComments'.$row["ID"].'" class="buttonP" onclick="openComments('.$row["ID"].')">Show Comments</button>
+                <button class="commentOrLikeButton" style="border-right:solid" id="button'.$row["ID"].'" onclick="like('.$row["ID"].')">Likes '.$row["LIKES"].'</button>
+                <button id="buttonComments'.$row["ID"].'" class="commentOrLikeButton" onclick="openComments('.$row["ID"].')">Show Comments</button>
                 </div>
-                <div style="border:solid" class="history" name="historyComments'.$row["ID"].'" id="historyComments'.$row["ID"].'"></div>';
+                <div  class="historyComments" name="historyComments'.$row["ID"].'" id="historyComments'.$row["ID"].'"></div>';
                 if(isset($_COOKIE["ID"])){
-                    echo '<div id="input'.$row["ID"].'" style="display:none">
-                    <textarea placeholder="Type message.." id="commentZone'.$row["ID"].'" name="commentZone'.$row["ID"].'" required rows="1"></textarea>
-                    <button type="button" class="btn" onclick="uploadComment('.$row["ID"].')">Send</button> 
+                    echo '<div class="commentUserZone" id="input'.$row["ID"].'" style="display:none" >
+                    <textarea maxlength="50" placeholder="Type message.." id="commentZone'.$row["ID"].'" name="commentZone'.$row["ID"].'" required rows="1"></textarea>
+                    <button  type="button" class="btn" onclick="uploadComment('.$row["ID"].')">Send</button> 
                     </div>';
                 }
                 echo '
@@ -324,7 +328,7 @@ switch($_GET["SIDE"]){
 
             /*If user has not shared any posts, display message */
             if($count < 1){
-                echo '<div id="MainContainerP">
+                echo '<div id="MainContainerProfileSide1">
                     <p><i>This user do not seem to have any posts as of yet</i></p>
                 </div>';
             }
@@ -338,34 +342,36 @@ switch($_GET["SIDE"]){
 if(isset( $_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE["ID"])){
     /*if user is the owner of the page, gives the option to add a hobby or post something */
     if ($_GET["ID"]==$_COOKIE["ID"]){
-    echo '<div class="tag"><a class="tagEdit" href="./newPost.php?ID='.$_GET["ID"].'&SIDE=1"">Ajouter un Hobby</a></div>';
-    echo '<div class="tag" ><a class="tagEdit" style="right:19.5%;background-color:#5c7999" href="./newPost.php?ID='.$_GET["ID"].'&SIDE=2">Ajouter un Post</a></div>';
+        echo'<div class="addPostContainer"><div class="tag"><a class="tagEdit" style="right:43%" href="./newPost.php?ID='.$_GET["ID"].'&SIDE=1"">Add a Hobby</a></div>
+        <div class="tag" ><a class="tagEdit" style="right:33.5%;background-color:#5c7999" href="./newPost.php?ID='.$_GET["ID"].'&SIDE=2">New Post</a></div></div>';
+        echo '';
+    
+
+        echo '';
     
     /*TODO */
-    echo '<a title="Open Messages" href="./newPost.php?ID='.$_GET["ID"].'"><img style="right:36%" src="./Images/Message.png" class="addPost2"></a>';
-    }else{
     
-    echo '<a href="./newPost.php?ID='.$_GET["ID"].'"><img src="./Images/Message.png" class="addPost2"></a>';
     }
     
-}elseif(!isset( $_COOKIE["mail"] ) || !isset( $_COOKIE["password"] ) || !isset($_COOKIE["ID"])){
-    echo '<a href="./newPost.php?ID='.$_GET["ID"].'"><img src="./Images/Message.png" class="addPost"></a>';
 }
-
-
-echo '<div id="Modal" class="imageModal">
-
-<!-- The Close Button -->
-<span class="close">&times;</span>
-
-<!-- Modal Content (The Image) -->
-<img class="imageOfModal" id="ModalImage">
-
-<!-- Modal Caption (Image Text) -->
-<div id="caption"></div>
-</div>';
-
 ?>
+
+
+<div id="Modal" class="imageModal">
+    
+        <!-- The Close Button -->
+        <span id="closeModal" class="closeModal">&times;</span>
+
+        <!-- Modal Content (The Image) -->
+        <img class="imageOfModal" id="ModalImage">
+
+        <!-- Modal Caption (Image Text) -->
+        <div id="caption">
+        </div>
+    </div>
+</div>
+
+
 
 
 <?php

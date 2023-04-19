@@ -25,15 +25,15 @@ echo '
     <div class="history" name="people" id="people">
     </div>
     
-    <div class="history" name="history" id="historyMessages">
+    <div class="history" name="historyMessages" id="historyMessages">
     </div> 
       <form class="form-container" id="Post">
 
         <label for="msg"><b>Message</b></label>
-        <textarea placeholder="Type message.." id="msg" name="msg" required rows="1"></textarea>
+        <textarea maxlength="50" placeholder="Type message.." id="msg" name="msg" required rows="1"></textarea>
         <input type="hidden" name="kind" id="kind" value="1">
-        <input type="hidden" name="receiver" id="receiver" value="">
-        <input type="hidden" name="receiverName" id="receiverName" value="">
+        <input type="hidden" name="interlocutor" id="interlocutor" value="0">
+        <input type="hidden" name="interlocutorName" id="interlocutorName" value="0">
       
         <button type="button" class="btn" onclick="uploadMessages()">Send</button>
         <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
@@ -127,7 +127,7 @@ function addInterlocutor(interlocutor){
     
 
     if(value != null){
-      xmlhttp.send("action=fetch&receiver="+document.getElementById("receiver").value);
+      xmlhttp.send("action=fetch&interlocutor="+document.getElementById("interlocutor").value);
     }else{
        xmlhttp.send("action=fetch");
     }
@@ -165,8 +165,8 @@ function addInterlocutor(interlocutor){
           obj.name = this.responseText;
 
           /*store the ID and name of the interlocutor in the html of the page */
-          document.getElementById("receiver").value = obj.value;
-          document.getElementById("receiverName").value = obj.name;
+          document.getElementById("interlocutor").value = obj.value;
+          document.getElementById("interlocutorName").value = obj.name;
 
           /*Change the title of the popup */
           document.getElementById("titleChat").innerHTML = "Chat with : "+obj.name;
@@ -187,8 +187,8 @@ function addInterlocutor(interlocutor){
     }else{
 
       /*store the ID and name of the interlocutor in the html of the page */
-      document.getElementById("receiver").value = obj.value;
-      document.getElementById("receiverName").value = obj.name;
+      document.getElementById("interlocutor").value = obj.value;
+      document.getElementById("interlocutorName").value = obj.name;
 
       /*Change the title of the popup */
       document.getElementById("titleChat").innerHTML = "Chat with : "+obj.name;
@@ -206,8 +206,10 @@ function addInterlocutor(interlocutor){
     /*if the user has clicked on the send button without typing anything, this function does nothing */
     if(document.getElementById("msg").value == ""){
       return;
+    }else if(document.getElementById("interlocutor").value==0){
+      alert("Please choose an interlocutor before sending anything");
+      return;
     }
-
     
 
     var xmlhttp = new XMLHttpRequest();
@@ -229,8 +231,8 @@ function addInterlocutor(interlocutor){
         
 
         /*Store the name and ID of the last person you've sent a message to in the cookies, allow user to go back to that conversation after closing the website */
-        document.cookie="interLocutorID="+document.getElementById("receiver").value;
-        document.cookie="interLocutorName="+document.getElementById("receiverName").value;
+        document.cookie="interLocutorID="+document.getElementById("interlocutor").value;
+        document.cookie="interLocutorName="+document.getElementById("interlocutorName").value;
       
     }
 
@@ -239,7 +241,7 @@ function addInterlocutor(interlocutor){
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
     /*parameters are the ID of the interlocutor as well as the content of the message you're sending */
-    var parameters = "action=post&ID="+document.getElementById("receiver").value+"&msg="+document.getElementById("msg").value
+    var parameters = "action=post&ID="+document.getElementById("interlocutor").value+"&msg="+document.getElementById("msg").value
     xmlhttp.send(parameters);
 
   }
@@ -258,7 +260,7 @@ function addInterlocutor(interlocutor){
     xmlhttp.open("post", "messageFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     
-    xmlhttp.send("action=display&ID="+document.getElementById("receiver").value);
+    xmlhttp.send("action=display&ID="+document.getElementById("interlocutor").value);
     }
     
   

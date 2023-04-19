@@ -239,24 +239,14 @@ function newPost($mode){
            
         }
 
-            /*echo "       ff  ".$_POST["Nom"];*/
-
-            echo 'VALUES :'.$values_explode[0]."<br>";
             $query = $query." ".$_COOKIE["ID"].", \"".$content."\", ".$values_explode[0].")";
 
             $result = $conn->query($query);
 
-            echo $query;
-           
-
         }
 
-        
-
-        
         return $error;
-
-        
+ 
 }
 
 
@@ -264,9 +254,6 @@ function newPost($mode){
 function editPost($mode){
     
     global $conn;
-
-
-    echo 'WOOOO';
 
     $error = NULL;
     $redirect = false;
@@ -288,7 +275,7 @@ function editPost($mode){
             $error = "COULDNT FIND ANY HOBY POST WITH TARGET OWNER";
         }
 
-        
+
     }else{
 
         if($mode == 1){
@@ -350,7 +337,6 @@ function editPost($mode){
                 $redirect = true;
             }
 
-           // if()
 
             $length = strlen($query) - 1;
 
@@ -388,9 +374,6 @@ function editPost($mode){
             
         }
 
-
-        
-        
         for ($i=1; $i<=$_POST["numberOfImage"]; $i++){
             $good = checkFile("fileToUpload".$i);
 
@@ -407,7 +390,6 @@ function editPost($mode){
            
         }
             
-
         $length = strlen($query) - 1;
         if($query[$length]==",") $query[$length]=" ";
 
@@ -419,11 +401,7 @@ function editPost($mode){
         
     }
 
-    
-
     }
-
-    echo $query;
 
     return array($error, $row);
 
@@ -720,7 +698,7 @@ function getProfile($addToConversationButton){
         /*If user is the owner of the page, they get the option to edit their profile */
         if(isset($_COOKIE["ID"]) && isset($_COOKIE["ID"])){
             if($_COOKIE["ID"]==$_GET["ID"]){
-                echo '<a title="Edit Profile" href="./EditProfile.php?ID='.$_GET["ID"].'"><img src="./Images/Edit.png" class="addPost3"></a>';
+                echo '<a title="Edit Profile" href="./EditProfile.php?ID='.$_GET["ID"].'"><img src="./Images/Edit.png" class="circleButton"></a>';
             }
         }
 
@@ -763,7 +741,7 @@ Each hobby tag is a link to the Tag.php page */
         </div>
         </div>
         
-        <div class="side">';
+        <div class="sideSelector">';
 /*Allows user to choose between displaying a user's hobbies or their posts */
         if(isset($_GET["SIDE"])){
             if($_GET["SIDE"]==1){

@@ -1,8 +1,10 @@
+<link rel="stylesheet" href="./Css/Post.css">
+
 <?php
 include("databaseFunctions.php");
 include("fileFunctions.php");
 
-echo '<p><br><br><br><br><br><br><br><br></p>';
+
 ConnectDatabase();
 
 if(!isset($_COOKIE["ID"]) || !isset($_GET["ID"]) || !isset($_GET["SIDE"])){
@@ -16,8 +18,8 @@ if(!isset($_COOKIE["ID"]) || !isset($_GET["ID"]) || !isset($_GET["SIDE"])){
     /*MAKE SURE YOU CANT GO BACK TO NEW POST OR ERASE POST */
     if($error == NULL){
         $redirect = "Location:Profile.php?ID=".$_COOKIE["ID"]."&SIDE=".$_GET["SIDE"];
-       //header($redirect);
-       echo 'Success';
+       header($redirect);
+      
     }else{
         echo'<div id=ErrorContainer>
 			<p>'.$error.'</p>
@@ -43,7 +45,7 @@ if($_GET["SIDE"]==1){
    
 
 
-    echo '<div id="MainContainerP">
+    echo '<div id="MainContainerProfileSide1">
     <div>
     <form id="myForm" style="border:solid" action="./newPost.php?ID='.$_GET["ID"].'&SIDE=1" method="POST" enctype="multipart/form-data">
     <input type="hidden" value="1" name = "newPost" id="newPost">
@@ -65,7 +67,7 @@ echo ' <div class="conhobby" style="width:100%">
                 }
         echo '
                    </select></h1>
-                <p class="tagExperience">
+                <p class="tagLigthColor">
                 <select class="post"  name="experience">
                     <option value="Debutant">Beginner</option>
                     <option value="Avance">Intermediate</option>
@@ -73,7 +75,7 @@ echo ' <div class="conhobby" style="width:100%">
                     <option value="Expert">Expert</option>
                     <option value="Occasionnel">Casual</option>
                 </select></p>
-                <p class="tagFrequence">
+                <p class="tagDarkColor">
                 <select class="post"  name="frequence">
                     <option value="Quotidien">Daily</option>
                     <option value="3-4/semaine">3-4/week</option>
@@ -83,7 +85,7 @@ echo ' <div class="conhobby" style="width:100%">
                     <option value="Rarement">Rarely</option>
                 </select></p>';
             
-          echo '<p class="tagAvailable">
+          echo '<p class="tagLigthColor">
                 <select class="post" name="available">
                     <option value="Yes">Available</option>
                     <option value="No">Not Available</option>
@@ -124,40 +126,11 @@ echo ' <div class="conhobby" style="width:100%">
     $error = $status[3];
 
     if($error==NULL){
-
-      /*  echo '
-        <div id="MainContainerP" >
-            <div class="divP">
-                <div class="conhobby">
-                    <div class="titlehobby">
-                        <h1><select name="Nom">';
         
-                        foreach($tag_array as &$tag){
-                            $s = (string) $ID_array[$index];
-                            $p = (string) $tag;
-                            echo '<option value="'.$s.'|'.$p.'">'.$p.'</option>';
-                
-                        }
-            
-                    echo ' 
-                    </select></h1>
-                    </div>
-                    <div class="charahobby">
-             
-                    <textarea class="post" name="content" placeholder="Ecrivez ici une petite description si vous le souhaitez"></textarea>
-            
-                    </div>
-                </div> 
-            </div>
-        </div>';*/
-        
-        
-        
-
-        
+  
 
 echo '
-<div id="MainContainerP">
+<div id="MainContainerProfileSide2">
     <div class="divP">
         <form id="myForm" action="./newPost.php?ID='.$_GET["ID"].'&SIDE=2" method="POST" enctype="multipart/form-data">
         <input type="hidden" value="1" name = "newPost" id="newPost">
@@ -189,50 +162,6 @@ echo '
 </div>
 
 </div>';
-
-    /*
-    echo '<div id=MainContainer>';
-        $index = 0;
-
-        echo '<form action="./newPost.php?ID='.$_GET["ID"].'&SIDE=2" method="POST" enctype="multipart/form-data">
-        <div class="linePost">
-        <label for="Nom">Hobby : </label>
-        <select name="Nom">';
-        
-        foreach($tag_array as &$tag){
-            $s = (string) $ID_array[$index];
-            $p = (string) $tag;
-            echo '<option value="'.$s.'|'.$p.'">'.$p.'</option>';
-        
-        }
-    
-        echo ' 
-        </select>
-        </div>
-
-        <input type="hidden" name="owner" value="'.$_GET["ID"].'">
-        <div class="linePost">
-        <label for="content">Description</label>
-        <textarea style="resize:none" name="content" placeholder="Ecrivez ici une petite description si vous le souhaitez"></textarea>
-        </div>
-        <input type="hidden" name="newPost" value="1">
-
-        <input type="file" name="fileToUpload" id="fileToUpload">
-        <input type="file" name="fileToUpload2" id="fileToUpload2">
-        <input type="file" name="fileToUpload3" id="fileToUpload3">
-        <input type="file" name="fileToUpload4" id="fileToUpload4">
-
-
-        <button type="submit">test</button>
-        </form>
-        ';*/
-
-
-
-
-
-
-
 
 
     }else{

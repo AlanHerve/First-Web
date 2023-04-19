@@ -121,10 +121,12 @@ function displayComments(){
     $query = "SELECT * FROM comments WHERE POST=".$_REQUEST["ID"];
     $result = $conn->query($query);
     
+    $count = 0;
 
     if($result){
         
         while($row = $result->fetch_assoc()){
+            $count++;
             
             if(isset( $_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE["ID"])){
                 if($row["OWNERID"]!=$_COOKIE["ID"]){
@@ -142,6 +144,11 @@ function displayComments(){
                   </div>';
             }
             
+        }
+
+        if($count==0){
+            if(isset( $_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE["ID"])) echo '<p class="descriptionText"><i>This post does not seem to have any comments yet</i></p>';
+            else echo '<p class="descriptionText"><i>This post does not seem to have any comments yet, <a href="./Login.php">log in</a> to add your own</i></p>';
         }
 
 
@@ -361,10 +368,10 @@ function getInterlocutors(){
                 $query = $query.$row["OWNER2"].",";
             }
         }
-        if(isset($_REQUEST["receiver"])){
-            if(!in_array($_REQUEST["receiver"], $interlocutors)){
+        if(isset($_REQUEST["interlocutor"])){
+            if(!in_array($_REQUEST["interlocutor"], $interlocutors)){
            
-                $query = $query.$_REQUEST["receiver"].",";
+                $query = $query.$_REQUEST["interlocutor"].",";
             } 
         }
         
@@ -380,8 +387,8 @@ function getInterlocutors(){
         $result = $conn->query($query);
         if($result){
             while($row = $result->fetch_assoc()){
-                if(isset($_REQUEST["receiver"])){
-                    if($row["ID"]!=$_REQUEST["receiver"]){
+                if(isset($_REQUEST["interlocutor"])){
+                    if($row["ID"]!=$_REQUEST["interlocutor"]){
                     
                         echo '<button value='.$row["ID"].' id="'.$row["NOM"].'" name="'.$row["NOM"].'" onclick="changeInterlocutor(this)">'.$row["NOM"].'</button>';
                         

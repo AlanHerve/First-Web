@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="./Css/Tag.css">
 <?php
 /*This page allows the user to search users based on the hobbies they 
 partake in */
@@ -104,15 +105,15 @@ if($result!=NULL){
                 <a href="./Profile.php?ID='.$row["OWNER"].'">'.$result2["NOM"].'</a>
             </div>
             <div class="fieldtext">
-                <p class="tagExperience"  style="width:85%">'.$row["EXPERIENCE"].'</p>
+                <p class="tagLightColor"  style="width:85%">'.$row["EXPERIENCE"].'</p>
             </div>
             <div class="fieldtext">
-                <p class="tagFrequence" style="width:85%">'.$row["FREQUENCY"].'</p>
+                <p class="tagDarkColor" style="width:85%">'.$row["FREQUENCY"].'</p>
             </div>
         
             <div class="fieldtext">';
                 if($row["AVAILABLE"]==1){
-                    echo '<p class="tagAvailable"  style="width:85%">Available</p>';
+                    echo '<p class="tagAvailabiliy"  style="width:85%">Available</p>';
                 }else{
                     echo '<p class="tagUnAvailable"  style="width:85%">Not Available</p>';
                 }

@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="./Css/Post.css">
 <?php
 echo '<script type="text/javascript" src="./profile.js"></script>';
 include("databaseFunctions.php");
@@ -42,10 +43,10 @@ if(!isset($_GET["ID"]) || !isset($_COOKIE["ID"]) || !isset($_GET["SIDE"])){
                 <p>'.$error.'</p>
             </div>';
     }elseif(isset($_POST["newPost"])){
-        /*TRY TO MAKE IT A NOTIFICATION */
-    $redirect = "Location:Profile.php?ID=".$row["OWNER"]."&SIDE=".$_GET["SIDE"];
+       
+        $redirect = "Location:Profile.php?ID=".$row["OWNER"]."&SIDE=".$_GET["SIDE"];
         
-    //header($redirect);
+        header($redirect);
         
     }
 
@@ -67,7 +68,7 @@ if(!isset($_GET["ID"]) || !isset($_COOKIE["ID"]) || !isset($_GET["SIDE"])){
 
 
 
-        echo '<div id="MainContainerP">
+        echo '<div id="MainContainerProfileSide1">
                 <div>
     
     
@@ -81,52 +82,53 @@ echo ' <div class="conhobby" style="width:100%">
 
             <div class="titlehobby">
                 <h1>'.$row["NOM"].'</h1>
-                <p class="tagExperience">
-                <select class="post"  name="experience">';
-                $text = array("Débutant", "Avancé", "Intermédiaire", "Expert", "Occasionnel");
-                $value = array("Debutant", "Avance", "Intermediaire","Expert", "Occasionnel");
-                $index =0;
-                foreach ($value as &$value_i) {
-                    if($row["EXPERIENCE"]==$value_i){
-                        echo '<option value='.$value_i.' selected>'.$text[$index].'</option>';
+                <div class="tagPost">
+                    <p class="tagLightColor">
+                    <select class="post"  name="experience">';
+                    $text = array("Débutant", "Avancé", "Intermédiaire", "Expert", "Occasionnel");
+                    $value = array("Debutant", "Avance", "Intermediaire","Expert", "Occasionnel");
+                    $index =0;
+                    foreach ($value as &$value_i) {
+                        if($row["EXPERIENCE"]==$value_i){
+                            echo '<option value='.$value_i.' selected>'.$text[$index].'</option>';
+                        }else{
+                            echo '<option value='.$value_i.'>'.$text[$index].'</option>';
+                        }
+        
+                        $index++;
+                    }   
+                echo '
+                    </select></p>
+                    <p class="tagDarkColor">
+                    <select class="post"  name="frequence">';
+                    $text = array("Quotidien", "3 à 4 fois par semaine", "2 à 3 fois par semaine", "Hebdomadaire", "Mensuel", "Rarement");
+                    $value = array("Quotidien", "3-4/semaine", "2-3/Semaine", "Hebdomadaire", "Mensuel", "Rarement");
+                    $index =0;
+                    foreach ($value as &$value_i) {
+                        if($row["FREQUENCY"]==$value_i){
+                            echo '<option value='.$value_i.' selected>'.$text[$index].'</option>';
                     }else{
-                        echo '<option value='.$value_i.'>'.$text[$index].'</option>';
+                            echo '<option value='.$value_i.'>'.$text[$index].'</option>';
                     }
         
                     $index++;
-                }
-                echo '
-                </select></p>
-                <p class="tagFrequence">
-                <select class="post"  name="frequence">';
-                $text = array("Quotidien", "3 à 4 fois par semaine", "2 à 3 fois par semaine", "Hebdomadaire", "Mensuel", "Rarement");
-                $value = array("Quotidien", "3-4/semaine", "2-3/Semaine", "Hebdomadaire", "Mensuel", "Rarement");
-                $index =0;
-                foreach ($value as &$value_i) {
-                    if($row["FREQUENCY"]==$value_i){
-                        echo '<option value='.$value_i.' selected>'.$text[$index].'</option>';
-                    }else{
-                        echo '<option value='.$value_i.'>'.$text[$index].'</option>';
                     }
-        
-                    $index++;
-                }
                 echo '
-                </select></p>';
-            
-          echo '<p class="tagAvailable">
-                <select class="post" name="available">';
-                if($row["AVAILABLE"]==1){
-                    echo '<option value="Yes" selected>Available</option>
-                    <option value="No">Not Available</option>';
-                }else {
-                    echo '<option value="Yes">Available</option>
-                    <option value="No" selected>Not Available</option>';
-                }
+                    </select></p>
+                    <p class="tagLightColor">
+                    <select class="post" name="available">';
+                    if($row["AVAILABLE"]==1){
+                        echo '<option value="Yes" selected>Available</option>
+                              <option value="No">Not Available</option>';
+                    }else {
+                        echo '<option value="Yes">Available</option>
+                              <option value="No" selected>Not Available</option>';
+                    }
                     
                 echo '
-                 </select></p>
-           
+                    </select>
+                    </p>
+                </div>
             </div>
         <div class="charahobby">
 
@@ -154,7 +156,7 @@ echo ' <div class="conhobby" style="width:100%">
             $image = $default[1];
 
             if($error == NULL){
-                echo '<img id="imagePost'.$row["ID"].'&1" name="imagePost'.$row["ID"].'&1" class="hobby2" src="./Images/'.$image.'" onclick="zoomImage(this)">
+                echo '<img id="imagePost'.$row["ID"].'&1" name="imagePost'.$row["ID"].'&1" class="uniqueImageHobby" src="./Images/'.$image.'" onclick="zoomImage(this)">
                 <input type="hidden" id="default1" name="default1" value="true">
                 <input type="hidden" value="1" name="deleteImage1" id="deleteImage1" form="myForm">';
                
@@ -164,7 +166,7 @@ echo ' <div class="conhobby" style="width:100%">
             }
             
         } else{
-            echo' <img id="imagePost'.$row["ID"].'&1" name="imagePost'.$row["ID"].'&1" class="hobby2" src="./uploads/'.$row["IMAGE"].'" onclick="zoomImage(this)">
+            echo' <img id="imagePost'.$row["ID"].'&1" name="imagePost'.$row["ID"].'&1" class="uniqueImageHobby" src="./uploads/'.$row["IMAGE"].'" onclick="zoomImage(this)">
             <input type="hidden" id="default1" name="default1" value="false">
             <input type="hidden" value="1" name="deleteImage1" id="deleteImage1" form="myForm">';
         }
@@ -176,7 +178,7 @@ echo ' <div class="conhobby" style="width:100%">
         echo '<form id="myForm" action="./EditPost.php?ID='.$_GET["ID"].'&SIDE=2" method="POST" enctype="multipart/form-data">
         <input type="hidden" id="idOfPost" name="idOfPost" value='.$row["ID"].'>
         <input type="hidden" name="newPost" value="2">
-        <div id="MainContainerP2" >';
+        <div id="MainContainerProfileSide2" >';
                 echo '
                     <div class="divP" style="border:solid">
                         <div class="conhobby">
@@ -239,31 +241,6 @@ echo ' <div class="conhobby" style="width:100%">
                     
             </div></form>';
 
-    /*DISPLAY IMAGES, MAKE BUTTONS A NICE LITTLE CIRCLE IN THE CORNER */
-        /*echo' <div id=MainContainerE>
-            <h1>'.$row["NOM"].'</h1>
-            <form id="myForm" action="./EditPost.php?ID='.$_GET["ID"].'&SIDE=2" method="POST" enctype="multipart/form-data">
-
-            <input type="hidden" name="newPost" value="2">
-            <input type="file" name="fileToUpload" id="fileToUpload">
-            <p></p>
-            <input type="file" name="fileToUpload2" id="fileToUpload2">
-            <p></p>
-            <input type="file" name="fileToUpload3" id="fileToUpload3">
-            <p></p>
-            <input type="file" name="fileToUpload4" id="fileToUpload4">
-            <p></p>
-    
-
-            <textarea style="resize:none" name="content" placeholder="Ecrivez ici une petite description si vous le souhaitez">'.$row["DESCRIPTION"].'</textarea>
-
-
-            
-            </form>
-
-            
-            
-            ';*/
     }
     echo '<input type="hidden" id="typeOfPost" name="typeOfPost" value="'.$row["TYPEID"].'" form="myForm">'
 
@@ -272,32 +249,35 @@ echo ' <div class="conhobby" style="width:100%">
 <input type="submit" value="Edit" form="myForm">
 
 <div id="Modal" class="imageModal">
+    
+        <!-- The Close Button -->
+        <span id="closeModal" class="closeModal">&times;</span>
 
-<!-- The Close Button -->
-<span class="close">&times;</span>
+        <!-- Modal Content (The Image) -->
+        <img class="imageOfModal" id="ModalImage">
 
-<!-- Modal Content (The Image) -->
-<img class="imageOfModal" id="ModalImage">
+        <!-- Modal Caption (Image Text) -->
+        <div id="caption"></div>
 
-<!-- Modal Caption (Image Text) -->
-<div id="caption"></div>
-
-<input type="hidden" id="current" name="current" value="null">
-<label for="img">Changer d'image :</label>
-        <input type="file" name="fileToUpload1" id="fileToUpload1" class="uploadImagePrompt" form="myForm">
-        <?php
-            if($_GET["SIDE"]==2){
-                echo '<input type="file" name="fileToUpload2" id="fileToUpload2" class="uploadImagePrompt" form="myForm">
-                <input type="file" name="fileToUpload3" id="fileToUpload3" class="uploadImagePrompt" form="myForm">
-                <input type="file" name="fileToUpload4" id="fileToUpload4" class="uploadImagePrompt" form="myForm">
-                ';
-            }
+        <input type="hidden" id="current" name="current" value="null">
+        <div class="changePrompt">
+            <label for="img">Changer d'image :</label>
+            <input type="file" name="fileToUpload1" id="fileToUpload1" class="uploadImagePrompt" form="myForm">
+            <?php
+                if($_GET["SIDE"]==2){
+              echo '<input type="file" name="fileToUpload2" id="fileToUpload2" class="uploadImagePrompt" form="myForm">
+                    <input type="file" name="fileToUpload3" id="fileToUpload3" class="uploadImagePrompt" form="myForm">
+                    <input type="file" name="fileToUpload4" id="fileToUpload4" class="uploadImagePrompt" form="myForm">
+                    ';
+                }
         
         ?>
-    <div id="defaultPrompt">
+        </div>
+        <div id="defaultPrompt">
         <label for="delete">Delete Image ?</label>
-        <input type="submit" name="deleteImage" id="deleteImage" onclick="deleteImage()" value="Edit">
-    </div>
+        <input type="submit" name="deleteImage" id="deleteImage" onclick="deleteImage()" value="Delete Image">
+        </div>
+    
 </div>
 
 <?php
