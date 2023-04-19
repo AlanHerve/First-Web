@@ -1,32 +1,22 @@
 html{
-    
     font-family: Arial;
-    
     padding: 0px;
     margin: 0px;
 }
 
 body{
-    
-    
-    /*background-color: rgb(64, 64, 167,1);*/
     background-color: rgb(203, 221, 231);
-
     padding: 0px;
     margin: 0px;
-/*
-    margin-top: 0;
-    padding: 0px 0px;
-    padding-bottom: 0px;
-    margin-left: 0;
-    margin-right: 0;
-    margin-bottom: 0px;*/
-
-    /*border: solid;
-    border-color: blueviolet;*/
 }
 
 h1,h2{
+    text-align: center;
+}
+
+h1{
+    margin-top: 2vw;
+    margin-bottom: 0.1vw;
     text-align: center;
 }
 
@@ -34,7 +24,7 @@ h1.blue{
     color: rgb(238, 244, 248);
 }
 
-#MainContainer, #ErrorContainer, #ProfileContainer, #MainContainerP, #MainContainerP2, #MainContainerPC, #MainContainerT, #MainContainerF, #MainContainerE{
+.confirmPrompt, #ErrorContainer, #ProfileContainer, #MainContainerProfileSide1, #MainContainerProfileSide2, #MainContainerPC, #MainContainerT, #MainContainerF{
     margin: 25px auto;
 	width: 90%;
     padding: 25px;
@@ -44,28 +34,15 @@ h1.blue{
     border-radius: 2vw;
 }
 
-#MainContainer {
-	
-    
-    color: black;
-    /*box-shadow: 5px 5px 10px 2px rgba(41, 41, 107, 0.9);*/
 
-   
-    display: flex;
-}
-
-
+/*Container To display errors during website runtime*/
 #ErrorContainer {
     background-color: rgb(255, 0, 0);
     border: solid;
     border-width: 3px;
     border-color: rgb(148, 13, 13);
-    
     color: white;
-    /*box-shadow: 5px 5px 10px 2px rgba(41, 41, 107, 0.9);*/
-
     text-align: center;
-   
     display: flex;
 }
 
@@ -74,87 +51,26 @@ h1.blue{
 
 #ProfileContainer {
     border-radius: 2vw;
-    
     color: black;
-    /*box-shadow: 5px 5px 10px 2px rgba(41, 41, 107, 0.9);*/
-    font-family: Arial, Helvetica;
-   
-
+    font-family: Arial, Helvetica;   
 }
 
 .contact{
     border: none;
 }
 
-#MainContainerP, #MainContainerP2 {
-	margin: 25px auto;
-	width: 90%;
-    min-height: 33%;
-    
-    margin-top: none;
-    margin-bottom: none;
-
-    color: black;
-    /*box-shadow: 5px 5px 10px 2px rgba(41, 41, 107, 0.9);*/
-
-   
-    display: flex;
-    
-    
-}
-
-#MainContainerP2{
-    flex-direction: column;
-}
-
-#MainContainerP{
-    flex-direction: row;
-}
-
-
 .divP{
     display: flex;
     flex-direction: row;
 }
 
-.buttonPDiv{
-    display: flex;
-    flex-direction: row;
-    margin: auto;
-    width: 60%;
-}
 
-.buttonP{
-    width: 50%;
-    text-align: center;
-    border: none;
-    
-}
-
-#MainContainerPC {
-	margin: 25px auto;
-	width: 90%;
-  
-    
-    margin-top: none;
-    margin-bottom: none;
-
-    color: black;
-    /*box-shadow: 5px 5px 10px 2px rgba(41, 41, 107, 0.9);*/
-
-   
-    display: flex;
-    
-}
 
 #MainContainerT {
-	
     height: 65%;
-    
 	border-width: 0px 2px; 
     margin-top: 1vw;
     color: black;
-    /*box-shadow: 5px 5px 10px 2px rgba(41, 41, 107, 0.9);*/
     display: flex;
     flex-direction: column;
     gap: 0px;
@@ -166,15 +82,12 @@ select.post{
     color: white;
     font-size: 1.2vw;
     width: auto;
-    
 }
 
 select.title{
     background-color: rgb(245, 245, 245);
     font-size: 2.7vw;
     border: none;
-
-
 }
 
 textarea.post{
@@ -183,17 +96,13 @@ textarea.post{
     resize:none
 }
 
-#MainContainerF {
-    
+/*#MainContainerF {
     color: black;
-    
-   /* box-shadow: 5px 5px 10px 2px rgba(41, 41, 107, 0.9);*/
-}
+}*/
 
 .formF{
     display: flex;
     flex-direction: column;
-    
 }
 
 input.line{
@@ -201,8 +110,6 @@ input.line{
     padding: 1vw 0px;
     margin-bottom: 2vw;
     margin-top: 0.1vw;
-    
-   
     border: solid;
     border-width: 0.2vw;
     border-color: lightgray;
@@ -249,29 +156,7 @@ button.line:hover{
 }
 
 
-#MainContainerE {
 
-    margin-top: 75px;
-
-    
-    color: black;
-    /*box-shadow: 5px 5px 10px 2px rgba(41, 41, 107, 0.9);*/
-
-   
-  
-}
-
-img.pic{
-    display: inline-block;
-    width: 20%;
-    height: auto;
-    border-radius: 50%;
-
-    margin-left: 1%;
-    margin-top: 3%;
-    margin-bottom: 3%;
-    margin-right: 2%;
-}
 
 .con2{
     display: flex;
@@ -289,43 +174,14 @@ img.pic{
 
 }
 
-.name{
-    width: 100%;
-    height: 22%;
-    margin-bottom: 0%;
 
-    font-size: 5vw;
-}
-
-.nickname{
-    text-align: bo;
-    width: 100%;
-    height: 15%;
-    margin-bottom: 1%;
-
-    border-bottom: solid;
-    border-color: rgb(64, 64, 167,1);
-    color: lightslategray;
-    font-size: 3vw;
-}
-
-.tagArea{
-    padding-bottom: 10px;
-    /*display: inline-block;
-    border-color: #000000;
-    border: solid;*/
-    width: 100%;
-    height: 45%;
-    overflow: auto;
-    
-}
 
 .tag, .tagEdit{
     font-size: 2vw;
     display: inline-block;
 }
 
-.tag a, .tagEdit a{
+.tag a, .tagEdit {
     background-color: #779ecb;
   
     border-radius: 30vw;
@@ -344,9 +200,10 @@ img.pic{
 
 }
 
-.tagEdit{
+.tagEdit {
+    
     font-size: 2.1vw;
-    position: fixed;
+    
     bottom: 2.1%;
     right: 10px;
     padding: 7px 9px;
@@ -356,7 +213,7 @@ img.pic{
 
 /*VERIFIER PK TAG FREQUENCE EST DECALE*/
 
-.tagAvailable, .tagExperience, .tagFrequence, .tagUnAvailable{
+.tagLightColor, .tagDarkColor{
     font-size: 1.62vw;
     display: inline-block;
     
@@ -374,30 +231,11 @@ img.pic{
     margin: auto;   
 }
 
-
-
-h1{
-    margin-top: 2vw;
-    margin-bottom: 0.1vw;
-    text-align: center;
-}
-
-.tagAvailable{
-    background-color: #779ecb;
-    /*background-color: rgb(139, 226, 146);*/
-}
-
-.tagUnAvailable{
-    background-color: #779ecb;
-    
-    /*background-color: #ff6961;*/
-}
-
-.tagExperience{
+.tagLightColor{
     background-color: #779ecb;
 }
 
-.tagFrequence{
+.tagDarkColor{
     background-color: #5c7999;
 }
 
@@ -407,7 +245,7 @@ h1{
 }
 
 
-.side {
+.sideSelector {
   
     width: 40%;
     display: flex;
@@ -420,7 +258,7 @@ h1{
 }
     
     /* Style the links inside the navigation bar */
-    .side a {
+    .sideSelector a {
         
       width: 50%;
       color: #779ecb;
@@ -429,87 +267,23 @@ h1{
       text-align: center;
       padding: 14px 16px;
       text-decoration: none;
-      font-size: 17px;
+      font-size: 2vw;
       
     }
     
     /* Change the color of links on hover */
-    .side a:hover {
+    .sideSelector a:hover {
       background-color: #ecebeb;
       color: black;
     }
     
     /* Add a color to the active/current link */
-    .side a.active {
+    .sideSelector a.active {
     color: #779ecb;
     text-decoration: underline;
     text-underline-offset: 0.7vw;
     text-decoration-thickness: 0.30vw;
     }
-
-
-
-
-.introContainer{
-    
-    padding: 0px;
-    margin-bottom: 17px;
-}
-
-
-.conhobby{
-    display: inline-block;
-    width: 40%;
-    height: auto;
-    padding: none;
-   
-    
-    
-}
-
-.titlehobby{
-    text-align: center;
-    
-    width: 100%;
-    height: 25%;
-    padding: none;
-    border-bottom: solid;
-    border-color: rgb(64, 64, 167,1);
-}
-
-.charahobby{
-    width: 100%;
-    height: 65%;
-    margin-top: 1%;
-    overflow: auto;
-    
-}
-
-img.hobby{
-    display: inline-block;
-    width: 55%;
-    
-    height: auto;
-    
-    border-radius: 4vw;
-    
-    
-    margin-left: 22.5%;
-    margin-right: 22.5%;
-    
-    margin-top: 2%;
-    margin-bottom: 3%;
-}
-
-
-
-.backdescription{
-    display: inline-block;
-    height: auto;
-    width: 90%;
-    border: solid;
-
-}
 
 img.addPost{
     position: fixed;
@@ -543,21 +317,9 @@ img.reaction:hover{
     background-color: rgb(255, 255, 255);
 }
 
-img.addPost2{
-    position: fixed;
-    bottom: 1.1%;
-    right: 70px;
-    border-radius: 50%;
-    padding: 3px;
-    
-    width: 5%;
-    height: auto;
-    
-
-}
-img.addPost3{
+img.circleButton{
     position: absolute;
-    
+    z-index: 1;
     left: 88%;
     
     
@@ -569,18 +331,12 @@ img.addPost3{
 
 }
 
-img.addPost2:hover{
-    background-color: rgb(255, 255, 255);
-}
-
-img.addPost3:hover{
+img.circleButton:hover{
     background-color: rgb(255, 255, 255);
 }
 
 
 /*-----TAG-----*/
-
-
 
 .con{
     width: 90%;
@@ -593,36 +349,28 @@ img.addPost3:hover{
     overflow-y: auto;
     overflow-x: hidden;
     /*KEEP IN MIND*/
-
-
-
  
 }
-    
-
+/*---TAG FILTERS---*/    
 
 .headline{
     margin-left: auto;
     margin-right: auto;
     width: 90%;
     padding: 0vw;
-    display: flex;
-    
-    
+    display: flex; 
 }
 
 .void{
     width: 45%;
-
 }
+
 .full{
     width: 75%;
     
     gap: 0vw;
     display: block;
 }
-
-
 
 .tagselect{
     width: 55%;
@@ -641,8 +389,6 @@ img.addPost3:hover{
     background-color: #779ecb;
     border: none;
     color:  rgb(238, 244, 248);
-   
-    
     font-size: 2vw;
 }
 
@@ -650,13 +396,15 @@ button.tagbutton:hover{
     background-color: #3b699e;
 }
 
+/*---TAG FILTERS END---*/ 
+
 /*put in another container*/
 form.index{
     width: 40%;
     height: 30%;
     display: flex;
    
-    /*box-shadow: 5px 5px 10px 2px rgba(41, 41, 107, 0.9);*/
+    
 }
 form.index button{
     background-color: rgb(29, 29, 119);
@@ -669,226 +417,26 @@ form.index input{
     width: 75%;
 }
 
-.line{
-    margin: 0 auto;
-    width: 90%;
-   
-    padding: 0px;
-    border-bottom: solid;
-    border-color: lightgray;
-    
-    display: flex;
-    
-}
-
-.field, .fieldtext, .fieldpic, .available, .fieldots, .available{
-    text-align: center;
-    display: inline-block;
-    font-size: 2vw;
-    
-    
-}
-
-.fieldtext{
-    
-    width: 20%;
-    vertical-align: middle;
-    margin: auto; 
-}
-
-.fieldtext a{
-    text-decoration: none;
-    color: black;
-}
-
-.fieldtext a:hover{
-    text-decoration: underline;
-}
-
-
-
-
-.fieldpic{
-    
-    
-    width: 10%;
-    display: flex;
-   
-
-}
 
 .profilepic{
     position:static;
     width: 55%;
     border-radius: 50%;
     padding: 5%;
-   
     margin: auto;
-
 }
 
-.fieldots{
-    vertical-align: middle;
-    width: 10%;
-    margin: auto;
-    font-size: 3vw;
-    color: rgb(44, 44, 44);
-}
-
-
-
-.dots{
-    
-}
-
-.dots:hover{
-   
-    color:  lightgray;
-
-}
-
-.optionModal{
-    
-    margin-top: 0px;
-    margin-left: 2%;
-    padding: 0px;
-    position: absolute;
-    
-    display: none;
-    z-index: 9;
-}
-
-
-
-
-
-.available{
-    width: 20%;
-    vertical-align: middle;
-    margin: auto; 
-}
-
-
-
-.tagt{
-    font-size: 2vw;
-    display: inline-block;
-    background-color: lightgray;
-    border: solid;
-    border-color: black;
-    border-width: 2px;
-    border-radius: 20%;
-    display: inline-block;
-    margin-left: 5px;
-    margin-top: 5px;
-    max-height: auto;
-    max-width: auto;
-    padding: 2px 5px;
-    color: #000000;
-    text-decoration: none;
-    /*box-shadow: 3px 3px 3px 1px rgba(0, 0, 0, 0.2);*/
-}
-
-
-
-.gridImage{
-    margin: auto auto;
-    width: 55%;
-    height: auto;
-
-    
-    
-    display:grid;
-    grid-template-columns: 50% 50%;
-    grid-row: 50% 50%;
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
-    border-top-left-radius: 4vw;
-    border-top-right-radius: 4vw;
-    padding: 0.3%;
-}
-
-.gridImageComponent{
-    width: 100%;
-    height: 100%;
-}
-
-.regularImage{
-    
-} 
-
-.potentialGrid{
-
-    width: 55%;
-    height: auto;
-    border-radius: 4vw;
-    margin: auto auto;
-}
-
-.potentialGrid > .regularImage{
-    border-radius: 4vw;
-    padding: 0.3%;
-
-    max-width: 100%;
-    max-height: 100%;
-    
-    width: 100%;
-    height: 100%;
-    margin: auto auto;
-}
-
-.description{
-    white-space: initial;
-    overflow: hidden;
-    
-   
-}
-
-.imageModal{
-
-    color: white;
-
-    display: none;
-    
-    top : 0px;
-    position: fixed;
-    z-index: 999;
-    
-    width: 1000%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.9);
-}
-
-.imageOfModal{
-    min-width: 350px;
-    width: 5%;
-    height: auto;
-    
-    
-}
-
-.uploadImagePrompt{
-    display:none;
-}
   
-img.hobby2{
-   
+img.uniqueImageHobby{
     width: 55%;
     height: auto;
-  
     border-radius: 4vw;
     padding: 0.3%;
-
-    
-    
     margin: auto auto;
 } 
 
 
 /*-----INDEX-----*/
-
-
-
 
 .linePost{
     width: 100%;
@@ -896,8 +444,6 @@ img.hobby2{
     border-color: lightgray;
 }
 
-.confirm{
-    display: inline-block;
-}
+
 
 
