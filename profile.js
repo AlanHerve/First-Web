@@ -65,7 +65,7 @@ function zoomImage(obj){
   window.onclick = function(event){
     
     /*When window registers a click, if target of click is not our modal, close options */
-   if(event.target == document.getElementById("Modal") && event.target != document.getElementsByClassName("gridImageComponent")){
+   if(event.target == document.getElementById("Modal") && event.target != document.getElementsByClassName("gridImageComponent") || event.target == document.getElementById("closeModal")){
       deZoomImage(defaultID);
     }
 }
@@ -242,7 +242,7 @@ function closeComments(number){
         /*displays comments but does not reload them
          * TODO : is this the better solution ?
          */
-        document.getElementById("input"+number).style.display = "block";
+        document.getElementById("input"+number).style.display = "flex";
         document.getElementById("historyComments"+number).style.display = "block";
         /*changes behavior of button */
         document.getElementById("buttonComments"+number).onclick = function() {closeComments(number)};
