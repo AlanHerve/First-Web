@@ -78,9 +78,13 @@ if(!isset($_GET["ID"]) || !isset($_COOKIE["ID"]) || !isset($_GET["SIDE"])){
 <input type="hidden" id="idOfPost" name="idOfPost" value='.$row["ID"].'>
 <input type="hidden" value="1" name = "newPost" id="newPost">
 <input type="hidden" name="owner" id="owner" value="'.$_GET["ID"].'">';  
-echo ' <div class="conhobby" style="width:100%">
-
-            <div class="titlehobby">
+echo ' <div class="conhobby" style="width:100%">';
+if($row["MODIFIED"]==1){
+    echo '<p style="color:gray"><i>Modified '.formatDate($row["TIME"]).'</i></p>';
+ }else{
+    echo '<p style="color:gray"><i>Posted '.formatDate($row["TIME"]).'</i></p>';
+ }
+            echo '<div class="titlehobby">
                 <h1>'.$row["NOM"].'</h1>
                 <div class="tagPost">
                     <p class="tagLightColor">
@@ -181,8 +185,13 @@ echo ' <div class="conhobby" style="width:100%">
         <div id="MainContainerProfileSide2" >';
                 echo '
                     <div class="divP" style="border:solid">
-                        <div class="conhobby">
-                            <div class="titlehobby" >
+                        <div class="conhobby">';
+                        if($row["MODIFIED"]==1){
+                            echo '<p style="color:gray"><i>Modified '.formatDate($row["TIME"]).'</i></p>';
+                         }else{
+                            echo '<p style="color:gray"><i>Posted '.formatDate($row["TIME"]).'</i></p>';
+                         }
+                           echo' <div class="titlehobby" >
                                 <h1>'.$row["NOM"].'</h1>';
                                 if($row["MODIFIED"]==1){
                                     echo '<h2>(Modifié le AJOUTER DATE)</h2>';
