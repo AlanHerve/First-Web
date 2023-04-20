@@ -47,7 +47,7 @@ if($_GET["SIDE"]==1){
 
     echo '<div id="MainContainerProfileSide1">
     <div>
-    <form id="myForm" style="border:solid" action="./newPost.php?ID='.$_GET["ID"].'&SIDE=1" method="POST" enctype="multipart/form-data">
+    <form id="myForm" action="./newPost.php?ID='.$_GET["ID"].'&SIDE=1" method="POST" enctype="multipart/form-data">
     <input type="hidden" value="1" name = "newPost" id="newPost">
     
     <input type="hidden" name="owner" id="owner" value="'.$_GET["ID"].'">';
@@ -56,7 +56,7 @@ if($_GET["SIDE"]==1){
 
     
 echo ' <div class="conhobby" style="width:100%">
-
+            <label for="Nom">Hobby :</label>
             <div class="titlehobby">
                 <h1><select class="title" name="Nom">';
                 while($row = $status[0]->fetch_assoc()){
@@ -67,7 +67,7 @@ echo ' <div class="conhobby" style="width:100%">
                 }
         echo '
                    </select></h1>
-                <p class="tagLigthColor">
+                <p class="tagLightColor">
                 <select class="post"  name="experience">
                     <option value="Debutant">Beginner</option>
                     <option value="Avance">Intermediate</option>
@@ -85,7 +85,7 @@ echo ' <div class="conhobby" style="width:100%">
                     <option value="Rarement">Rarely</option>
                 </select></p>';
             
-          echo '<p class="tagLigthColor">
+          echo '<p class="tagLightColor">
                 <select class="post" name="available">
                     <option value="Yes">Available</option>
                     <option value="No">Not Available</option>
