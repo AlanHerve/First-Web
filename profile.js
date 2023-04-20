@@ -176,7 +176,7 @@ function like(number){
         
         /*change displayed value of numbers of like */
         document.getElementById("post"+number).value = add;
-        document.getElementById("button"+number).innerHTML ="Likes "+  document.getElementById("post"+number).value;
+        document.getElementById("button"+number).innerHTML ="Dislike this post : "+  document.getElementById("post"+number).value;
 
         /*change behavior of like button 
          * IMPORTANT : it is necessary to encapsulate the new behavior of the button in a function (){}, other wise the page will just execute the function
@@ -214,7 +214,7 @@ function dislike(number){
             var substract = parseInt(document.getElementById("post"+number).value) - 1;
         
             document.getElementById("post"+number).value = substract;
-            document.getElementById("button"+number).innerHTML ="Likes "+  document.getElementById("post"+number).value;
+            document.getElementById("button"+number).innerHTML ="Like this post : "+  document.getElementById("post"+number).value;
             document.getElementById("button"+number).disabled = false;
             document.getElementById("button"+number).onclick = function () {like(number);}
         }
@@ -236,36 +236,49 @@ function closeComments(number){
     document.getElementById("historyComments"+number).style.display="none";
     /*change text and behavior and text of button */
     document.getElementById("buttonComments"+number).innerHTML = "Show Comments";
-    document.getElementById("input"+number).style.display = "none";
+    if(document.getElementById("input"+number)){
+      document.getElementById("input"+number).style.display = "none";
+    }
     /*changes behavior of button */
     document.getElementById("buttonComments"+number).onclick = function() {
         /*displays comments but does not reload them
          * TODO : is this the better solution ?
          */
-        document.getElementById("input"+number).style.display = "flex";
-        document.getElementById("historyComments"+number).style.display = "block";
-        /*changes behavior of button */
-        document.getElementById("buttonComments"+number).onclick = function() {closeComments(number)};
-        /*changes text of button */
-        document.getElementById("buttonComments"+number).innerHTML = "Hide Comments";};
+        openComments(number);
+    };
+
+    document.getElementById("IdIntervalClose"+number).value = setInterval(function(){
+      document.getElementById("closeCondition"+number).value = "true";
+    } , 2000);
         
 }
 
-/*Open comments for the first time, loading them from the SQL database */
-function openComments(number){
-    
-    var xmlhttp = new XMLHttpRequest();
+function loadComments(number){
+  var xmlhttp = new XMLHttpRequest();
+
+ 
 
     xmlhttp.onreadystatechange = function(){
         if(this.readyState==4 && this.status==200){
             /*makes comment container visible */
-            document.getElementById("historyComments"+number).style.display = "block";
+            
             /*Sets content of comment container */
             document.getElementById("historyComments"+number).innerHTML = this.responseText;
-            document.getElementById("input"+number).style.display = "block";
-            /*Change text and behavior of the open comment button */
-            document.getElementById("buttonComments"+number).onclick = function() {closeComments(number)};
-            document.getElementById("buttonComments"+number).innerHTML = "Hide Comments";
+            
+            if(document.getElementById("closeCondition"+number).value=="true"){
+              clearInterval(document.getElementById("IdInterval"+number).value);
+              document.getElementById("running"+number).value="false";
+              document.getElementById("closeCondition"+number).value = "false";
+              
+            }else if(document.getElementById("running"+number).value=="false"){
+              document.getElementById("running"+number).value="true";
+              
+              document.getElementById("IdInterval"+number).value =   setInterval(function(){
+               loadComments(number);
+              }, 2000);
+
+                
+            }
         }
     }
 
@@ -274,5 +287,24 @@ function openComments(number){
     
     var parameters = "action=displayComments&ID="+number;
     xmlhttp.send(parameters);
+
+}
+
+/*Open comments for the first time, loading them from the SQL database */
+function openComments(number){
+  if(document.getElementById("running"+number).value=="false") loadComments(number);
+  document.getElementById("historyComments"+number).style.display = "block";
+  if(document.getElementById("input"+number)){
+    document.getElementById("input"+number).style.display = "flex";
+  }
+  
+  /*Change text and behavior of the open comment button */
+  document.getElementById("buttonComments"+number).onclick = function() {closeComments(number)};
+  document.getElementById("buttonComments"+number).innerHTML = "Hide Comments";
+    
+  
+    document.getElementById("closeCondition"+number).value = "false";
+    clearInterval(document.getElementById("IdIntervalClose"+number).value);
+  
 }
 
