@@ -193,7 +193,7 @@ function newPost($mode){
                 $error = "FILE TYPE IS NOT OF ACCEPTABLE TYPE";
             }else{
                 
-                $query = "INSERT INTO hobby_post (ID, NOM, EXPERIENCE, FREQUENCY, AVAILABLE, IMAGE1, OWNER, DESCRIPTION, TYPEID) VALUES
+                $query = "INSERT INTO hobby_post (ID, NOM, EXPERIENCE, FREQUENCY, AVAILABLE, IMAGE, OWNER, DESCRIPTION, TYPEID) VALUES
                 (NULL, \"".$values_explode[1]."\", \"".$_POST["experience"]."\", \"".$_POST["frequence"]."\", ".$present.", NULL, ".$_POST["owner"].", \"".SecurizeString_ForSQL($content)."\", ".$values_explode[0].")";
             }
 
@@ -205,6 +205,7 @@ function newPost($mode){
                 }
             }
             
+
         }else{
 
             /*Upload a regular post */
@@ -245,6 +246,8 @@ function newPost($mode){
 
         }
 
+       
+
         return $error;
  
 }
@@ -254,7 +257,7 @@ function newPost($mode){
 function editPost($mode){
     
     global $conn;
-
+    date_default_timezone_set('Europe/Paris');
     $error = NULL;
     $redirect = false;
 
@@ -317,7 +320,7 @@ function editPost($mode){
     
             if(isset($_POST["content"])){
                 if($_POST["content"]!=$row["DESCRIPTION"]){
-                    $query = $query."DESCRIPTION='".SecurizeString_ForSQL($_POST["content"])."'";
+                    $query = $query."DESCRIPTION='".SecurizeString_ForSQL($_POST["content"])."',";
                     $redirect = true;
                 }
             
@@ -327,7 +330,7 @@ function editPost($mode){
             $good = checkFile("fileToUpload1");
 
             if(isset($_FILES["fileToUpload1"]["name"]) && $good!=NULL){
-                $query = $query."IMAGE='".SecurizeString_ForSQL($_FILES["fileToUpload1"]["name"])."'";
+                $query = $query."IMAGE='".SecurizeString_ForSQL($_FILES["fileToUpload1"]["name"])."',";
                 $redirect = true;
             }elseif($good == NULL && $_FILES["fileToUpload1"]["name"]!=""){
                 $error = "FILE TYPE IS NOT OF ACCEPTABLE TYPE";
@@ -337,6 +340,7 @@ function editPost($mode){
                 $redirect = true;
             }
 
+            $query = $query."MODIFIED=1,";
 
             $length = strlen($query) - 1;
 
@@ -368,7 +372,7 @@ function editPost($mode){
     
         if(isset($_POST["content"])){
             if($_POST["content"]!=$row["DESCRIPTION"]){
-                $query = $query."DESCRIPTION='".SecurizeString_ForSQL($_POST["content"])."'";
+                $query = $query."DESCRIPTION='".SecurizeString_ForSQL($_POST["content"])."',";
                 $redirect = true;
             }
             
@@ -389,6 +393,8 @@ function editPost($mode){
             }
            
         }
+
+        $query = $query."MODIFIED=1,";
             
         $length = strlen($query) - 1;
         if($query[$length]==",") $query[$length]=" ";
@@ -402,12 +408,12 @@ function editPost($mode){
     }
 
     }
-
+    
     return array($error, $row);
 
 }
 
-function editPost2(){
+/*function editPost2(){
     
     global $conn;
     $redirect = false;
@@ -435,7 +441,7 @@ function editPost2(){
         }
         /*MODIFIER LES IMAGES*/
     
-        if(isset($_POST["content"])){
+       /* if(isset($_POST["content"])){
             if($_POST["content"]!=$row["DESCRIPTION"]){
                 $query = $query."DESCRIPTION='".SecurizeString_ForSQL($_POST["content"])."'";
                 $redirect = true;
@@ -458,7 +464,7 @@ function editPost2(){
 
     return array($result, $redirect, $query, $row);
 
-}
+}*/
 
 function test(){
 
@@ -772,11 +778,32 @@ Each hobby tag is a link to the Tag.php page */
 
 }
 
+function formatDate($timeOfItem){
+
+    date_default_timezone_set('Europe/Paris');
+    $today = date("Y-m-d h:i:s", time());
+
+    $today_interface = DateTime::createFromFormat("Y-m-d h:i:s", $today);
+
+    $to_match = DateTime::createFromFormat("Y-m-d h:i:s", $timeOfItem);
+    $to_match->setTime(0,0,0);
+
+    $difference = $to_match->diff($today_interface);
+    
+    if($difference->d!=0){
+        return "the : ".date("d/m/Y", strtotime($timeOfItem));
+    }else{
+        return "today : ".date("h:i", strtotime($timeOfItem));
+    }
+
+}
 
 function getPosts($mode){
         
         global $conn;
         $error = NULL;
+
+        date_default_timezone_set('Europe/Paris');
 
         switch($mode){
             /*selects the post about hobbies of the user */

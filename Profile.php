@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="./Css/Post.css">
 <link rel="stylesheet" href="./Css/Profile.css">
+<link rel="stylesheet" href="./Css/Popup.css">
 <script type="text/javascript" src="./profile.js"></script>
 <?php
 
@@ -88,6 +89,9 @@ switch($_GET["SIDE"]){
             while($row = $result->fetch_assoc()){
                 /*RECUP LE NOMBRE DE LIKE */
                 /*Beginning of post container */
+                
+               
+                /*$timestamp = strtotime($row["TIME"]);*/
                 echo '<div id="MainContainerProfileSide1" >';
                 /* TODO : MAKE LINKS SPANS ? 
                  * If user is the owner of the page, they get the option to edit or delete their posts
@@ -103,9 +107,14 @@ switch($_GET["SIDE"]){
                  *with a group/partner 
                  */
 
-         echo ' <div class="conhobby">
-         
-                    <div class="titlehobby">
+         echo ' <div class="conhobby">';
+         if($row["MODIFIED"]==1){
+            echo '<p style="color:gray"><i>Modified '.formatDate($row["TIME"]).'</i></p>';
+         }else{
+            echo '<p style="color:gray"><i>Posted '.formatDate($row["TIME"]).'</i></p>';
+         }
+               
+                  echo '<div class="titlehobby">
                         <h1>'.$row["NOM"].'</h1>
                         <div class="tagPost"><p class="tagLightColor">'.$row["EXPERIENCE"].'</p><p class="tagDarkColor">'.$row["FREQUENCY"].'</p>';
 
@@ -225,13 +234,14 @@ switch($_GET["SIDE"]){
                 }
                 echo '
                     <div class="divP">
-                        <div class="conhobby">
-                            <div class="titlehobby" >
-                                <h1>'.$row["NOM"].'</h1>';
-                                if($row["MODIFIED"]==1){
-                                    echo '<h2>(Modifié le AJOUTER DATE)</h2>';
-                                }
-                    echo '
+                        <div class="conhobby">';
+                        if($row["MODIFIED"]==1){
+                            echo '<p style="color:gray"><i>Modified '.formatDate($row["TIME"]).'</i></p>';
+                         }else{
+                            echo '<p style="color:gray"><i>Posted '.formatDate($row["TIME"]).'</i></p>';
+                         }
+                           echo' <div class="titlehobby" >
+                                <h1>'.$row["NOM"].'</h1>
                             </div>
                             <div  class="description">
                         ';
@@ -309,9 +319,12 @@ switch($_GET["SIDE"]){
  
                 echo '
                 <div class="commentOrLikeButtonDiv" ">
-            
+                <input type="hidden" name="running'.$row["ID"].'" id="running'.$row["ID"].'" value="false">
+                <input type="hidden" name="closeConditionInterval'.$row["ID"].'" id="closeCondition'.$row["ID"].'" value="false">
+                <input type="hidden" name="IdInterval'.$row["ID"].'" id="IdInterval'.$row["ID"].'" value="">
+                <input type="hidden" name="IdIntervalClose'.$row["ID"].'" id="IdIntervalClose'.$row["ID"].'" value="">
                 <input type="hidden" name="post'.$row["ID"].'" id="post'.$row["ID"].'" value="'.$row["LIKES"].'">
-                <button class="commentOrLikeButton" style="border-right:solid" id="button'.$row["ID"].'" onclick="like('.$row["ID"].')">Likes '.$row["LIKES"].'</button>
+                <button class="commentOrLikeButton" style="border-right:solid" id="button'.$row["ID"].'" onclick="like('.$row["ID"].')">Like this post : '.$row["LIKES"].'</button>
                 <button id="buttonComments'.$row["ID"].'" class="commentOrLikeButton" onclick="openComments('.$row["ID"].')">Show Comments</button>
                 </div>
                 <div  class="historyComments" name="historyComments'.$row["ID"].'" id="historyComments'.$row["ID"].'"></div>';

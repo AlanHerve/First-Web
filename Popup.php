@@ -208,6 +208,7 @@ function addInterlocutor(interlocutor){
       return;
     }else if(document.getElementById("interlocutor").value==0){
       alert("Please choose an interlocutor before sending anything");
+      document.getElementById("msg").value = "";
       return;
     }
     

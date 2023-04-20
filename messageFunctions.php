@@ -118,6 +118,8 @@ function displayComments(){
     global $conn;
     $error = NULL;
 
+    date_default_timezone_set('Europe/Paris');
+
     $query = "SELECT * FROM comments WHERE POST=".$_REQUEST["ID"];
     $result = $conn->query($query);
     
@@ -130,17 +132,20 @@ function displayComments(){
             
             if(isset( $_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE["ID"])){
                 if($row["OWNERID"]!=$_COOKIE["ID"]){
+                    echo '<p class="timeContainer1">'.formatDate($row["TIME"]).'</p>';
                     echo '<div class="messageContainer1">
-                    <p>'.$row["CONTENT"].'</p>
+                    <p class="paragraph">'.$row["CONTENT"].'</p>
                   </div>';
                 }else{
+                    echo '<p class="timeContainer2">'.formatDate($row["TIME"]).'</p>';
                     echo '<div class="messageContainer2" id="comment'.$row["ID"].'" name="comment'.$row["ID"].'">
-                    <p>'.$row["CONTENT"].'</p><span class="destroyButton" onclick="destroyComment('.$row["ID"].')">&#215;</span>
+                    <p class="paragraph">'.$row["CONTENT"].'</p><span class="destroyButton" onclick="destroyComment('.$row["ID"].')">&#215;</span>
                   </div>';
                 }
             }else{
+                echo '<p class="timeContainer1">'.formatDate($row["TIME"]).'</p>';
                 echo '<div class="messageContainer1">
-                    <p>'.$row["CONTENT"].'</p>
+                    <p class="paragraph">'.$row["CONTENT"].'</p>
                   </div>';
             }
             
@@ -203,8 +208,10 @@ function sendComment(){
         $error = "COULDN'T SEND COMMENT";
         echo $error;
     }else{
+        date_default_timezone_set('Europe/Paris');
+        echo '<p class="timeContainer2">'.date("h:i", time()).'</p>';
         echo '<div class="messageContainer2" id="comment'.$_REQUEST["ID"].'" name="comment'.$_REQUEST["ID"].'">
-                <p>'.$_REQUEST["msg"].'</p><span class="destroyButton" onclick="destroyComment('.$_REQUEST["ID"].')">&#215;</span>
+                <p class="paragraph">'.$_REQUEST["msg"].'</p><span class="destroyButton" onclick="destroyComment('.$_REQUEST["ID"].')">&#215;</span>
               </div>';
     }
     }
@@ -230,11 +237,11 @@ function sendMessage(){
             if($row = $result->fetch_assoc()){
                 if($row["OWNER1"]==$_COOKIE["ID"]){
                     echo '<div class="messageContainer2" id="message'.$row["ID"].'" name="message'.$row["ID"].'">
-                            <p>'.$row["CONTENT"].'</p><span class="destroyButton" onclick="destroyMessage('.$row["ID"].')">&#215;</span>
+                            <p class="paragraph">'.$row["CONTENT"].'</p><span class="destroyButton" onclick="destroyMessage('.$row["ID"].')">&#215;</span>
                           </div>';
                 }else{
                     echo '<div class="messageContainer1">
-                            <p>'.$row["CONTENT"].'</p>
+                            <p class="paragraph">'.$row["CONTENT"].'</p>
                           </div>';
                 }
             }
@@ -259,6 +266,9 @@ function sendTest(){
 }
 
 function getMessages(){
+
+    date_default_timezone_set('Europe/Paris');
+
     global $conn;
 
     $error = NULL;
@@ -286,13 +296,16 @@ function displayMessages(){
         echo $error;
     }else{
         while(  $row = $message->fetch_assoc()){
+            
             if($row["OWNER1"]==$_COOKIE["ID"]){
+                echo '<p class="timeContainer2">'.formatDate($row["TIME"]).'</p>';
                 echo '<div class="messageContainer2" id="message'.$row["ID"].'" name="message'.$row["ID"].'">
-                        <p>'.$row["CONTENT"].'</p><span class="destroyButton" onclick="destroyMessage('.$row["ID"].')">&#215;</span>
+                        <p class="paragraph">'.$row["CONTENT"].'</p><span class="destroyButton" onclick="destroyMessage('.$row["ID"].')">&#215;</span>
                       </div>';
             }else{
+                echo '<p class="timeContainer1">'.formatDate($row["TIME"]).'</p>';
                 echo '<div class="messageContainer1">
-                        <p>'.$row["CONTENT"].'</p>
+                        <p class="paragraph">'.$row["CONTENT"].'</p>
                       </div>';
             }
             
