@@ -92,8 +92,8 @@ select.title{
 
 textarea.post{
     width: 100%;
-    height: 90%;
-    resize:none
+    min-height: 50%;
+    resize:none;
 }
 
 /*#MainContainerF {

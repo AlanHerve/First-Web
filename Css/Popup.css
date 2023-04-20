@@ -4,6 +4,7 @@
     max-height: 250px;
     overflow: auto;
     margin: auto;
+   
 }
 
 
@@ -14,8 +15,32 @@
   border-radius: 5px;
   padding: 5px;
   margin: 10px 0;
-
+ 
   
+}
+
+.timeContainer1, .timeContainer2{
+  color: gray;
+  font-style: italic;
+}
+
+.timeContainer1{
+  text-align: left;
+  right: 0px;
+}
+
+.timeContainer2{
+  text-align: right;
+  
+}
+
+.paragraph{
+  width: 70%;
+  overflow-wrap: break-word;
+}
+
+.closePart{
+  width: 30%;
 }
 
 
