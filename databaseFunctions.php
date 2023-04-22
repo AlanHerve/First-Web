@@ -413,101 +413,67 @@ function editPost($mode){
 
 }
 
-/*function editPost2(){
-    
-    global $conn;
-    $redirect = false;
+/*A use cant have a hobby more than once on their profile
+ * this function asks the database which hobby they can ask
+ */
+function hobbiesRemaining(){
 
-    if(!isset($_POST["newPost"])){
-        $query = "SELECT * FROM regular_post WHERE OWNER=".$_COOKIE["ID"]." AND ID=".$_GET["ID"];
-        $result=$conn->query($query);
-        $row = $result->fetch_assoc();
-        if(!$row){
-            $error = "COULDNT FIND ANY HOBY POST WITH TARGET OWNER";
-        }
-    }else{
+    $servername = "localhost";
+    $username = "root";
+    $password = "root";
+    $dbname = "projetessai";
 
-        $query = "SELECT * FROM regular_post WHERE OWNER=".$_COOKIE["ID"]." AND ID=".$_GET["ID"];
-        $result=$conn->query($query);
-        $row = $result->fetch_assoc();
-
-        $query = "UPDATE regular_post
-        SET ";
-    
-        $files = array("fileToUpload1", "fileToUpload2", "fileToUpload3", "fileToUpload4");
-        $good = array();
-        foreach ($files as &$file){
-            array_push($good, checkFile($file));
-        }
-        /*MODIFIER LES IMAGES*/
-    
-       /* if(isset($_POST["content"])){
-            if($_POST["content"]!=$row["DESCRIPTION"]){
-                $query = $query."DESCRIPTION='".SecurizeString_ForSQL($_POST["content"])."'";
-                $redirect = true;
-            }
-            echo '<p><br> row: '.$row["DESCRIPTION"].'<br>4<br>'.$_POST["content"].'</p>';
-            
-        }
-        if($redirect){
-            echo '<p>papaya<br>ture</p>';
-        }else{
-            echo '<p>papaya<br>false</p>';
-        }
-        
-    
-        $query = $query."WHERE ID=".$_GET["ID"];
-        
-    }
-
-    $result = $conn->query($query);
-
-    return array($result, $redirect, $query, $row);
-
-}*/
-
-function test(){
-
-    global $conn;
+    $conn = mysqli_connect($servername, $username, $password, $dbname);
 
     $error = NULL;
 
     $count=0;
-    $max= 10;
-
-    $query = "SELECT TYPEID FROM hobby_post WHERE OWNER=".$_GET["ID"];
-    $result = $conn->query($query);
-    if($result){
-        $query = "SELECT NOM, ID FROM hobby_list WHERE ID NOT IN (";
-        
-        while($row = $result->fetch_assoc()){
-            $count += 1;
-            $to_add = "'".$row["TYPEID"]."'";
-            $query = $query.$to_add.",";
-        }
-        /*echo '<p><br><br><br><br><br>'.$query.'<br><br><br><br></p>';*/
-        $length = strlen($query) - 1;
-        if($query[$length]=="("){
-
-            /*????????????? */
-            $query ="SELECT NOM, ID FROM hobby_list";
-        }else{
-            if($count<$max){
-                $query[$length] = ")";
-            }else{
-                $error = "YOU'VE POSTED IN EACH HOBBY CATEGORY, THERE AREN'T ANYMORE HOBBIES TO PUT ON YOUR PAGE";
-            }
-            
-        }
-        
-    }else{
-        $query ="SELECT NOM, ID FROM hobby_list";
-    }
-        
-
-       
     
-    /*echo '<p><br><br><br><br><br>'.$query.'<br><br><br><br></p>';*/
+
+    $query ="SELECT NOM, ID FROM hobby_list";
+
+    $listOfHobbies = mysqli_query($conn, $query);
+
+    $max = mysqli_num_rows($listOfHobbies);
+    
+    if($max > 0){
+
+        /*Gets all hobbies the user has already posted */
+        $query = "SELECT TYPEID FROM hobby_post WHERE OWNER=".$_GET["ID"];
+        $result = mysqli_query($conn, $query );
+        if($result){
+            /*Once complete, will get all hobies the user has not already */
+            $query = "SELECT NOM, ID FROM hobby_list WHERE ID NOT IN (";
+        
+            while($row = $result->fetch_assoc()){
+
+                if($row)
+
+
+                $count += 1;
+                $to_add = "'".$row["TYPEID"]."'";
+                $query = $query.$to_add.",";
+            }
+        
+            $length = strlen($query) - 1;
+            if($query[$length]=="("){
+                /*if no hobby already posted, select everything */
+                $query = "SELECT NOM, ID FROM hobby_list";
+            }else{
+                if($count<$max){
+                    /*completes query to avoid syntax error */
+                    $query[$length] = ")";
+                }else{
+                    $error = "YOU'VE POSTED IN EACH HOBBY CATEGORY, THERE AREN'T ANYMORE HOBBIES TO PUT ON YOUR PAGE";
+                }
+            }  
+        }else{
+            $error = "COULD NOT RETRIEVE YOUR POST HISTORY";
+        }
+    }
+
+    
+        
     if($error==NULL){
         $result = $conn->query($query);
 
@@ -515,12 +481,13 @@ function test(){
             $error = "COULD NOT RETRIEVE HOBBY LIST"; 
         }
     }
-    
+    mysqli_close($conn);
 
     return array($result, $error, $query);
 
 }
 
+/*searches tags to fill select option in newPost.php and Profile.php for SIDE=2 */
 function getAvailableTags($mode){
 
     /*VOIR SI CETTE FONCTION EST SI UTILE QUE CA*/
@@ -529,16 +496,17 @@ function getAvailableTags($mode){
     $error = NULL;
     $found = 0;
 
-
+    /*If posting a new regular post */
     if($mode==1){
-        echo 'mode 1 <br>';
         $query = "SELECT * FROM hobby_post WHERE OWNER=".$_GET["ID"];
+
+    /*Fetches the hobby type of regular posts already posted by users */
     }else{
         $query = "SELECT * FROM regular_post WHERE OWNER=".$_GET["ID"];
     }
 
     
-
+    /*pushes names and IDs in arrays */
     $tags = array();
     $IDs = array();
 
@@ -658,7 +626,9 @@ function editProfile(){
 
 }
 
-
+/*fetches Profile info of users and display them
+ * $addToConversationButton is the button allowing a connected user to click on to add personn to their chat popup
+ */
 function getProfile($addToConversationButton){
 
 
@@ -778,18 +748,26 @@ Each hobby tag is a link to the Tag.php page */
 
 }
 
+/*Checks if date of post is today, formats date of post to be displayed on the top left corner of a post */
 function formatDate($timeOfItem){
 
+    /*necessary to avoid a bug */
     date_default_timezone_set('Europe/Paris');
+
+    /*fetches time of now to a format of our choosing */
     $today = date("Y-m-d h:i:s", time());
 
-    $today_interface = DateTime::createFromFormat("Y-m-d h:i:s", $today);
-
-    $to_match = DateTime::createFromFormat("Y-m-d h:i:s", $timeOfItem);
+    /*initialises the DateTime objects */
+    $today_interface = DateTime::createFromFormat("Y-m-d H:i:s", $today);
+    
+    /*Using H majuscule is necessary to avoid failure if timestamp was created after noon */
+    $to_match = DateTime::createFromFormat("Y-m-d H:i:s", $timeOfItem);
     $to_match->setTime(0,0,0);
 
+    /*calculate the difference between the two dates */
     $difference = $to_match->diff($today_interface);
     
+    /*value of the difference in days */
     if($difference->d!=0){
         return "the : ".date("d/m/Y", strtotime($timeOfItem));
     }else{
@@ -798,6 +776,7 @@ function formatDate($timeOfItem){
 
 }
 
+/*getPosts of an user */
 function getPosts($mode){
         
         global $conn;
@@ -840,7 +819,7 @@ function getPosts($mode){
         
 }
 
-/*Get all the hobbies stored in the SQL database */
+/*Get all the hobbies stored in the SQL database, used in Tag.php */
 function getAllTags(){
     global $conn;
 
@@ -850,6 +829,7 @@ function getAllTags(){
     return $result;
 }
 
+/*for each post of type choosen in Tag.php, fetches their owner's information */
 function getLine($owner){
 
     global $conn;
@@ -861,13 +841,15 @@ function getLine($owner){
     return $result2;
 }
 
-function tagPost(){
+
+function fetchesPostsWithSpecifiedTag(){
     global $conn;
     $name = NULL;
     $result = NULL;
 
-    if(isset($_GET["TAG"])){
 
+    if(isset($_GET["TAG"])){
+        /*REPLACE THIS WITH JS, EASY FIX */
         $query="SELECT * FROM hobby_post WHERE TYPEID=".$_GET["TAG"];
         $result = $conn->query($query);
 
@@ -878,7 +860,8 @@ function tagPost(){
         $query="SELECT * FROM hobby_post WHERE TYPEID=".$_GET["TAG"];
         $result = $conn->query($query);
    
- 
+  
+    /*If user has not selected a tag or tag not present in the url, displays a random tag */
     }else{
         $query = "SELECT * FROM hobby_post";
         $result = $conn->query($query);
@@ -893,6 +876,7 @@ function tagPost(){
 
         $size = sizeof($value);
 
+        /*if users posted more than one hobby, filters with random hobby */
         if($size > 0){
             $random = rand(0, $size -1);
             $redirect = "Location:Tag.php?TAG=".$value[$random];
@@ -900,10 +884,8 @@ function tagPost(){
         }else{
             $result = NULL;
         }
-        
-        
-
     }
+
     return array($result, $name);
      
 }
@@ -914,14 +896,15 @@ function CreateLoginCookie($username, $encryptedPasswd, $ID){
     setcookie("ID", $ID, time() + 24*3600);
 }
 
+//Create cookies to store the user's last private messages interlocutor
 function CreateInterlocutorCookie($interlocutorID, $interlocutorName){
     setcookie("interlocutorID", $interlocutorID, time() + 24*3600);
     setcookie("interlocutorName", $interlocutorName, time() + 24*3600);
     
 }
 
-//Méthode pour détruire les cookies de Login
-//--------------------------------------------------------------------------------
+//Destroy Login and interlocutor Cookies once user logs out
+
 function DestroyLoginCookie(){
     setcookie("mail", NULL, -1 );
     setcookie("password", NULL, -1);
@@ -932,6 +915,8 @@ function DestroyLoginCookie(){
 }
 
 function CheckNewAccountForm(){
+
+
     global $conn;
 
     $creationAttempted = false;
@@ -940,11 +925,13 @@ function CheckNewAccountForm(){
 
     $ID = NULL;
 
-    //Données reçues via formulaire?
+    
     if(isset($_POST["name"]) && isset($_POST["password"]) && isset($_POST["confirm"])){
 
         $creationAttempted = true;
-        //CHANGER ORDRE DE VERIFICATION
+        /*Checks if information in the form is valid 
+         * 2 users can't have the same name or email address 
+         */
         //Form is only valid if password == confirm, and username is at least 4 char long
         if ( strlen($_POST["name"]) < 4 ){
             $error = "Your UserName must be at least 4 characters long";
@@ -953,7 +940,7 @@ function CheckNewAccountForm(){
             $error = "Password and confirmation password are different";
         }
         elseif($_POST["mail"]==" "){ /*TODO */
-            $error = "Le mail est invalide";
+            $error = "E-Mail is not valid";
         }
         else {
             $query="SELECT email
@@ -975,34 +962,24 @@ function CheckNewAccountForm(){
             $checkmail=$conn->query($query);
 
             if($checkmail->num_rows !=0){
-                $error = "This name address already belongs to somebody";
+                $error = "This name  already belongs to somebody";
                 return array($creationAttempted, $creationSuccessful, $error);
             }
 
 
-
-            /*$query="SELECT nickname
-            FROM personne
-            WHERE nickname LIKE '".$_POST["nickName"]."'";
-            $checkmail=$conn->query($query);
-            
-            if($checkmail->num_rows !=0){
-                $error = "Le surnom est déja prix";
-                return array($creationAttempted, $creationSuccessful, $error);
-            }*/
-
+                /*Add new user to the database */
                 $username = SecurizeString_ForSQL($_POST["name"]);
                 $nickname = SecurizeString_ForSQL($_POST["nickName"]);
 
                 $mail = $_POST["mail"];
 		        $password = md5($_POST["password"]);
 
-                $query = "INSERT INTO `personne` VALUES (NULL, '$username', '$nickname', '$password', '$mail', NULL )";/*IMAGE */
+                $query = "INSERT INTO `personne` VALUES (NULL, '$username', '$nickname', '$password', '$mail', NULL )";
 
                 $result = $conn->query($query);
 
                 
-
+                /*If no rows are affected, the query failed */
                 if( mysqli_affected_rows($conn) == 0 )
                 {
                     $error = "Error during SQL insertion, try entering names, nicknames and password without any special character";
