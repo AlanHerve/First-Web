@@ -87,15 +87,9 @@ switch($_GET["SIDE"]){
     }
         
             while($row = $result->fetch_assoc()){
-                /*RECUP LE NOMBRE DE LIKE */
                 /*Beginning of post container */
-                
-               
-                /*$timestamp = strtotime($row["TIME"]);*/
                 echo '<div id="MainContainerProfileSide1" >';
-                /* TODO : MAKE LINKS SPANS ? 
-                 * If user is the owner of the page, they get the option to edit or delete their posts
-                 */
+                /*  If user is the owner of the page, they get the option to edit or delete their posts */
                 if(isset($_COOKIE["ID"])){
                     if($_COOKIE["ID"]==$_GET["ID"]){
                         echo '<a title="Edit Post" href="./EditPost.php?ID='.$row["ID"].'&SIDE=1"><img src="./Images/Edit.png" class="circleButton"></a>';
@@ -233,7 +227,7 @@ switch($_GET["SIDE"]){
                     }
                 }
                 echo '
-                    <div class="divP">
+                    <div class="divFlexRow">
                         <div class="conhobby">';
                         if($row["MODIFIED"]==1){
                             echo '<p style="color:gray"><i>Modified '.formatDate($row["TIME"]).'</i></p>';

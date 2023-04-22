@@ -1,27 +1,34 @@
+
+/*This function is used to delete an image in the DeletePost section */
 function deleteImage(){
 
   var current = document.getElementById("current").value;
+  /*stores in the form that image n° current will need to be deleted
+   * in the database
+   */
   document.getElementById("deleteImage"+current).value = "0";
   
 
   var xmlhttp = new XMLHttpRequest();
+
   xmlhttp.onload = function(){
     var result = this.responseText;
     if(result == "error") alert("An error occured");
     else {
       const idOfPost = document.getElementById("idOfPost").value;
+      /*changes image n° current of post n° idOfPost */
       document.getElementById("imagePost"+idOfPost+"&"+current).src = result;
     }
     
     
-
+    /*hides Modal and notifies html that image n° current is a default image */
     document.getElementById("Modal").style.display = "none";
     document.getElementById("default"+current).value = "true";
   }
-  xmlhttp.open("post", "messageFunctions.php", true);
+  xmlhttp.open("post", "XMLFunctions.php", true);
   xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-  
+  /*Aks the database for the default image for the hobby */
   var parameters = "action=default&type="+document.getElementById("typeOfPost").value;
  
   /*Start the request*/
@@ -29,39 +36,40 @@ function deleteImage(){
 
 }
 
-
-
+/*Function allowing user to click on an image to display it in better proportions*/
 function zoomImage(obj){
+
+  /*plane of z-index > to that of the rest of the website */
   var modal = document.getElementById("Modal");
   modal.style.display = "block";
 
+  /*changes content of img element of the Modal */
   var image = document.getElementById("ModalImage");
   image.src = obj.src;
 
+  /*remove  useless string to keep only the ID of the Image inside the post
+   * (value between 1 and 4)
+   */
   const regex = /^.+&/ ;
-
   var ID = obj.id;
   ID = ID.replace(regex, "");
 
+  /*HTML element telling us if this image is the default image of the hobby or not */
   var defaultID = document.getElementById("default"+ID);
   if(defaultID){
+    /*if image is default, display text explaining it is default image */
     if (defaultID.value == "true")  document.getElementById("defaultPrompt").style.display = "none";
-    //document.getElementById("defaultExplanation").style.display = "block";
+    
   }
   
-
+  /*the current HTML element helps us identify the current image in the editPost page */
   if(document.getElementById("current")){
    
     document.getElementById("current").value = ID;
-
-   
     document.getElementById("fileToUpload"+ID).style.display="block";
     
   }
   
-
-  
-
   window.onclick = function(event){
     
     /*When window registers a click, if target of click is not our modal, close options */
@@ -78,15 +86,21 @@ function deZoomImage(defaultID){
  
   if(defaultID) document.getElementById("defaultPrompt").style.display = "block";
   var current = document.getElementById("current");
+  /*checks if we have a current element, if yes, hides it */
   if(current) document.getElementById("fileToUpload" + current.value).style.display="none";
   modal.style.display = "none";
+  /*remove the window onclik listener */
   window.onclick = null;
 }
 
 
+/*if more than one image per post, resizes it */
 function resizeImages(IdOfImages, numberOfImages){
     
+
+  /*original container for img is not fit for multiple elements */
     document.getElementById("potentialGrid"+IdOfImages).className = "gridImage";
+    /*original image class is not fit for the presence of otehr images alongside it */
     for(let i = 1; i<= numberOfImages; i++) document.getElementById("imagePost"+IdOfImages+"&"+i).className = "gridImageComponent";
 
 
@@ -118,11 +132,11 @@ function uploadComment(number){
         }
       }
       /*Sends the request via post to avoid cluttering url with useless information */
-      xmlhttp.open("post", "messageFunctions.php", true);
+      xmlhttp.open("post", "XMLFunctions.php", true);
       xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
       /*Parameters allows us to pass information to a "post" request
-       *action: behavior the messageFunctions.php page will take
+       *action: behavior the XMLFunctions.php page will take
        *ID : ID of the post
        *msg : text of the comment
        */
@@ -137,7 +151,7 @@ function uploadComment(number){
  * Amelioration Ideas : Add options to report comment ?
  * Create an admin role that can delete any comment ?
  */
-function destroyComment(number){
+function deleteComment(number){
 
     var xmlhttp = new XMLHttpRequest();
 
@@ -152,10 +166,10 @@ function destroyComment(number){
       }
     }
 
-    xmlhttp.open("post", "messageFunctions.php", true);
+    xmlhttp.open("post", "XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
    
-    var parameters = "action=destroyComment&ID="+number;
+    var parameters = "action=deleteComment&ID="+number;
     xmlhttp.send(parameters);
 
 }
@@ -186,7 +200,7 @@ function like(number){
       }
     }
 
-    xmlhttp.open("post", "messageFunctions.php", true);
+    xmlhttp.open("post", "XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     
     var parameters = "action=like&ID="+number;
@@ -211,16 +225,19 @@ function dislike(number){
 
     xmlhttp.onreadystatechange=function(){
         if(this.readyState==4 && this.status==200){
-            var substract = parseInt(document.getElementById("post"+number).value) - 1;
-        
-            document.getElementById("post"+number).value = substract;
-            document.getElementById("button"+number).innerHTML ="Like this post : "+  document.getElementById("post"+number).value;
-            document.getElementById("button"+number).disabled = false;
-            document.getElementById("button"+number).onclick = function () {like(number);}
+          /*parses the number of likes of current post stored in HTML*/
+          var substract = parseInt(document.getElementById("post"+number).value) - 1;
+          /*Reduces the number of likes displayed */
+          document.getElementById("post"+number).value = substract;
+
+          /*Changes text an behavior of button */
+          document.getElementById("button"+number).innerHTML ="Like this post : "+  document.getElementById("post"+number).value;
+          document.getElementById("button"+number).disabled = false;
+          document.getElementById("button"+number).onclick = function () {like(number);}
         }
     }
 
-    xmlhttp.open("post", "messageFunctions.php", true);
+    xmlhttp.open("post", "XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     
     var parameters = "action=dislike&ID="+number;
@@ -241,18 +258,16 @@ function closeComments(number){
     }
     /*changes behavior of button */
     document.getElementById("buttonComments"+number).onclick = function() {
-        /*displays comments but does not reload them
-         * TODO : is this the better solution ?
-         */
         openComments(number);
     };
 
+    /*Sets a timer to stop the reloading comments process after a certain time */
     document.getElementById("IdIntervalClose"+number).value = setInterval(function(){
       document.getElementById("closeCondition"+number).value = "true";
-    } , 2000);
+    } , 10000);
         
 }
-
+/*Function loading the comments */
 function loadComments(number){
   var xmlhttp = new XMLHttpRequest();
 
@@ -260,29 +275,35 @@ function loadComments(number){
 
     xmlhttp.onreadystatechange = function(){
         if(this.readyState==4 && this.status==200){
-            /*makes comment container visible */
+            
             
             /*Sets content of comment container */
             document.getElementById("historyComments"+number).innerHTML = this.responseText;
             
+            /*If the current post's comment section has been closed for a while, stop reloading process */
             if(document.getElementById("closeCondition"+number).value=="true"){
+              /*stops the reloading condition*/
               clearInterval(document.getElementById("IdInterval"+number).value);
+              /*sets the running state and closing condition back to original */
               document.getElementById("running"+number).value="false";
               document.getElementById("closeCondition"+number).value = "false";
-              
+
+              /*If the function is called while the relaoding loop is not set: */
             }else if(document.getElementById("running"+number).value=="false"){
+              /*Mark reloading loop for post n° "number" as active */
               document.getElementById("running"+number).value="true";
               
+              /*Sets the reloading loop and store it id in HTML element*/
               document.getElementById("IdInterval"+number).value =   setInterval(function(){
                loadComments(number);
-              }, 2000);
+              }, 7000);
 
                 
             }
         }
     }
 
-    xmlhttp.open("post", "messageFunctions.php", true);
+    xmlhttp.open("post", "XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     
     var parameters = "action=displayComments&ID="+number;
@@ -292,18 +313,23 @@ function loadComments(number){
 
 /*Open comments for the first time, loading them from the SQL database */
 function openComments(number){
+  /*If reloading loop not setup, calls function loadCOmments */
   if(document.getElementById("running"+number).value=="false") loadComments(number);
+
+  /*displays message */
   document.getElementById("historyComments"+number).style.display = "block";
-  if(document.getElementById("input"+number)){
-    document.getElementById("input"+number).style.display = "flex";
-  }
+
+  /*If the textarea element to write comments exists (if user is conencted) display it */
+  if(document.getElementById("input"+number)) document.getElementById("input"+number).style.display = "flex";
+  
   
   /*Change text and behavior of the open comment button */
   document.getElementById("buttonComments"+number).onclick = function() {closeComments(number)};
   document.getElementById("buttonComments"+number).innerHTML = "Hide Comments";
     
-  
+    /*Indicates the reloading loop still needs to be active */
     document.getElementById("closeCondition"+number).value = "false";
+    /*terminates the interval aiming to terminate the reloading loop*/
     clearInterval(document.getElementById("IdIntervalClose"+number).value);
   
 }

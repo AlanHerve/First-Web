@@ -115,7 +115,7 @@ echo '<div id="MainContainerProfileSide2" >';
                     }
                 }
                 echo '
-                    <div class="divP">
+                    <div class="divFlexRow">
                         <div class="conhobby">
                             <div class="titlehobby" >
                                 <h1>'.$row["NOM"].'</h1>';
@@ -208,7 +208,6 @@ DisconnectDatabase();
     </div>
 </div>
 
-
-</body>
-<footer>baahbahbah</footer>
-</html>
+<?php>
+include("Footer.php");
+?>

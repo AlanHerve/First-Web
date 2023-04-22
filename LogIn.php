@@ -6,6 +6,7 @@ $active = 5;
 
 include("Topnav.php");
 
+/*if user is not already connected */
 if(!isset($_GET["connect"])){
 	$loginStatus = CheckLogin();
 	if ( $loginStatus[0] ) {
@@ -19,6 +20,8 @@ if(!isset($_GET["connect"])){
 			<p>'.$loginStatus[2].'</p>
 		</div>';
 	}
+
+/*if user is already connected */
 }else{
 	DestroyLoginCookie();
 	$redirect = "Location:Index.php";
@@ -26,12 +29,10 @@ if(!isset($_GET["connect"])){
 }
 
 
-echo '<a href="https://www.w3schools.com/w3css/w3css_input.asp">ameliore</a>';
-
 
 ?>
 
-
+/*Log in form */
 <div id=MainContainerF>
 	<form action="./LogIn.php" class="formF" method="POST">
 		<label for="mail">Email</label>
@@ -48,8 +49,9 @@ echo '<a href="https://www.w3schools.com/w3css/w3css_input.asp">ameliore</a>';
 ?>
 </div>
 
-<div id=MainContainer>
-<p>Vous n'avez pas encore de compte ? Vous pouvez en créer un <a href="newAccount.php">ici</a></p>
+/*
+<div id=MainContainerF>
+<p>You do not already have an account ? Create one <a href="./newAccount.php">here</a></p>
 </div>
 
 

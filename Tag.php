@@ -52,7 +52,7 @@ $list = getAllTags();
 
 <?php
 /*Asks the database for a list of hobby posts with the same tag*/
-$queryHobbyPosts = tagPost();
+$queryHobbyPosts = fetchesPostsWithSpecifiedTag();
 
 /*Name of the hobby */
 $name = $queryHobbyPosts[1];
@@ -69,24 +69,27 @@ if($result!=NULL){
     if($name!=""){
         echo ' <h1>Hobby : '.$name.'</h1>';
     }
+    /*Line to indicate to user what kind of values are displayed in each column */
     echo '
     <div class="line" style="width:80%">
         <div class="fieldpic" style="vertical-align: middle; margin: auto">Avatar</div>
-        <div class="fieldtext">Nom</div>
+        <div class="fieldtext">Name</div>
         <div class="fieldtext">Experience</div>
-        <div class="fieldtext">Frequence</div>
-        <div class="fieldtext">Disponible</div>
+        <div class="fieldtext">Frequency</div>
+        <div class="fieldtext">Availability</div>
         <div class="fieldots" style="font-size:2vw">Options</div>
     
     </div>
     <div class="con">';
+    /*indicates if a personn with the corresponding tag was found */
     $found = false;    
 
-    $count = 0;
+    $numberOfPersonFound = 0;
+
     while($row = $result->fetch_assoc()){
 
-        $count +=1;
-
+        $numberOfPersonFound +=1;
+        /*At least one personn with the corresponding tag was found */
         $found=true;
     
         $result2 = getLine($row["OWNER"]);
@@ -143,7 +146,7 @@ if($result!=NULL){
     if(!$found){
         /*If we haven't found anyone with this hobby */
         echo '<p>NO ONE SEEMS TO PARTAKE IN THAT HOBBY AT THE MOMENT</p>';
-    }elseif($count<4){
+    }elseif($numberOfPersonFound<4){
         /*If the number of person found is > 0 but < 4, the page will display the default image for the hobby researched to occupy the empty space */
         $default = getDefault($row, 2);
 
@@ -175,25 +178,13 @@ if(isset( $_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE[
 
 <script>
 
-function other(number, connected, opened){
-    closeOptions(opened, connected);
-    displayOptions(opened, connected);
-}
 
+/*Displays Option modal if connected, alert message otherwise */
 function displayOptions(number, connected){
     if(connected){
-
-        /*var arrayOptions = document.getElementsByClassName("dots");
-
-        for(let i = 0; i < arrayOptions.length; i++){
-            if(arrayOptions[i].id!="dots"+number){
-                arrayOptions[i].onclick = function (){
-                    other(i, connected, number);
-                }
-            }
-        }*/
-
+        /*grays out the Options dots*/
         document.getElementById("dots"+number).style.color = "lightgray";
+        /*displays options */
         document.getElementById("options"+number).style.display = "block";
         document.getElementById("dots"+number).onclick = function(){closeOptions(number, connected);};
         window.onclick = function(event){
@@ -205,11 +196,10 @@ function displayOptions(number, connected){
        
         }
     }else{
-        alert("Please log in if you want to access options")
+        alert("Please log in if you want to access options");
     }
     
-}
-
+/*close options modal and return dots to original state */
 function closeOptions(number, connected){
     document.getElementById("dots"+number).style.color = null;
     document.getElementById("options"+number).style.display = null;

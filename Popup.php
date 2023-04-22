@@ -48,7 +48,7 @@ echo '
 ?> 
 
 <script>
-  function destroyMessage(number){
+  function deleteMessage(number){
    
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onload = function(){
@@ -58,10 +58,10 @@ echo '
         else alert(this.responseText);    
       
     }
-    xmlhttp.open("post", "messageFunctions.php", true);
+    xmlhttp.open("post", "XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
    
-    var parameters = "action=destroyMessage&ID="+number;
+    var parameters = "action=deleteMessage&ID="+number;
    
    
     xmlhttp.send(parameters);
@@ -87,7 +87,7 @@ echo '
 
       
     }
-    xmlhttp.open("post", "messageFunctions.php", true);
+    xmlhttp.open("post", "XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     
     xmlhttp.send("action=check&tocheck="+interlocutor);
@@ -106,7 +106,7 @@ function addInterlocutor(interlocutor){
         changeInterlocutor(person);
       
     }
-    xmlhttp.open("post", "messageFunctions.php", true);
+    xmlhttp.open("post", "XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     
     xmlhttp.send("action=add&toadd="+interlocutor);
@@ -121,7 +121,7 @@ function addInterlocutor(interlocutor){
         document.getElementById("people").innerHTML = this.responseText;
       
     }
-    xmlhttp.open("post", "messageFunctions.php", true);
+    xmlhttp.open("post", "XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     
     
@@ -178,7 +178,7 @@ function addInterlocutor(interlocutor){
         
       }
       
-      xmlhttp.open("post", "messageFunctions.php", true);
+      xmlhttp.open("post", "XMLFunctions.php", true);
       xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
       
       /*Identify the name of the interlocutor */
@@ -238,7 +238,7 @@ function addInterlocutor(interlocutor){
     }
 
 
-    xmlhttp.open("post", "messageFunctions.php", true);
+    xmlhttp.open("post", "XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
     /*parameters are the ID of the interlocutor as well as the content of the message you're sending */
@@ -258,7 +258,7 @@ function addInterlocutor(interlocutor){
         
       
     }
-    xmlhttp.open("post", "messageFunctions.php", true);
+    xmlhttp.open("post", "XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     
     xmlhttp.send("action=display&ID="+document.getElementById("interlocutor").value);

@@ -16,22 +16,24 @@ echo '<p><br><br><br></p>';
 
 
 $redirect = "Location:Index.php";
-
+/*If user isn't a connected user, redirects them */
 if(!isset($_GET["ID"]) || !isset($_COOKIE["ID"]) || !isset($_GET["SIDE"])){
     DisconnectDatabase();
     header($redirect);
-}elseif(!validate($_GET["SIDE"])){
-    DisconnectDatabase();
+
+/*If user isn't the owner of the post, redirects thel */
+}elseif(!($test = validate($_GET["SIDE"]))){
+   DisconnectDatabase();
    header($redirect);
+
+/*If form has been filled */
 }else if(isset($_POST["erase"])){
     suppressPost($_GET["SIDE"]);
     DisconnectDatabase();
     $redirect = "Location:Profile.php?ID=".$_COOKIE["ID"]."&SIDE=".$_GET["SIDE"];
     header($redirect);
 }
-/*REGARDER SI ENLEVER REDIRECT POSE PROBLEME */
 
- 
     $status = editPost($_GET["SIDE"]);
 
     $error = $status[0];
@@ -51,106 +53,95 @@ if(!isset($_GET["ID"]) || !isset($_COOKIE["ID"]) || !isset($_GET["SIDE"])){
     }
 
 
-    $test = validate($_GET["SIDE"]);
+    
     $valid = $test[0];
     $row = $test[1];
 
-    if(!validate($_GET["SIDE"])){
-    DisconnectDatabase();
-    header($redirect);
-    }
-
+  
+    /*If editing a post of type "hobby" */
     if($_GET["SIDE"]==1){
-
-        
-
-        
-
 
 
         echo '<div id="MainContainerProfileSide1">
                 <div>
-    
-    
 
-
-    <form id="myForm" action="./EditPost.php?ID='.$_GET["ID"].'&SIDE=1" method="POST" enctype="multipart/form-data">
-<input type="hidden" id="idOfPost" name="idOfPost" value='.$row["ID"].'>
-<input type="hidden" value="1" name = "newPost" id="newPost">
-<input type="hidden" name="owner" id="owner" value="'.$_GET["ID"].'">';  
-echo ' <div class="conhobby" style="width:100%">';
-if($row["MODIFIED"]==1){
-    echo '<p style="color:gray"><i>Modified '.formatDate($row["TIME"]).'</i></p>';
- }else{
-    echo '<p style="color:gray"><i>Posted '.formatDate($row["TIME"]).'</i></p>';
- }
-            echo '<div class="titlehobby">
-                <h1>'.$row["NOM"].'</h1>
-                <div class="tagPost">
-                    <p class="tagLightColor">
-                    <select class="post"  name="experience">';
-                    $text = array("Débutant", "Avancé", "Intermédiaire", "Expert", "Occasionnel");
-                    $value = array("Debutant", "Avance", "Intermediaire","Expert", "Occasionnel");
-                    $index =0;
-                    foreach ($value as &$value_i) {
-                        if($row["EXPERIENCE"]==$value_i){
-                            echo '<option value='.$value_i.' selected>'.$text[$index].'</option>';
+                    <form id="myForm" action="./EditPost.php?ID='.$_GET["ID"].'&SIDE=1" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" id="idOfPost" name="idOfPost" value='.$row["ID"].'>
+                        <input type="hidden" value="1" name = "newPost" id="newPost">
+                        <input type="hidden" name="owner" id="owner" value="'.$_GET["ID"].'">';  
+                 echo ' <div class="conhobby" style="width:100%">';
+                        /*display the time of post and if post was modified */
+                        if($row["MODIFIED"]==1){
+                        echo '<p style="color:gray"><i>Modified '.formatDate($row["TIME"]).'</i></p>';
                         }else{
-                            echo '<option value='.$value_i.'>'.$text[$index].'</option>';
+                        echo '<p style="color:gray"><i>Posted '.formatDate($row["TIME"]).'</i></p>';
                         }
+                        /*echoes the name of the hobby and selectors allowing user to choose
+                        * their experience, frequency, and availability
+                        */
+                      echo '<div class="titlehobby">
+                                <h1>'.$row["NOM"].'</h1>
+                                <div class="tagPost">
+                                    <p class="tagLightColor">
+                                        <select class="post"  name="experience">';
+                                        $text = array("Débutant", "Avancé", "Intermédiaire", "Expert", "Occasionnel");
+                                        $value = array("Debutant", "Avance", "Intermediaire","Expert", "Occasionnel");
+                                        $index =0;
+                                        /*Selects the right level of experience when opening the page*/
+                                        foreach ($value as &$value_i) {
+                                            if($row["EXPERIENCE"]==$value_i){
+                                                echo '<option value='.$value_i.' selected>'.$text[$index].'</option>';
+                                            }else{
+                                                echo '<option value='.$value_i.'>'.$text[$index].'</option>';
+                                        }
         
-                        $index++;
+                                        $index++;
                     }   
-                echo '
-                    </select></p>
-                    <p class="tagDarkColor">
-                    <select class="post"  name="frequence">';
-                    $text = array("Quotidien", "3 à 4 fois par semaine", "2 à 3 fois par semaine", "Hebdomadaire", "Mensuel", "Rarement");
-                    $value = array("Quotidien", "3-4/semaine", "2-3/Semaine", "Hebdomadaire", "Mensuel", "Rarement");
-                    $index =0;
-                    foreach ($value as &$value_i) {
-                        if($row["FREQUENCY"]==$value_i){
-                            echo '<option value='.$value_i.' selected>'.$text[$index].'</option>';
-                    }else{
-                            echo '<option value='.$value_i.'>'.$text[$index].'</option>';
-                    }
+                                  echo '</select>
+                                    </p>
+                                    <p class="tagDarkColor">
+                                        <select class="post"  name="frequence">';
+                                        $text = array("Quotidien", "3 à 4 fois par semaine", "2 à 3 fois par semaine", "Hebdomadaire", "Mensuel", "Rarement");
+                                        $value = array("Quotidien", "3-4/semaine", "2-3/Semaine", "Hebdomadaire", "Mensuel", "Rarement");
+                                        $index =0;
+                                        /*Selects the right Frequency when opening the page*/
+                                        foreach ($value as &$value_i) {
+                                            if($row["FREQUENCY"]==$value_i){
+                                                echo '<option value='.$value_i.' selected>'.$text[$index].'</option>';
+                                            }else{
+                                                echo '<option value='.$value_i.'>'.$text[$index].'</option>';
+                                            }
         
-                    $index++;
-                    }
-                echo '
-                    </select></p>
-                    <p class="tagLightColor">
-                    <select class="post" name="available">';
-                    if($row["AVAILABLE"]==1){
-                        echo '<option value="Yes" selected>Available</option>
-                              <option value="No">Not Available</option>';
-                    }else {
-                        echo '<option value="Yes">Available</option>
-                              <option value="No" selected>Not Available</option>';
-                    }
+                                            $index++;
+                                        }
+                                  echo '</select>
+                                    </p>
+                                    <p class="tagLightColor">
+                                    <select class="post" name="available">';
+                                    /*availability is stored as a binary value in sql database */
+                                    if($row["AVAILABLE"]==1){
+                                        echo '<option value="Yes" selected>Available</option>
+                                              <option value="No">Not Available</option>';
+                                    }else {
+                                        echo '<option value="Yes">Available</option>
+                                                <option value="No" selected>Not Available</option>';
+                                    }
                     
-                echo '
-                    </select>
-                    </p>
-                </div>
-            </div>
-        <div class="charahobby">
-
-            <textarea maxlength="100" class="post" name="content" placeholder="Ecrivez ici une petite description si vous le souhaitez">'.$row["DESCRIPTION"].'</textarea>
-
-        </div>
-        
-        
-    </div>' ;  
+                                echo '
+                                    </select>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="charahobby">
+                                <textarea maxlength="100" class="post" name="content" placeholder="Ecrivez ici une petite description si vous le souhaitez">'.$row["DESCRIPTION"].'</textarea>
+                            </div>
+                        </div>' ;  
         
   echo '
-       
-        </form>
-        </div>
-        
+                    </form>
+                </div>';
 
-        ';
-
+        /*if post does not have an image */
         if(!$row["IMAGE"]){
 
             /*gets default image corresponding to the hobby, see fileFunctions.php */
@@ -177,86 +168,88 @@ if($row["MODIFIED"]==1){
 
        echo'</div>';
 
+    /*if editing a post of type "regular" */
     }else{
 
         echo '<form id="myForm" action="./EditPost.php?ID='.$_GET["ID"].'&SIDE=2" method="POST" enctype="multipart/form-data">
-        <input type="hidden" id="idOfPost" name="idOfPost" value='.$row["ID"].'>
-        <input type="hidden" name="newPost" value="2">
-        <div id="MainContainerProfileSide2" >';
+                <input type="hidden" id="idOfPost" name="idOfPost" value='.$row["ID"].'>
+                <input type="hidden" name="newPost" value="2">
+                <div id="MainContainerProfileSide2" >';
                 echo '
-                    <div class="divP" style="border:solid">
+                    <div class="divFlexRow" style="border:solid">
                         <div class="conhobby">';
                         if($row["MODIFIED"]==1){
                             echo '<p style="color:gray"><i>Modified '.formatDate($row["TIME"]).'</i></p>';
                          }else{
                             echo '<p style="color:gray"><i>Posted '.formatDate($row["TIME"]).'</i></p>';
                          }
-                           echo' <div class="titlehobby" >
-                                <h1>'.$row["NOM"].'</h1>';
-                                if($row["MODIFIED"]==1){
-                                    echo '<h2>(Modifié le AJOUTER DATE)</h2>';
-                                }
+                              echo' <div class="titlehobby" >
+                                        <h1>'.$row["NOM"].'</h1>';
+                                        if($row["MODIFIED"]==1){
+                                            echo '<h2>(Modifié le AJOUTER DATE)</h2>';
+                                        }
                     echo '
-                            </div>
-                            <div class="charahobby">
-                        ';
-                                if($row["DESCRIPTION"]){
-                                    echo'<h4>Descritpion</h4>
-                                    <textarea maxlength="100" class="post" name="content" placeholder="Ecrivez ici une petite description si vous le souhaitez">'.$row["DESCRIPTION"].'</textarea>';
-                                }else{
-                                    echo '<textarea maxlength="100" class="post" name="content" placeholder="Ecrivez ici une petite description si vous le souhaitez">'.$row["DESCRIPTION"].'</textarea>';
-                    
-                                }
+                                    </div>
+                                    <div class="charahobby">';
+                                    if($row["DESCRIPTION"]){
+                                       echo'<h4>Descritpion</h4>
+                                            <textarea maxlength="100" class="post" name="content" placeholder="Ecrivez ici une petite description si vous le souhaitez">'.$row["DESCRIPTION"].'</textarea>';
+                                    }else{
+                                      echo '<textarea maxlength="100" class="post" name="content" placeholder="Ecrivez ici une petite description si vous le souhaitez">'.$row["DESCRIPTION"].'</textarea>';
+                                    }
              echo ' 
-                            </div>
-                        </div>
-                
-                
-                     <div id="potentialGrid'.$row["ID"].'" class="potentialGrid">' ;  
-                    $images = array("IMAGE1", "IMAGE2", "IMAGE3", "IMAGE4");  
-                    $countImage = 0;
-                    foreach($images as &$image){
+                                    </div>
+                                </div>
+                                <div id="potentialGrid'.$row["ID"].'" class="potentialGrid">' ;  
+                                    $images = array("IMAGE1", "IMAGE2", "IMAGE3", "IMAGE4");  
+                                    $countImage = 0;
+                                        foreach($images as &$image){
                         
-                        if($row[$image]!=NULL){
-                            $countImage++;
-                            echo '<img id="imagePost'.$row["ID"].'&'.$countImage.'" class="regularImage" src="./uploads/'.$row[$image].'" onclick="zoomImage(this)">
-                            <input type="hidden" value="1" name="deleteImage'.$countImage.'" id="deleteImage'.$countImage.'" form="myForm">
-                            <input type="hidden" id="default'.$countImage.'" name="default'.$countImage.'" value="false">';
-                        }
-                    }
-                    echo '<input type="hidden" value="'.$countImage.'" id="numberOfImage" name="numberOfImage">';
-                    if($countImage > 1){
-                        echo '<script>resizeImages('.$row["ID"].', '.$countImage.');</script>';
-                    }elseif($countImage == 0){
-                        $default = getDefault($row["TYPEID"], 1);
+                                            if($row[$image]!=NULL){
+                                                $countImage++;
+                                              echo '<img id="imagePost'.$row["ID"].'&'.$countImage.'" class="regularImage" src="./uploads/'.$row[$image].'" onclick="zoomImage(this)">
+                                                    <input type="hidden" value="1" name="deleteImage'.$countImage.'" id="deleteImage'.$countImage.'" form="myForm">
+                                                    <input type="hidden" id="default'.$countImage.'" name="default'.$countImage.'" value="false">';
+                                            }
+                                        }
+                              echo '<input type="hidden" value="'.$countImage.'" id="numberOfImage" name="numberOfImage">';
+                                if($countImage > 1){
+                                    /*if we have more than one image, resizes and rearrange them */
+                                    echo '<script>resizeImages('.$row["ID"].', '.$countImage.');</script>';
+                                }elseif($countImage == 0){
+                                    $default = getDefault($row["TYPEID"], 1);
 
-                        $error = $default[0];
-                        $image = $default[1];
+                                    $error = $default[0];
+                                    $image = $default[1];
     
-                        if($error == NULL){
-                            echo '<img id="imagePost'.$row["ID"].'&1" class="regularImage" src="./Images/'.$image.'" onclick="zoomImage(this)">
-                            <input type="hidden" id="default1" name="default1" value="true">';
-                           
-                        
-                        }else{
-                            /*TODO */
-                        }
-                    }
-                    echo '</div>
-                    
-            
-                    </div><p></p>
-                    
-                    
-            </div></form>';
+                                    if($error == NULL){
+                                        /*allows user to zoom on image */
+                                        echo '<img id="imagePost'.$row["ID"].'&1" class="regularImage" src="./Images/'.$image.'" onclick="zoomImage(this)">
+                                             <input type="hidden" id="default1" name="default1" value="true">';
+                                    }else{
+                                        /*TODO */
+                                    }
+                                }
+                          echo '</div>
+                            </div>
+                            <p></p>
+                        </div>
+                    </form>';
 
     }
+
+    
     echo '<input type="hidden" id="typeOfPost" name="typeOfPost" value="'.$row["TYPEID"].'" form="myForm">'
 
 
 ?></div>
+
+/*Submit button */
 <input type="submit" value="Edit" form="myForm">
 
+/*Modal displaying images user wants to see zoomed
+ * also allows user to change images
+ */
 <div id="Modal" class="imageModal">
     
         <!-- The Close Button -->
@@ -268,11 +261,13 @@ if($row["MODIFIED"]==1){
         <!-- Modal Caption (Image Text) -->
         <div id="caption"></div>
 
+        /*stores id of the current image */
         <input type="hidden" id="current" name="current" value="null">
         <div class="changePrompt">
             <label for="img">Changer d'image :</label>
             <input type="file" name="fileToUpload1" id="fileToUpload1" class="uploadImagePrompt" form="myForm">
             <?php
+                /*Regular post are allowed to have more than one image */
                 if($_GET["SIDE"]==2){
               echo '<input type="file" name="fileToUpload2" id="fileToUpload2" class="uploadImagePrompt" form="myForm">
                     <input type="file" name="fileToUpload3" id="fileToUpload3" class="uploadImagePrompt" form="myForm">

@@ -1,19 +1,26 @@
 <?php
-
+/*checks if file submitted is of valid format and upload it 
+ * if function succeeds or if file already exists, return the name of the file
+ */
 function checkFile($file_name){
+
+    /*directory where the image will be uploaded */
     $target_dir = "uploads/";
+    /*builds path the file will take during its upload */
     $target_file = $target_dir . basename($_FILES[$file_name]["name"]);
     $uploadOk = 1;
     $already = 0;
+
+    /*fetches type of image */
     $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
     
 
 
     $return_value = NULL;
+
+
+
     // Check if image file is a actual image or fake image
-
-  
-
     if(isset($_POST["newPost"]) && $_FILES[$file_name]["tmp_name"]!=NULL) {
       $check = getimagesize($_FILES[$file_name]["tmp_name"]);
       if($check !== false) {
@@ -51,9 +58,11 @@ function checkFile($file_name){
       } else {
         if (move_uploaded_file($_FILES[$file_name]["tmp_name"], $target_file) && $already==0) {
           echo "<p>The file ". htmlspecialchars( basename( $_FILES[$file_name]["name"])). " has been uploaded.</p>";
+          /*return the name of the file */
           $return_value = htmlspecialchars( basename( $_FILES[$file_name]["name"]));
         }elseif($already == 1){
           echo 'already';
+          
           $return_value = $_FILES[$file_name]["tmp_name"];
         } else {
           echo "<p>Sorry, there was an error uploading your file.</p>";
@@ -61,8 +70,6 @@ function checkFile($file_name){
         }
       } 
 
-    }else{
-      
     }
   
     return $return_value;
@@ -80,6 +87,7 @@ function getDefault($type, $mode){
 
   $image = NULL;
 
+  /*if mode!=1 we are in the page Tag.php */
   if($mode==1){
     $query = "SELECT IMAGE FROM hobby_list WHERE ID=".$type;
   }else{
