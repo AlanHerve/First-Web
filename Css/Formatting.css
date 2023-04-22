@@ -55,11 +55,8 @@ h1.blue{
     font-family: Arial, Helvetica;   
 }
 
-.contact{
-    border: none;
-}
 
-.divP{
+.divFlexRow{
     display: flex;
     flex-direction: row;
 }
@@ -95,10 +92,6 @@ textarea.post{
     min-height: 50%;
     resize:none;
 }
-
-/*#MainContainerF {
-    color: black;
-}*/
 
 .formF{
     display: flex;
@@ -156,8 +149,6 @@ button.line:hover{
 }
 
 
-
-
 .con2{
     display: flex;
 }
@@ -173,7 +164,6 @@ button.line:hover{
     margin-bottom: 3%;
 
 }
-
 
 
 .tag, .tagEdit{
@@ -210,9 +200,7 @@ button.line:hover{
     
 }
 
-
-/*VERIFIER PK TAG FREQUENCE EST DECALE*/
-
+/*tags for availability, experience, frequency*/
 .tagLightColor, .tagDarkColor{
     font-size: 1.62vw;
     display: inline-block;
@@ -245,6 +233,7 @@ button.line:hover{
 }
 
 
+/*Allows user to choose between displaying hobbies or regular posts*/
 .sideSelector {
   
     width: 40%;
@@ -285,41 +274,13 @@ button.line:hover{
     text-decoration-thickness: 0.30vw;
     }
 
-img.addPost{
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    padding: 3px;
-    border-radius: 50%;
-    
-    height: 50px;
-    width: 50px;
-    
-
-}
-
-img.addPost:hover{
-    background-color: rgb(255, 255, 255);
-}
-
-img.reaction{
-    position: fixed;
-
-    border-radius: 50%;
-    padding: 3px;
-    height: 50px;
-    width: 50px;
-    
-
-}
-
-img.reaction:hover{
-    background-color: rgb(255, 255, 255);
-}
 
 img.circleButton{
+
+    /*will stay above post but under chat and add popups as well as topnav*/
     position: absolute;
     z-index: 1;
+
     left: 88%;
     
     
@@ -348,7 +309,7 @@ img.circleButton:hover{
     vertical-align: middle;
     overflow-y: auto;
     overflow-x: hidden;
-    /*KEEP IN MIND*/
+   
  
 }
 /*---TAG FILTERS---*/    
@@ -398,7 +359,7 @@ button.tagbutton:hover{
 
 /*---TAG FILTERS END---*/ 
 
-/*put in another container*/
+
 form.index{
     width: 40%;
     height: 30%;
@@ -437,13 +398,3 @@ img.uniqueImageHobby{
 
 
 /*-----INDEX-----*/
-
-.linePost{
-    width: 100%;
-    border-bottom: solid;
-    border-color: lightgray;
-}
-
-
-
-

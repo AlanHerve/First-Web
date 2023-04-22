@@ -1,4 +1,6 @@
-/* Add a black background color to the top navigation */
+
+/*this navigtion bar was taken from : https://www.w3schools.com/howto/howto_js_topnav.asp*/
+
 .topnav {
   position: fixed;
   top: 0;
