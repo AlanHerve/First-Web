@@ -9,6 +9,8 @@ include("Topnav.php");
 
 if($newAccount[1]){
     $redirect = "Location:Profile.php?ID=".$newAccount[3];
+    session_start();
+    $_SESSION["inscription"]=1;
     header($redirect);
    
     

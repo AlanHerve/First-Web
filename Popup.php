@@ -31,6 +31,10 @@ echo '
 
         <label for="msg"><b>Message</b></label>
         <textarea maxlength="50" placeholder="Type message.." id="msg" name="msg" required rows="1"></textarea>
+        <input type="hidden" name="closeConditionPopup" id="closeConditionPopup" value="">
+        <input type="hidden" name="runningPopup" id="runningPopup" value="">
+        <input type="hidden" name="closeIntervalPopup" id="closeIntervalPopup" value="">
+        <input type="hidden" name="loadIntervalPopup" id="loadIntervalPopup" value="">
         <input type="hidden" name="kind" id="kind" value="1">
         <input type="hidden" name="interlocutor" id="interlocutor" value="0">
         <input type="hidden" name="interlocutorName" id="interlocutorName" value="0">
@@ -40,7 +44,9 @@ echo '
       </form>
   </div>
   
-  <script>initInterlocutor();</script>';
+  <script>initInterlocutor();
+  document.getElementById("runningPopup").value = "false";
+  document.getElementById("closeConditionPopup").value = "false";</script>';
   
   
 }
@@ -53,8 +59,11 @@ echo '
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onload = function(){
       
-        if(this.responseText != null)
-        document.getElementById("message"+number).remove();  
+        if(this.responseText != null){
+          document.getElementById("message"+number).remove();  
+          document.getElementById("time"+number).remove();
+        }
+        
         else alert(this.responseText);    
       
     }
@@ -74,7 +83,10 @@ echo '
       
         
         if(this.responseText=="false"){
+          var history = document.getElementById("historyMessages");
+          history.innerHTML = this.responseText;
           addInterlocutor(interlocutor);
+          
         }else if(this.responseText=="true"){
           var person = {name:null, value:interlocutor};
           changeInterlocutor(person, null);
@@ -156,6 +168,9 @@ function addInterlocutor(interlocutor){
   
   /*Changes the user you're currently speaking with*/
   function changeInterlocutor(obj){
+
+    var history = document.getElementById("historyMessages");
+        history.innerHTML = this.responseText;
 
     if(obj.name == null){
         /*If parameter does not specify the name of the user*/
@@ -258,6 +273,7 @@ function addInterlocutor(interlocutor){
         
       
     }
+
     xmlhttp.open("post", "XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     
@@ -275,6 +291,16 @@ function addInterlocutor(interlocutor){
     /*Returns element with id = myFrom*/
     var Pop = document.querySelector("#myForm");
 
+
+    
+   
+    
+    if(document.getElementById("runningPopup").value == "false"){
+      
+
+      loadMessages();
+    }
+
     /*If clicks outside of popup or open button, close popup (have to put openbutton in the allowed element, otherwise the popup won't open)*/
     window.onclick = function(event){
         /*When window registers a click, if target of click is not our modal, close options */
@@ -282,11 +308,55 @@ function addInterlocutor(interlocutor){
           closeForm();
         }
     }
+
+
+    /*Indicates the reloading loop still needs to be active */
+    document.getElementById("closeConditionPopup").value = "false";
+    /*terminates the interval aiming to terminate the reloading loop*/
+    clearInterval(document.getElementById("closeIntervalPopup").value);
   }
   
   function closeForm() {
     document.getElementById("myForm").style.display = "none";
+
+    document.getElementById("closeIntervalPopup").value = setInterval(function(){
+      document.getElementById("closeConditionPopup").value = "true";
+    } , 10000);
   }
+
+  function loadMessages(){
+    /*Sets content of comment container */
+          
+            /*If the current post's comment section has been closed for a while, stop reloading process */
+            if(document.getElementById("closeConditionPopup").value=="true"){
+              
+              /*stops the reloading condition*/
+              clearInterval(document.getElementById("loadIntervalPopup").value);
+              /*sets the running state and closing condition back to original */
+              document.getElementById("runningPopup").value="false";
+              document.getElementById("closeConditionPopup").value = "false";
+
+              /*If the function is called while the relaoding loop is not set: */
+            }else if(document.getElementById("runningPopup").value=="false"){
+
+           
+              /*Mark reloading loop for post n° "number" as active */
+              document.getElementById("runningPopup").value="true";
+              displayMessages(document.getElementById("interlocutor"));
+              /*Sets the reloading loop and store it id in HTML element*/
+              document.getElementById("loadIntervalPopup").value =   setInterval(function(){
+               loadMessages();
+              }, 7000);
+
+                
+            }else{
+              displayMessages(document.getElementById("interlocutor"));
+            }
+  }
+
+
+
+  
   
   
 </script>

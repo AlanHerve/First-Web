@@ -4,6 +4,7 @@
 include("databaseFunctions.php");
 include("fileFunctions.php");
 
+echo'<p><br><br><br><br></p>';
 
 ConnectDatabase();
 
@@ -13,7 +14,7 @@ if(!isset($_COOKIE["ID"]) || !isset($_GET["ID"]) || !isset($_GET["SIDE"])){
     header($redirect);
 
 /*If new post form has been filled */
-}elseif(isset($_POST["newPost"])){
+}elseif(isset($_POST["processForm"])){
 
     /*newPost only returns a potential error */
     $error = newPost($_GET["SIDE"]);
@@ -50,7 +51,7 @@ if($_GET["SIDE"]==1){
       echo '<div id="MainContainerProfileSide1">
                 <div>
                     <form id="myForm" action="./newPost.php?ID='.$_GET["ID"].'&SIDE=1" method="POST" enctype="multipart/form-data">
-                        <input type="hidden" value="1" name = "newPost" id="newPost">
+                        <input type="hidden" value="1" name = "processForm" id="processForm">
                         <input type="hidden" name="owner" id="owner" value="'.$_GET["ID"].'">
                         <div class="conhobby" style="width:100%">
                             <label for="Nom">Hobby :</label>
@@ -61,29 +62,29 @@ if($_GET["SIDE"]==1){
                                  */
                                 while($row = $status[0]->fetch_assoc()){
                                     $s = (string) $row["ID"];
-                                    $p = (string) $row["NOM"];
-                                    echo '<option value="'.$s.'|'.$p.'">'.$row["NOM"].'</option>';
+                                    $p = (string) $row["HOBBY_NAME"];
+                                    echo '<option value="'.$s.'|'.$p.'">'.$p.'</option>';
                 
                                 }
 ?>
                                 </select></h1>
                                 <p class="tagLightColor">
                                     <select class="post"  name="experience">
-                                        <option value="Debutant">Beginner</option>
-                                        <option value="Avance">Intermediate</option>
-                                        <option value="Intermediaire">Advanced</option>
+                                        <option value="Beginner">Beginner</option>
+                                        <option value="Intermediate">Intermediate</option>
+                                        <option value="Advanced">Advanced</option>
                                         <option value="Expert">Expert</option>
-                                        <option value="Occasionnel">Casual</option>
+                                        <option value="Casual">Casual</option>
                                     </select>
                                 </p>
                                 <p class="tagDarkColor">
                                     <select class="post"  name="frequence">
-                                        <option value="Quotidien">Daily</option>
-                                        <option value="3-4/semaine">3-4/week</option>
-                                        <option value="2-3/semaine">2-3/week</option>
-                                        <option value="Hebdomadaire">Weekly</option>
-                                        <option value="Mensuel">Monthly</option>
-                                        <option value="Rarement">Rarely</option>
+                                        <option value="Beginner">Daily</option>
+                                        <option value="3-4/week">3-4/week</option>
+                                        <option value="2-3/week">2-3/week</option>
+                                        <option value="Weekly">Weekly</option>
+                                        <option value="Monthly">Monthly</option>
+                                        <option value="Rarely">Rarely</option>
                                     </select>
                                 </p>
                                 <p class="tagLightColor">
@@ -101,7 +102,7 @@ if($_GET["SIDE"]==1){
                     </form>
                 </div>
                 <label for="img">An image to illustrate :</label>
-                <input type="file" name="fileToUpload1" id="fileToUpload1">
+                <input type="file" name="fileToUpload1" id="fileToUpload1" form="myForm">
             </div>
             
         <input type="submit" value="Post" form="myForm">';
@@ -123,9 +124,9 @@ if($_GET["SIDE"]==1){
 
 echo '
 <div id="MainContainerProfileSide2">
-    <div class="divFlexRow">
+    
         <form id="myForm" action="./newPost.php?ID='.$_GET["ID"].'&SIDE=2" method="POST" enctype="multipart/form-data">
-            <input type="hidden" value="1" name = "newPost" id="newPost">
+            <input type="hidden" value="1" name = "processForm" id="processForm">
             <div class="conhobby">
                 <div class="titlehobby">
                     <label for="Nom">Hobby :</label>
@@ -139,21 +140,24 @@ echo '
                     }
         
                 echo ' 
-                </select></h1>
+                    </select></h1>
+                </div>
+                <div class="charahobby">
+                    <textarea maxlength="100" class="post" name="content" placeholder="Ecrivez ici une petite description si vous le souhaitez"></textarea>
+                </div>
             </div>
-            <div class="charahobby">
-                <textarea maxlength="100" class="post" name="content" placeholder="Ecrivez ici une petite description si vous le souhaitez"></textarea>
+            <div>
+                <label for="img">Up to 4 images to illustrate :</label>
+                <input type="file" name="fileToUpload1" id="fileToUpload1">
+                <input type="file" name="fileToUpload2" id="fileToUpload2">
+                <input type="file" name="fileToUpload3" id="fileToUpload3">
+                <input type="file" name="fileToUpload4" id="fileToUpload4">
             </div>
+        </form>
     
 </div>
-<div><label for="img">Up to 4 images to illustrate :</label>
-<input type="file" name="fileToUpload1" id="fileToUpload1">
-<input type="file" name="fileToUpload2" id="fileToUpload2">
-<input type="file" name="fileToUpload3" id="fileToUpload3">
-<input type="file" name="fileToUpload4" id="fileToUpload4"></div>
-</div>
-
-</div>';
+        
+    <input type="submit" value="Post" form="myForm">';
 
 
     }else{
@@ -163,10 +167,7 @@ echo '
     }
 
 
-        echo '
-        </form>
-        <input type="submit" value="Post" form="myForm">
-        </div>';
+        
 }
 
 

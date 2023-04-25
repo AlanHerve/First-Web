@@ -20,9 +20,9 @@ if(!isset($_GET["ID"]) || !isset($_COOKIE["ID"]) || !isset($_GET["SIDE"])){
     header($redirect);
 }
 
-$test = validate($_GET["SIDE"]);
-$valid = $test[0];
-$row = $test[1];
+$testIfOwner = validate($_GET["SIDE"]);
+$valid = $testIfOwner[0];
+$row = $testIfOwner[1];
 
 if(!validate($_GET["SIDE"])){
     DisconnectDatabase();
@@ -53,7 +53,7 @@ if(isset($_COOKIE["ID"])){
 echo ' <div class="conhobby">
 
     <div class="titlehobby">
-        <h1>'.$row["NOM"].'</h1>
+        <h1>'.$row["HOBBY_NAME"].'</h1>
         <div class="tagPost"><p class="tagLightColor">'.$row["EXPERIENCE"].'</p><p class="tagDarkColor">'.$row["FREQUENCY"].'</p>';
 
         /*Availability is stored in the SQL database as a binary value */
@@ -118,7 +118,7 @@ echo '<div id="MainContainerProfileSide2" >';
                     <div class="divFlexRow">
                         <div class="conhobby">
                             <div class="titlehobby" >
-                                <h1>'.$row["NOM"].'</h1>';
+                                <h1>'.$row["HOBBY_NAME"].'</h1>';
                                 if($row["MODIFIED"]==1){
                                     echo '<h2>(Modifié le AJOUTER DATE)</h2>';
                                 }
@@ -208,6 +208,6 @@ DisconnectDatabase();
     </div>
 </div>
 
-<?php>
-include("Footer.php");
+<?php
+include("./Footer.php");
 ?>

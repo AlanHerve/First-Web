@@ -5,9 +5,10 @@ function ConnectDatabase(){
     $servername = "localhost";
     $username = "root";
     $password = "root";
-    $dbname = "projetessai";
+    $dbname = "hobbysharedatabase";
+   
     global $conn;
-    
+
     $conn = new mysqli($servername, $username, $password, $dbname);
 
     // Check connection
@@ -64,7 +65,7 @@ function CheckLogin(){
     //Si un login a été tenté, on interroge la BDD
     if ($loginAttempted){
         
-        $query = "SELECT * FROM personne WHERE EMAIL = '".$mail."' AND PASSWORD ='".$password."'";
+        $query = "SELECT * FROM users WHERE EMAIL = '".$mail."' AND PASSWORD ='".$password."'";
         //echo '<p>'.$query.'</p>';
         $result = $conn->query($query);
         $tap = $result->fetch_assoc();
@@ -96,25 +97,27 @@ function suppressPost($mode){
         case 1:$query = "DELETE FROM hobby_post
         WHERE ID=".$_GET["ID"];
 
-        $result = $conn->query($query);
-
         break;
         case 2: $query = "DELETE FROM regular_post
         WHERE ID=".$_GET["ID"];
-
-        $result = $conn->query($query);
-
-        $query = "DELETE FROM comments WHERE POST=".$_GET["ID"];
-
         break;
     }
+    $result = $conn->query($query);
 
     if(!$result){
         $error = "NO FILE TO DELETE OR COULDN'T DELETE FILE";
     }elseif($mode==2){
+        $query = "DELETE FROM comments WHERE POST=".$_GET["ID"];
         $result = $conn->query($query);
 
-        if(!$result) $error = "ERROR IN DELETING COMMENTS";
+        if(!$result){
+            $error = "ERROR IN DELETING COMMENTS";
+        }else{
+            $query = "DELETE FROM likes WHERE POST_ID=".$_GET["ID"];
+            $result = $conn->query($query);
+            if(!$result) $error = "ERROR IN DELETING LIKES";
+        }
+
     }
 
     return $error;
@@ -187,13 +190,13 @@ function newPost($mode){
             /*if user is uploading an image */
             
             if(isset($_FILES["fileToUpload1"]["name"]) && $good!=NULL){
-                $query = "INSERT INTO hobby_post (ID, NOM, EXPERIENCE, FREQUENCY, AVAILABLE, IMAGE1, OWNER, DESCRIPTION, TYPEID) VALUES
+                $query = "INSERT INTO hobby_post (ID, HOBBY_NAME, EXPERIENCE, FREQUENCY, AVAILABLE, IMAGE, OWNER, DESCRIPTION, TYPEID) VALUES
                 (NULL, \"".$values_explode[1]."\", \"".$_POST["experience"]."\", \"".$_POST["frequence"]."\", ".$present.", '".$_FILES["fileToUpload1"]["name"]."', ".$_POST["owner"].", \"".SecurizeString_ForSQL($content)."\", ".$values_explode[0].")";
             }elseif(isset($_FILES["fileToUpload1"]["name"]) && $_FILES["fileToUpload1"]["name"]!="" && $good == NULL){
                 $error = "FILE TYPE IS NOT OF ACCEPTABLE TYPE";
             }else{
                 
-                $query = "INSERT INTO hobby_post (ID, NOM, EXPERIENCE, FREQUENCY, AVAILABLE, IMAGE, OWNER, DESCRIPTION, TYPEID) VALUES
+                $query = "INSERT INTO hobby_post (ID, HOBBY_NAME, EXPERIENCE, FREQUENCY, AVAILABLE, IMAGE, OWNER, DESCRIPTION, TYPEID) VALUES
                 (NULL, \"".$values_explode[1]."\", \"".$_POST["experience"]."\", \"".$_POST["frequence"]."\", ".$present.", NULL, ".$_POST["owner"].", \"".SecurizeString_ForSQL($content)."\", ".$values_explode[0].")";
             }
 
@@ -221,7 +224,7 @@ function newPost($mode){
 
             
 
-            $query = "INSERT INTO regular_post (ID, NOM, IMAGE1, IMAGE2, IMAGE3, IMAGE4, OWNER, DESCRIPTION, TYPEID) VALUES
+            $query = "INSERT INTO regular_post (ID, HOBBY_NAME, IMAGE1, IMAGE2, IMAGE3, IMAGE4, OWNER, DESCRIPTION, TYPEID) VALUES
             (NULL, \"".$values_explode[1]."\",";
         
         for ($i=1; $i<=4; $i++){
@@ -246,7 +249,7 @@ function newPost($mode){
 
         }
 
-       
+        echo $query;
 
         return $error;
  
@@ -263,7 +266,7 @@ function editPost($mode){
 
     $row = NULL;
 
-    if(!isset($_POST["newPost"])){
+    if(!isset($_POST["processForm"])){
         /* */
         if($mode == 1){
             $query = "SELECT * FROM hobby_post WHERE OWNER=".$_COOKIE["ID"]." AND ID=".$_GET["ID"];
@@ -336,7 +339,7 @@ function editPost($mode){
                 $error = "FILE TYPE IS NOT OF ACCEPTABLE TYPE";
                 $redirect = false;
             }elseif($_POST["deleteImage1"]==0){
-                $query = $query."IMAGE=NULL ";
+                $query = $query."IMAGE=NULL, ";
                 $redirect = true;
             }
 
@@ -421,7 +424,7 @@ function hobbiesRemaining(){
     $servername = "localhost";
     $username = "root";
     $password = "root";
-    $dbname = "projetessai";
+    $dbname = "hobbysharedatabase";
 
     $conn = mysqli_connect($servername, $username, $password, $dbname);
 
@@ -430,7 +433,7 @@ function hobbiesRemaining(){
     $count=0;
     
 
-    $query ="SELECT NOM, ID FROM hobby_list";
+    $query ="SELECT HOBBY_NAME, ID FROM hobby_list";
 
     $listOfHobbies = mysqli_query($conn, $query);
 
@@ -443,7 +446,7 @@ function hobbiesRemaining(){
         $result = mysqli_query($conn, $query );
         if($result){
             /*Once complete, will get all hobies the user has not already */
-            $query = "SELECT NOM, ID FROM hobby_list WHERE ID NOT IN (";
+            $query = "SELECT HOBBY_NAME, ID FROM hobby_list WHERE ID NOT IN (";
         
             while($row = $result->fetch_assoc()){
 
@@ -458,7 +461,7 @@ function hobbiesRemaining(){
             $length = strlen($query) - 1;
             if($query[$length]=="("){
                 /*if no hobby already posted, select everything */
-                $query = "SELECT NOM, ID FROM hobby_list";
+                $query = "SELECT HOBBY_NAME, ID FROM hobby_list";
             }else{
                 if($count<$max){
                     /*completes query to avoid syntax error */
@@ -514,7 +517,7 @@ function getAvailableTags($mode){
             
     while($row = $result->fetch_assoc()){     
         if(!in_array($row["TYPEID"], $IDs)){
-            array_push($tags, $row["NOM"]);
+            array_push($tags, $row["HOBBY_NAME"]);
             array_push($IDs, $row["TYPEID"]);
             $found += 1;  
         }
@@ -547,7 +550,7 @@ function editProfile(){
 
     if(isset($_POST["new"])){
         $tryEdit = true; 
-        $query = "SELECT * FROM personne WHERE ID=".$_GET["ID"];
+        $query = "SELECT * FROM users WHERE ID=".$_GET["ID"];
         $result = $conn->query($query);
 
         
@@ -555,12 +558,12 @@ function editProfile(){
         if($row){
             
 
-            $query = "UPDATE personne
+            $query = "UPDATE users
                       SET ";
 
         if(isset($_POST["name"])){
-            if($_POST["name"]!=$row["NOM"] && $_POST["name"]!=""){
-                $query = $query."NOM='".$_POST["name"]."',";
+            if($_POST["name"]!=$row["NAME"] && $_POST["name"]!=""){
+                $query = $query."NAME='".$_POST["name"]."',";
                 $success = true;
             }else{
 
@@ -606,6 +609,27 @@ function editProfile(){
                 }
                 
             }
+
+            
+
+            $good = checkFile("fileToUpload1");
+            
+           
+
+            if(isset($_FILES["fileToUpload1"]["name"]) && $good!=NULL){
+                $query = $query."AVATAR='".SecurizeString_ForSQL($_FILES["fileToUpload1"]["name"])."',";
+                $success = true;
+            }elseif($good == NULL && $_FILES["fileToUpload1"]["name"]!=""){
+                $error = "FILE TYPE IS NOT OF ACCEPTABLE TYPE";
+                $success = false;
+            }elseif($_POST["deleteImage1"]==0){
+                $query = $query."AVATAR=NULL ";
+                $success = true;
+            }
+
+            echo $_FILES["fileToUpload1"]["name"].'<br>';
+    
+
                 if($success){
                     $length = strlen($query) - 1;
                     $query[$length] = " ";
@@ -616,13 +640,15 @@ function editProfile(){
         }
     }else{
         
-        $query = "SELECT * FROM personne WHERE ID=".$_GET["ID"];
+        $query = "SELECT * FROM users WHERE ID=".$_GET["ID"];
         $result = $conn->query($query);
     
         $row = $result->fetch_assoc();
     }
+    
 
-    return array($row, $success, $error, $query);
+
+    return array($row, $success, $error);
 
 }
 
@@ -637,14 +663,13 @@ function getProfile($addToConversationButton){
     $found = 0;    
 
     $error = NULL;
-
     
-    $query = 'SELECT * FROM personne WHERE ID='.$_GET["ID"];
+    $query = 'SELECT * FROM users WHERE ID='.$_GET["ID"];
 
     /*checks database if user with ID mentionned in webpage url exists */
     if ( $guy = $conn->query($query) ){
 
-        if($personne = $guy->fetch_assoc()){
+        if($user = $guy->fetch_assoc()){
 
         $found = 1;
         
@@ -655,7 +680,7 @@ function getProfile($addToConversationButton){
         $result = $conn->query($query);
         
         /*Beginning of request to get the name of the hobbies */
-        $query = "SELECT NOM, ID FROM hobby_list WHERE ID IN (";
+        $query = "SELECT HOBBY_NAME, ID FROM hobby_list WHERE ID IN (";
 
         /*For each hobby, add its ID to the request */
         while($row = $result->fetch_assoc()){
@@ -666,10 +691,12 @@ function getProfile($addToConversationButton){
         $length = strlen($query) - 1;
         $query[$length] = ")";
 
+       
         $result = $conn->query($query);
         
         /*Container of the user's profile */
-        echo ' <div id="ProfileContainer">';
+        echo ' 
+    <div id="ProfileContainer">';
 
         /*If user is the owner of the page, they get the option to edit their profile */
         if(isset($_COOKIE["ID"]) && isset($_COOKIE["ID"])){
@@ -679,43 +706,44 @@ function getProfile($addToConversationButton){
         }
 
         echo '
-        <div class="con2">
-        ';
-        if($personne["avatar"]!=NULL){
-            echo '
-        <img class="pic" src="./Images/'.$personne["avatar"].'">';
+        <div class="con2">';
+        if($user["AVATAR"]!=NULL){
+echo '      <img class="pic" src="./uploads/'.$user["AVATAR"].'" onclick="zoomImage(this)">';
         }else {
             /*If person does not have an avatar, display the default image */
-            echo '
-        <img class="pic" src="./Images/img_avatar.png">';
+echo '      <img class="pic" src="./Images/img_avatar.png" onclick="zoomImage(this)">';
         }
 /*TODO : make $var a span */
-        echo '
-        <div class="con">
-            <div class="name">
-                '.$personne["NOM"].' '.$addToConversationButton.'
-            </div>
-            <div class="nickname">
-                '.$personne["NICKNAME"].'
-            </div>
-            <div class="tagArea">';
+echo '      <div class="con">
+                <div class="name">
+                    '.$user["NAME"].' '.$addToConversationButton.'
+                </div>
+                <div class="nickname">
+                    '.$user["NICKNAME"].'
+                </div>
+                <div class="tagArea">';
 /*If query returned something, the user has already published hobbies on the website
 Each hobby tag is a link to the Tag.php page */
-        if($result){
-            while($row = $result->fetch_assoc()){
-            echo'<div class="tag">
-                <a class="tag" href="Tag.php?TAG='.$row["ID"].'">'.$row["NOM"].'</a>
-            </div>';
-            }   
-        }else{
-            echo'<p><i>This person does not seem to have any hobby yet...</i></p>';
-        }
+                if($result){
+                    while($row = $result->fetch_assoc()){
+        echo'       <div class="tag">
+                        <a class="tag" href="Tag.php?TAG='.$row["ID"].'">'.$row["HOBBY_NAME"].'</a>
+                    </div>';
+                    }   
+                }else{
+                    if(isset( $_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE["ID"])){
+        echo'       <p><i>You do not seem to have any hobby yet...</i></p>';
+                    }else{
+        echo'       <p><i>This person does not seem to have any hobby yet...</i></p>';
+                    }
+        
+                }
 /*close the divs of tagArea, con and con2 */
         echo '
             </div>
 
         </div>
-        </div>
+    </div>
         
         <div class="sideSelector">';
 /*Allows user to choose between displaying a user's hobbies or their posts */
@@ -729,10 +757,9 @@ Each hobby tag is a link to the Tag.php page */
             }
         }
             
-        echo '</div>';
-
-        echo '</div>';
-        //TODO : changer les echos pour gerer les différents cas
+        echo '</div>
+        </div>';
+       
         }else{
          
         $error = "COULD NOT FIND ANYONE WITH THIS ID";
@@ -771,7 +798,7 @@ function formatDate($timeOfItem){
     if($difference->d!=0){
         return "the : ".date("d/m/Y", strtotime($timeOfItem));
     }else{
-        return "today : ".date("h:i", strtotime($timeOfItem));
+        return "today : ".date("H:i", strtotime($timeOfItem));
     }
 
 }
@@ -834,7 +861,7 @@ function getLine($owner){
 
     global $conn;
 
-    $query2 = "SELECT * FROM personne WHERE ID=".$owner;
+    $query2 = "SELECT * FROM users WHERE ID=".$owner;
     $result2 = $conn->query($query2);
     $result2 = $result2->fetch_assoc();
 
@@ -855,7 +882,7 @@ function fetchesPostsWithSpecifiedTag(){
 
         $row = $result->fetch_assoc();
 
-        $name = $row["NOM"];
+        $name = $row["HOBBY_NAME"];
        
         $query="SELECT * FROM hobby_post WHERE TYPEID=".$_GET["TAG"];
         $result = $conn->query($query);
@@ -943,8 +970,8 @@ function CheckNewAccountForm(){
             $error = "E-Mail is not valid";
         }
         else {
-            $query="SELECT email
-            FROM personne
+            $query="SELECT EMAIL
+            FROM users
             WHERE email LIKE '".$_POST["mail"]."'";
             $checkmail=$conn->query($query);
             $ID = "1";
@@ -956,9 +983,9 @@ function CheckNewAccountForm(){
                 return array($creationAttempted, $creationSuccessful, $error);
             }
             
-            $query="SELECT nom
-            FROM personne
-            WHERE nom LIKE '".$_POST["name"]."'";
+            $query="SELECT NAME
+            FROM users
+            WHERE NAME LIKE '".$_POST["name"]."'";
             $checkmail=$conn->query($query);
 
             if($checkmail->num_rows !=0){
@@ -974,7 +1001,7 @@ function CheckNewAccountForm(){
                 $mail = $_POST["mail"];
 		        $password = md5($_POST["password"]);
 
-                $query = "INSERT INTO `personne` VALUES (NULL, '$username', '$nickname', '$password', '$mail', NULL )";
+                $query = "INSERT INTO `users` VALUES (NULL, '$username', '$nickname', '$password', '$mail', NULL )";
 
                 $result = $conn->query($query);
 
@@ -987,11 +1014,8 @@ function CheckNewAccountForm(){
                 else{
 
                     /*SINCE ID is an autoincrement, we need to ask the SQL database which ID the new user got */
-                    $query= "SELECT * FROM personne WHERE EMAIL='".$mail."'";
-                    $result = $conn->query($query);
-                    
-                    $row = $result->fetch_assoc();
-                    $ID = $row["ID"];
+                   
+                    $ID = $conn->insert_id;
 
                     CreateLoginCookie($mail, $password, $ID);
                     $creationSuccessful = true;
