@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="./Css/Post.css">
 <link rel="stylesheet" href="./Css/Profile.css">
 <link rel="stylesheet" href="./Css/Popup.css">
+
 <script type="text/javascript" src="./profile.js"></script>
 <?php
 
@@ -16,26 +17,28 @@ $active = 0;
 if(isset( $_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE["ID"]) && !isset($_GET["ID"])){
 
     $redirect="Location:Profile.php?ID=".$_COOKIE["ID"];
-    
+   
     header($redirect);
 
 /*If no user is connected an no ID is specified, redirects to Index */
 }elseif((!isset( $_COOKIE["mail"] ) || !isset( $_COOKIE["password"] ) || !isset($_COOKIE["ID"])) && !isset($_GET["ID"])){
 
     $redirect="Location:Index.php";
+    
+    header($redirect);
 
-    header($redirect);
-}
 /*If no side is specified, redirect to the "Hobbies" side */
-if(!isset($_GET["SIDE"])){
+}elseif(!isset($_GET["SIDE"])){
     $redirect = "Location:Profile.php?ID=".$_GET["ID"]."&SIDE=1";
+   
     header($redirect);
-}
+
 
 
 /*If we are on the "Posts" side and post are not filtered by their hobby sets TAG to none */
-if(!isset($_GET["TAG"]) && $_GET["SIDE"]==2){
+}elseif(!isset($_GET["TAG"]) && $_GET["SIDE"]==2){
     $redirect = "Location:Profile.php?ID=".$_GET["ID"]."&SIDE=2&TAG=none";
+    
     header($redirect);
 }
 
@@ -57,6 +60,13 @@ if(isset( $_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE[
         displayPopUp($_GET["ID"]);
     }
    
+}
+
+if(isset($_SESSION["inscription"])){
+    echo '<div id=ErrorContainer style="background-color:lightblue;border-color:white">
+    <p> Congrats on creating you new Account ! </p>
+</div>';
+unset($_SESSION["inscription"]);
 }
 
 include("Topnav.php");
@@ -85,6 +95,7 @@ switch($_GET["SIDE"]){
         <p>'.$error.'</p>
     </div>');
     }
+    
         
             while($row = $result->fetch_assoc()){
                 /*Beginning of post container */
@@ -109,7 +120,7 @@ switch($_GET["SIDE"]){
          }
                
                   echo '<div class="titlehobby">
-                        <h1>'.$row["NOM"].'</h1>
+                        <h1>'.$row["HOBBY_NAME"].'</h1>
                         <div class="tagPost"><p class="tagLightColor">'.$row["EXPERIENCE"].'</p><p class="tagDarkColor">'.$row["FREQUENCY"].'</p>';
 
                         /*Availability is stored in the SQL database as a binary value */
@@ -129,8 +140,16 @@ switch($_GET["SIDE"]){
                         <h4>Descritpion</h4>
                         <p >'.$row["DESCRIPTION"].'</p>';
                     }else{
-                        /*if user has decided to not add a description display message : */
+                        if(isset( $_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE["ID"])){
+                            /*if user has decided to not add a description display message : */
+                            if($_GET["ID"]!=$_COOKIE["ID"]){
+                                
                         echo '<p class="descriptionText" style="color:gray"><i>This user does not seem to have any description for this hobby</i></p>';
+                            }else{
+                                echo '<p class="descriptionText" style="color:gray"><i>You do not seem to have any description for this hobby</i></p>';
+                            }
+                        }
+                        
                     }
                      echo '</div>
                      </div>' ;  
@@ -217,128 +236,112 @@ switch($_GET["SIDE"]){
             
             $count = 0;
 
-            while($row = $result->fetch_assoc()){
-                $count += 1;
-          echo '<div id="MainContainerProfileSide2" >';
-                if(isset($_COOKIE["ID"]) && isset($_COOKIE["ID"])){
-                    if($_COOKIE["ID"]==$_GET["ID"]){
-                        echo '<a title="Edit Post" href="./EditPost.php?ID='.$row["ID"].'&SIDE=2"><img src="./Images/Edit.png" class="circleButton"></a>';
-                        echo '<a title="Edit Post" href="./Confirm.php?ID='.$row["ID"].'&SIDE=2"><img src="./Images/Delete.png" class="circleButton" style="left:81%"></a>';
-                    }
-                }
-                echo '
-                    <div class="divFlexRow">
-                        <div class="conhobby">';
-                        if($row["MODIFIED"]==1){
-                            echo '<p style="color:gray"><i>Modified '.formatDate($row["TIME"]).'</i></p>';
-                         }else{
-                            echo '<p style="color:gray"><i>Posted '.formatDate($row["TIME"]).'</i></p>';
-                         }
-                           echo' <div class="titlehobby" >
-                                <h1>'.$row["NOM"].'</h1>
-                            </div>
-                            <div  class="description">
-                        ';
-                                if($row["DESCRIPTION"]){
-                                    echo'<h4>Descritpion</h4>
-                                         <p class="descriptionText">'.$row["DESCRIPTION"].'</p>';
-                                }else{
-                                    echo '<p class="descriptionText" style="color:gray"><i>This user does not seem to have any description for this post</i></p>';
-                    
-                                }
-             echo ' 
-                            </div>
-                        </div>
-                
-                
-                     <div id="potentialGrid'.$row["ID"].'" class="potentialGrid">' ;  
-                    $images = array("IMAGE1", "IMAGE2", "IMAGE3", "IMAGE4");  
-                    $countImage = 0;
-                    foreach($images as &$image){
-                        
-                        if($row[$image]!=NULL){
-                            $countImage++;
-                            echo '<img id="imagePost'.$row["ID"].'&'.$countImage.'" class="regularImage" src="./uploads/'.$row[$image].'" onclick="zoomImage(this)">';
-                        }
-                    }
-                    
-                    if($countImage > 1){
-                        echo '<script>resizeImages('.$row["ID"].', '.$countImage.');</script>';
-                    }elseif($countImage==0){
-                        $default = getDefault($row["TYPEID"], 1);
-
-                        $error = $default[0];
-                        $image = $default[1];
-    
-                        if($error == NULL){
-                            echo '<img id="imagePost'.$row["ID"].'&1" class="regularImage" src="./Images/'.$image.'" onclick="zoomImage(this)">
-                           
-                        ';
-                        }else{
-                            /*TODO */
-                        }
-                    }
-                    echo '</div>
-                    </div>';
-                
-                   /* if($row["IMAGE"]!=NULL){
-                echo'   <div id="potentialGrid'.$row["ID"].'" class="gridImage">
-                            <img id="imagePost'.$row["ID"].''.$count.'" class="gridImageComponent" src="./uploads/'.$row["IMAGE"].'">
-                            <img id="imagePost'.$row["ID"].''.$count.'" class="gridImageComponent" src="./uploads/'.$row["IMAGE"].'">
-                            <img id="imagePost'.$row["ID"].''.$count.'" class="gridImageComponent" src="./uploads/'.$row["IMAGE"].'">
-                            <img id="imagePost'.$row["ID"].''.$count.'" class="gridImageComponent" src="./uploads/'.$row["IMAGE"].'">
-                        </div>
-                    </div> ';
-                    }else{
-                 echo'   <div id="potentialGrid'.$row["ID"].'" class="gridImage">
-                            <img id="imagePost'.$row["ID"].''.$count.'" class="gridImageComponent"  src="./Images/Filler3.png">
-                            <img id="imagePost'.$row["ID"].''.$count.'" class="gridImageComponent"  src="./Images/Filler3.png">
-                            <img id="imagePost'.$row["ID"].''.$count.'" class="gridImageComponent"  src="./Images/Filler3.png">
-                            <img id="imagePost'.$row["ID"].''.$count.'" class="gridImageComponent"  src="./Images/Filler3.png">
-                        </div>
-                    </div> ';
-                    }*/
-                
-               
-
-                
-                /*TROUVER MEILLEUR MOYEN D'UPLOAD DES NULLS */
-                /*if(!$row["IMAGE"] || $row["IMAGE"]=="NULL"){
-                    
-                } else{
-                    
-                }*/
-                
-                
- 
-                echo '
-                <div class="commentOrLikeButtonDiv" ">
-                <input type="hidden" name="running'.$row["ID"].'" id="running'.$row["ID"].'" value="false">
-                <input type="hidden" name="closeConditionInterval'.$row["ID"].'" id="closeCondition'.$row["ID"].'" value="false">
-                <input type="hidden" name="IdInterval'.$row["ID"].'" id="IdInterval'.$row["ID"].'" value="">
-                <input type="hidden" name="IdIntervalClose'.$row["ID"].'" id="IdIntervalClose'.$row["ID"].'" value="">
-                <input type="hidden" name="post'.$row["ID"].'" id="post'.$row["ID"].'" value="'.$row["LIKES"].'">
-                <button class="commentOrLikeButton" style="border-right:solid" id="button'.$row["ID"].'" onclick="like('.$row["ID"].')">Like this post : '.$row["LIKES"].'</button>
-                <button id="buttonComments'.$row["ID"].'" class="commentOrLikeButton" onclick="openComments('.$row["ID"].')">Show Comments</button>
-                </div>
-                <div  class="historyComments" name="historyComments'.$row["ID"].'" id="historyComments'.$row["ID"].'"></div>';
-                if(isset($_COOKIE["ID"])){
-                    echo '<div class="commentUserZone" id="input'.$row["ID"].'" style="display:none" >
-                    <textarea maxlength="50" placeholder="Type message.." id="commentZone'.$row["ID"].'" name="commentZone'.$row["ID"].'" required rows="1"></textarea>
-                    <button  type="button" class="btn" onclick="uploadComment('.$row["ID"].')">Send</button> 
-                    </div>';
-                }
-                echo '
-                
-                </div>';
+            if( isset( $_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE["ID"])){
+                echo '<input type="hidden" id="idUser" name="idUser" value="'.$_COOKIE["ID"].'">';
             }
 
-            /*If user has not shared any posts, display message */
-            if($count < 1){
+            if(mysqli_num_rows($result)>0){
+
+
+                while($row = $result->fetch_assoc()){
+                
+                    echo '<div id="MainContainerProfileSide2" >';
+                          if(isset($_COOKIE["ID"]) && isset($_COOKIE["ID"])){
+                              if($_COOKIE["ID"]==$_GET["ID"]){
+                                  echo '<a title="Edit Post" href="./EditPost.php?ID='.$row["ID"].'&SIDE=2"><img src="./Images/Edit.png" class="circleButton"></a>';
+                                  echo '<a title="Edit Post" href="./Confirm.php?ID='.$row["ID"].'&SIDE=2"><img src="./Images/Delete.png" class="circleButton" style="left:81%"></a>';
+                              }
+                          }
+                          echo '
+                              <div class="divFlexRow">
+                                  <div class="conhobby">';
+                                  if($row["MODIFIED"]==1){
+                                      echo '<p style="color:gray"><i>Modified '.formatDate($row["TIME"]).'</i></p>';
+                                   }else{
+                                      echo '<p style="color:gray"><i>Posted '.formatDate($row["TIME"]).'</i></p>';
+                                   }
+                                     echo' <div class="titlehobby" >
+                                          <h1>'.$row["HOBBY_NAME"].'</h1>
+                                      </div>
+                                      <div  class="description">
+                                  ';
+                                          if($row["DESCRIPTION"]){
+                                              echo'<h4>Descritpion</h4>
+                                                   <p class="descriptionText">'.$row["DESCRIPTION"].'</p>';
+                                          }else{
+                                              echo '<p class="descriptionText" style="color:gray"><i>This user does not seem to have any description for this post</i></p>';
+                              
+                                          }
+                       echo ' 
+                                      </div>
+                                  </div>
+                          
+                          
+                               <div id="potentialGrid'.$row["ID"].'" class="potentialGrid">' ;  
+                              $images = array("IMAGE1", "IMAGE2", "IMAGE3", "IMAGE4");  
+                              $countImage = 0;
+                              foreach($images as &$image){
+                                  
+                                  if($row[$image]!=NULL){
+                                      $countImage++;
+                                      echo '<img id="imagePost'.$row["ID"].'&'.$countImage.'" class="regularImage" src="./uploads/'.$row[$image].'" onclick="zoomImage(this)">';
+                                  }
+                              }
+                              
+                              if($countImage > 1){
+                                  echo '<script>resizeImages('.$row["ID"].', '.$countImage.');</script>';
+                              }elseif($countImage==0){
+                                  $default = getDefault($row["TYPEID"], 1);
+          
+                                  $error = $default[0];
+                                  $image = $default[1];
+              
+                                  if($error == NULL){
+                                      echo '<img id="imagePost'.$row["ID"].'&1" class="regularImage" src="./Images/'.$image.'" onclick="zoomImage(this)">
+                                     
+                                  ';
+                                  }else{
+                                      /*TODO */
+                                  }
+                              }
+                              echo '</div>
+                              </div>';
+
+                          echo '
+                          <div class="commentOrLikeButtonDiv" ">
+                          <input type="hidden" name="running'.$row["ID"].'" id="running'.$row["ID"].'" value="false">
+                          <input type="hidden" name="closeConditionInterval'.$row["ID"].'" id="closeCondition'.$row["ID"].'" value="false">
+                          <input type="hidden" name="IdInterval'.$row["ID"].'" id="IdInterval'.$row["ID"].'" value="">
+                          <input type="hidden" name="IdIntervalClose'.$row["ID"].'" id="IdIntervalClose'.$row["ID"].'" value="">
+                          <input type="hidden" name="post'.$row["ID"].'" id="post'.$row["ID"].'" value="'.$row["LIKES"].'">
+                          <button class="commentOrLikeButton" style="border-right:solid" id="button'.$row["ID"].'" onclick="like('.$row["ID"].')">Like this post : '.$row["LIKES"].'</button>
+                          <button id="buttonComments'.$row["ID"].'" class="commentOrLikeButton" onclick="openComments('.$row["ID"].')">Show Comments</button>
+                          </div>
+                          <div  class="historyComments" name="historyComments'.$row["ID"].'" id="historyComments'.$row["ID"].'"></div>';
+
+                          
+                          if(isset($_COOKIE["ID"])){
+                              echo '<div class="commentUserZone" id="input'.$row["ID"].'" style="display:none" >
+                              <textarea maxlength="50" placeholder="Type message.." id="commentZone'.$row["ID"].'" name="commentZone'.$row["ID"].'" required rows="1"></textarea>
+                              <button  type="button" class="btn" onclick="uploadComment('.$row["ID"].')">Send</button> 
+                              </div>';
+
+                              echo '<script>initLikes('.$row["ID"].');</script>';
+                          }
+                          echo '
+                          
+                          </div>';
+                      }
+
+            }else{
+                /*If user has not shared any posts, display message */
                 echo '<div id="MainContainerProfileSide1">
                     <p><i>This user do not seem to have any posts as of yet</i></p>
                 </div>';
             }
+            
+
+            
 
         break;
 }

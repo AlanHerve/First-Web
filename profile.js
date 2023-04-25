@@ -9,9 +9,14 @@ function deleteImage(){
   document.getElementById("deleteImage"+current).value = "0";
   
 
-  var xmlhttp = new XMLHttpRequest();
+  /*Aks the database for the default image for the hobby */
+  var type = document.getElementById("typeOfPost");
+  if(type){
 
-  xmlhttp.onload = function(){
+
+    var xmlhttp = new XMLHttpRequest();
+
+    xmlhttp.onload = function(){
     var result = this.responseText;
     if(result == "error") alert("An error occured");
     else {
@@ -25,14 +30,28 @@ function deleteImage(){
     document.getElementById("Modal").style.display = "none";
     document.getElementById("default"+current).value = "true";
   }
-  xmlhttp.open("post", "XMLFunctions.php", true);
-  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.open("post", "XMLFunctions.php", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-  /*Aks the database for the default image for the hobby */
-  var parameters = "action=default&type="+document.getElementById("typeOfPost").value;
- 
-  /*Start the request*/
-  xmlhttp.send(parameters);
+    var parameters = "action=default&type="+type.value;
+    /*Start the request*/
+    xmlhttp.send(parameters);
+
+
+    /*if image does not come from a post, then it comes from a profile pic */
+  } else{
+    const idOfPost = document.getElementById("idOfPost").value;
+    /*changes image n° current of post n° idOfPost */
+    document.getElementById("imagePost"+idOfPost+"&"+current).src = "./Images/img_avatar.png";
+  
+  
+  
+    /*hides Modal and notifies html that image n° current is a default image */
+    document.getElementById("Modal").style.display = "none";
+    document.getElementById("default"+current).value = "true";
+  }
+   
+  
 
 }
 
@@ -67,8 +86,11 @@ function zoomImage(obj){
    
     document.getElementById("current").value = ID;
     document.getElementById("fileToUpload"+ID).style.display="block";
-    
+    console.log("current");
   }
+
+  console.log(ID);
+
   
   window.onclick = function(event){
     
@@ -119,8 +141,8 @@ function uploadComment(number){
       
       var xmlhttp = new XMLHttpRequest();
       /*once request is done :  */
-      xmlhttp.onreadystatechange=function(){
-        if(this.readyState==4 && this.status==200){
+      xmlhttp.onload = function(){
+        
         /*Empties textbox */
           document.getElementById("commentZone"+number).value = "";
           /*Add new comment to comments already being displayed 
@@ -129,7 +151,7 @@ function uploadComment(number){
           document.getElementById("historyComments"+number).innerHTML += this.responseText;
           
           
-        }
+        
       }
       /*Sends the request via post to avoid cluttering url with useless information */
       xmlhttp.open("post", "XMLFunctions.php", true);
@@ -155,15 +177,15 @@ function deleteComment(number){
 
     var xmlhttp = new XMLHttpRequest();
 
-    xmlhttp.onreadystatechange=function(){
-      if(this.readyState==4 && this.status==200){
+    xmlhttp.onload = function(){
+      
         /*this.responseText can only be an error, if is null, there is no error
          * To avoid reloading all the comments, just the deleted comment is being removes via remove()
          */
         if(this.responseText != null)
         document.getElementById("comment"+number).remove();  
         else alert(this.responseText);    
-      }
+      
     }
 
     xmlhttp.open("post", "XMLFunctions.php", true);
@@ -174,17 +196,67 @@ function deleteComment(number){
 
 }
 
+function initLikes(number){
+
+  document.getElementById("button"+number).disabled = true;
+
+  const userId = document.getElementById("idUser");
+
+  if(userId){
+
+  var xmlhttp = new XMLHttpRequest();
+
+  xmlhttp.onload = function(){
+    
+    if(this.responseText=="liked"){
+      document.getElementById("button"+number).innerHTML ="Dislike this post : "+  document.getElementById("post"+number).value;
+      
+      document.getElementById("button"+number).onclick = function () {dislike(number);}
+    }else{
+      console.log("okay" + number+" | "+this.responseText);
+    }
+
+    document.getElementById("button"+number).disabled = false;
+  }
+
+
+
+  let x = document.cookie; 
+
+  const regexFirst = /^.+ ID=/ ;
+  const regexLast =/;.+/;
+  
+  var ID = x.replace(regexFirst, "");
+
+
+
+  var ID = ID.replace(regexLast, "");
+
+ 
+  xmlhttp.open("post", "XMLFunctions.php", true);
+  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  console.log("ID ! "+userId.value);
+  var parameters = "action=initLike&USER_ID="+userId.value+"&POST_ID="+number;
+  xmlhttp.send(parameters);
+  
+  }
+
+}
+
 /* Allow user to like a post
  * TODO toggle likes button, and checks if user hasn't already liked, disable button until function is done
  */
 function like(number){
-    
-    document.getElementById("button"+number).disabled = true;
+  document.getElementById("button"+number).disabled = true;
+  const userId = document.getElementById("idUser");
 
+  if(userId){
     var xmlhttp = new XMLHttpRequest();
     
-    xmlhttp.onreadystatechange=function(){
-      if(this.readyState==4 && this.status==200){
+    xmlhttp.onload = function(){
+      
+      
+        
         /*calculate new value of number of likes */
         var add = parseInt(document.getElementById("post"+number).value) + 1;
         
@@ -197,14 +269,22 @@ function like(number){
          */
         document.getElementById("button"+number).disabled = false;
         document.getElementById("button"+number).onclick = function () {dislike(number);}
-      }
+      
     }
 
     xmlhttp.open("post", "XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     
-    var parameters = "action=like&ID="+number;
+    var parameters = "action=like&ID="+number+"&USER_ID="+userId.value;
     xmlhttp.send(parameters);
+  }else{
+    alert("Please log in to like a post");
+    
+  }
+    
+ 
+
+    
 
 
 }
@@ -218,13 +298,16 @@ function dislike(number){
      * multiple times in very short intervals
      */
     document.getElementById("button"+number).disabled = true;
+    const userId = document.getElementById("idUser");
 
-    var xmlhttp = new XMLHttpRequest();
+    if(userId){
+      var xmlhttp = new XMLHttpRequest();
+      var xmlhttp = new XMLHttpRequest();
 
     
 
-    xmlhttp.onreadystatechange=function(){
-        if(this.readyState==4 && this.status==200){
+          xmlhttp.onload = function(){
+          console.log(this.responseText);
           /*parses the number of likes of current post stored in HTML*/
           var substract = parseInt(document.getElementById("post"+number).value) - 1;
           /*Reduces the number of likes displayed */
@@ -234,14 +317,15 @@ function dislike(number){
           document.getElementById("button"+number).innerHTML ="Like this post : "+  document.getElementById("post"+number).value;
           document.getElementById("button"+number).disabled = false;
           document.getElementById("button"+number).onclick = function () {like(number);}
-        }
+        
     }
 
     xmlhttp.open("post", "XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     
-    var parameters = "action=dislike&ID="+number;
+    var parameters = "action=dislike&ID="+number+"&USER_ID="+userId.value;
     xmlhttp.send(parameters);
+  }
 
 }
 
@@ -273,8 +357,8 @@ function loadComments(number){
 
  
 
-    xmlhttp.onreadystatechange = function(){
-        if(this.readyState==4 && this.status==200){
+  xmlhttp.onload = function(){
+        
             
             
             /*Sets content of comment container */
@@ -300,7 +384,7 @@ function loadComments(number){
 
                 
             }
-        }
+        
     }
 
     xmlhttp.open("post", "XMLFunctions.php", true);

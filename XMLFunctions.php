@@ -38,7 +38,9 @@ if(isset($_REQUEST["action"])){
         case "default" : 
             include("fileFunctions.php");
             echoDefault();
-            
+            break;
+        case "initLike" :
+            initLike();
             break;
     }
 
@@ -176,11 +178,27 @@ function displayComments(){
     }
 }
 
+function initLike(){
+
+    global $conn;
+    $error = NULL;
+
+    $query = "SELECT ID FROM likes WHERE USER_ID=".$_REQUEST["USER_ID"]." AND POST_ID=".$_REQUEST["POST_ID"];
+    $result = $conn->query($query);
+
+    if(mysqli_num_rows($result)>0){
+        echo 'liked';
+    }else{
+        echo $query;
+    }
+}
+
 /*Like of dislike a post */
 function like($case){
     global $conn;
     $error = NULL;
-     
+
+
     /*Beginning of query */
     $query = "UPDATE regular_post SET LIKES=";
 
@@ -198,25 +216,37 @@ function like($case){
     if(!$result){
         $error = "COULD NOT UPDATE TABLE";
         echo $error;
+    }else{
+        if($case==1) $query = "INSERT likes (USER_ID, POST_ID) VALUES (".$_REQUEST["USER_ID"].",".$_REQUEST["ID"].")";
+        else $query = "DELETE FROM likes WHERE USER_ID=".$_REQUEST["USER_ID"]." AND POST_ID=".$_REQUEST["ID"];
+        $result = $conn->query($query);
+        echo $query;
     }
 }
+
+
 
 /*getName of current Interlocutor in the popup */
 function getName(){
     global $conn;
     $error = NULL;
 
-    $query = "SELECT NOM FROM personne WHERE ID=".$_REQUEST["ID"];
+    $query = "SELECT NAME FROM users WHERE ID=".$_REQUEST["ID"];
     $result = $conn->query($query);
 
     if($result){
         if($row = $result->fetch_assoc()){
-            echo $row["NOM"];
+            echo $row["NAME"];
         }
     }
 }
 
 function sendComment(){
+
+    $servername = "localhost";
+    $username = "root";
+    $password = "root";
+    $dbname = "hobbysharedatabase";
 
     $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -246,6 +276,11 @@ function sendComment(){
 }
 
 function sendMessage(){
+
+    $servername = "localhost";
+    $username = "root";
+    $password = "root";
+    $dbname = "hobbysharedatabase";
     
     $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -266,7 +301,7 @@ function sendMessage(){
              * We need the ID in case user wishes to delete the message
              */
             $idOfMessage = $conn->insert_id;
-
+                  echo '<p class="timeContainer2"><i>now</i></p>';
                   echo '<div class="messageContainer2" id="message'.$idOfMessage.'" name="message'.$idOfMessage.'">
                             <p class="paragraph">'.$_REQUEST["msg"].'</p><span class="destroyButton" onclick="deleteMessage('.$idOfMessage.')">&#215;</span>
                         </div>';
@@ -311,6 +346,7 @@ function getMessages(){
 }
 
 function displayMessages(){
+
     
     $result = getMessages($_REQUEST["ID"]);
     $message = $result[1];
@@ -323,19 +359,21 @@ function displayMessages(){
         while(  $row = $message->fetch_assoc()){
             /*If you were the one to send the message */
             if($row["OWNER1"]==$_COOKIE["ID"]){
-                echo '<p class="timeContainer2">'.formatDate($row["TIME"]).'</p>';
+                echo '<p class="timeContainer2" id="time'.$row["ID"].'">'.formatDate($row["TIME"]).'</p>';
                 echo '<div class="messageContainer2" id="message'.$row["ID"].'" name="message'.$row["ID"].'">
                         <p class="paragraph">'.$row["CONTENT"].'</p><span class="destroyButton" onclick="deleteMessage('.$row["ID"].')">&#215;</span>
                       </div>';
             }else{
                 /*if you were the one to receive the message */
-                echo '<p class="timeContainer1">'.formatDate($row["TIME"]).'</p>';
+                echo '<p class="timeContainer1" id="time'.$row["ID"].'">'.formatDate($row["TIME"]).'</p>';
                 echo '<div class="messageContainer1">
                         <p class="paragraph">'.$row["CONTENT"].'</p>
                       </div>';
             }
             
         }
+
+        
     }
     
 }
@@ -345,7 +383,7 @@ function addInterlocutor(){
  
     global $conn;
 
-    $query = "SELECT * FROM personne WHERE ID=".$_REQUEST["toadd"];
+    $query = "SELECT * FROM users WHERE ID=".$_REQUEST["toadd"];
 
     echo $query;
 
@@ -354,7 +392,7 @@ function addInterlocutor(){
     if($result){
         if($row = $result->fetch_assoc()){
             /*button to make interlocutor the current interlocutor */
-            echo '<button value='.$row["ID"].' id="'.$row["NOM"].'" name="'.$row["NOM"].'" onclick="changeInterlocutor(this)">'.$row["NOM"].'</button>';
+            echo '<button value='.$row["ID"].' id="'.$row["NAME"].'" name="'.$row["NAME"].'" onclick="changeInterlocutor(this)">'.$row["NAME"].'</button>';
         }
     }
 }
@@ -398,7 +436,7 @@ function getInterlocutors(){
     $interlocutors = array();
 
     /*get Info about user's interlocutors */
-    $query = "SELECT * FROM personne WHERE ID IN (";
+    $query = "SELECT * FROM users WHERE ID IN (";
 
     if($result){
         while($row = $result->fetch_assoc()){
@@ -440,11 +478,11 @@ function getInterlocutors(){
                 if(isset($_REQUEST["interlocutor"])){
                     if($row["ID"]!=$_REQUEST["interlocutor"]){
                     
-                        echo '<button value='.$row["ID"].' id="'.$row["NOM"].'" name="'.$row["NOM"].'" onclick="changeInterlocutor(this)">'.$row["NOM"].'</button>';
+                        echo '<button value='.$row["ID"].' id="'.$row["NAME"].'" name="'.$row["NAME"].'" onclick="changeInterlocutor(this)">'.$row["NAME"].'</button>';
                         
                     }
                 }else{
-                    echo '<button value='.$row["ID"].' id="'.$row["NOM"].'" name="'.$row["NOM"].'" onclick="changeInterlocutor(this)">'.$row["NOM"].'</button>';
+                    echo '<button value='.$row["ID"].' id="'.$row["NAME"].'" name="'.$row["NAME"].'" onclick="changeInterlocutor(this)">'.$row["NAME"].'</button>';
                 }
                 
             }
