@@ -32,7 +32,7 @@ if(!isset($_GET["connect"])){
 
 ?>
 
-/*Log in form */
+<!--Log in form -->
 <div id=MainContainerF>
 	<form action="./LogIn.php" class="formF" method="POST">
 		<label for="mail">Email</label>
@@ -42,11 +42,6 @@ if(!isset($_GET["connect"])){
 		<input type="hidden" name="connection" value="1">
     	<input type="submit" value="Log In">
 	</form>
-	<?php
-
-
-
-?>
 </div>
 
 /*
