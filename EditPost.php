@@ -44,7 +44,7 @@ if(!isset($_GET["ID"]) || !isset($_COOKIE["ID"]) || !isset($_GET["SIDE"])){
         echo'<div id=ErrorContainer>
                 <p>'.$error.'</p>
             </div>';
-    }elseif(isset($_POST["newPost"])){
+    }elseif(isset($_POST["processForm"])){
        
         $redirect = "Location:Profile.php?ID=".$row["OWNER"]."&SIDE=".$_GET["SIDE"];
         
@@ -67,7 +67,7 @@ if(!isset($_GET["ID"]) || !isset($_COOKIE["ID"]) || !isset($_GET["SIDE"])){
 
                     <form id="myForm" action="./EditPost.php?ID='.$_GET["ID"].'&SIDE=1" method="POST" enctype="multipart/form-data">
                         <input type="hidden" id="idOfPost" name="idOfPost" value='.$row["ID"].'>
-                        <input type="hidden" value="1" name = "newPost" id="newPost">
+                        <input type="hidden" value="1" name = "processForm" id="processForm">
                         <input type="hidden" name="owner" id="owner" value="'.$_GET["ID"].'">';  
                  echo ' <div class="conhobby" style="width:100%">';
                         /*display the time of post and if post was modified */
@@ -80,39 +80,36 @@ if(!isset($_GET["ID"]) || !isset($_COOKIE["ID"]) || !isset($_GET["SIDE"])){
                         * their experience, frequency, and availability
                         */
                       echo '<div class="titlehobby">
-                                <h1>'.$row["NOM"].'</h1>
+                                <h1>'.$row["HOBBY_NAME"].'</h1>
                                 <div class="tagPost">
                                     <p class="tagLightColor">
                                         <select class="post"  name="experience">';
-                                        $text = array("Débutant", "Avancé", "Intermédiaire", "Expert", "Occasionnel");
-                                        $value = array("Debutant", "Avance", "Intermediaire","Expert", "Occasionnel");
-                                        $index =0;
+                                        $value = array("Beginner", "Intermediate", "Advanced", "Expert", "Casual");
+         
                                         /*Selects the right level of experience when opening the page*/
                                         foreach ($value as &$value_i) {
                                             if($row["EXPERIENCE"]==$value_i){
-                                                echo '<option value='.$value_i.' selected>'.$text[$index].'</option>';
+                                                echo '<option value='.$value_i.' selected>'.$value_i.'</option>';
                                             }else{
-                                                echo '<option value='.$value_i.'>'.$text[$index].'</option>';
+                                                echo '<option value='.$value_i.'>'.$value_i.'</option>';
                                         }
         
-                                        $index++;
+
                     }   
                                   echo '</select>
                                     </p>
                                     <p class="tagDarkColor">
                                         <select class="post"  name="frequence">';
-                                        $text = array("Quotidien", "3 à 4 fois par semaine", "2 à 3 fois par semaine", "Hebdomadaire", "Mensuel", "Rarement");
-                                        $value = array("Quotidien", "3-4/semaine", "2-3/Semaine", "Hebdomadaire", "Mensuel", "Rarement");
-                                        $index =0;
+                                        $value = array("Daily", "3-4/week", "2-3/week", "Weekly", "Montly", "Rarely");
+
                                         /*Selects the right Frequency when opening the page*/
                                         foreach ($value as &$value_i) {
                                             if($row["FREQUENCY"]==$value_i){
-                                                echo '<option value='.$value_i.' selected>'.$text[$index].'</option>';
+                                                echo '<option value='.$value_i.' selected>'.$value_i.'</option>';
                                             }else{
-                                                echo '<option value='.$value_i.'>'.$text[$index].'</option>';
+                                                echo '<option value='.$value_i.'>'.$value_i.'</option>';
                                             }
         
-                                            $index++;
                                         }
                                   echo '</select>
                                     </p>
@@ -173,7 +170,7 @@ if(!isset($_GET["ID"]) || !isset($_COOKIE["ID"]) || !isset($_GET["SIDE"])){
 
         echo '<form id="myForm" action="./EditPost.php?ID='.$_GET["ID"].'&SIDE=2" method="POST" enctype="multipart/form-data">
                 <input type="hidden" id="idOfPost" name="idOfPost" value='.$row["ID"].'>
-                <input type="hidden" name="newPost" value="2">
+                <input type="hidden" name="processForm" value="2">
                 <div id="MainContainerProfileSide2" >';
                 echo '
                     <div class="divFlexRow" style="border:solid">
@@ -184,7 +181,7 @@ if(!isset($_GET["ID"]) || !isset($_COOKIE["ID"]) || !isset($_GET["SIDE"])){
                             echo '<p style="color:gray"><i>Posted '.formatDate($row["TIME"]).'</i></p>';
                          }
                               echo' <div class="titlehobby" >
-                                        <h1>'.$row["NOM"].'</h1>';
+                                        <h1>'.$row["HOBBY_NAME"].'</h1>';
                                         if($row["MODIFIED"]==1){
                                             echo '<h2>(Modifié le AJOUTER DATE)</h2>';
                                         }
@@ -244,12 +241,12 @@ if(!isset($_GET["ID"]) || !isset($_COOKIE["ID"]) || !isset($_GET["SIDE"])){
 
 ?></div>
 
-/*Submit button */
+<!-- Submit button -->
 <input type="submit" value="Edit" form="myForm">
 
-/*Modal displaying images user wants to see zoomed
- * also allows user to change images
- */
+<!-- Modal displaying images user wants to see zoomed
+ * also allows user to change images -->
+ 
 <div id="Modal" class="imageModal">
     
         <!-- The Close Button -->
@@ -261,13 +258,13 @@ if(!isset($_GET["ID"]) || !isset($_COOKIE["ID"]) || !isset($_GET["SIDE"])){
         <!-- Modal Caption (Image Text) -->
         <div id="caption"></div>
 
-        /*stores id of the current image */
+        <!--stores id of the current image -->
         <input type="hidden" id="current" name="current" value="null">
         <div class="changePrompt">
             <label for="img">Changer d'image :</label>
             <input type="file" name="fileToUpload1" id="fileToUpload1" class="uploadImagePrompt" form="myForm">
             <?php
-                /*Regular post are allowed to have more than one image */
+                /*Regular post are allowed to have more than one image*/
                 if($_GET["SIDE"]==2){
               echo '<input type="file" name="fileToUpload2" id="fileToUpload2" class="uploadImagePrompt" form="myForm">
                     <input type="file" name="fileToUpload3" id="fileToUpload3" class="uploadImagePrompt" form="myForm">

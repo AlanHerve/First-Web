@@ -34,12 +34,12 @@ $list = getAllTags();
                         if(isset($_GET["TAG"])){
                             if($_GET["TAG"]==$row["ID"]){
                                 /*ID of tag is equal to the tag researched */
-                                echo '<option value="'.$row["ID"].'" selected>'.$row["NOM"].'</option>';
+                                echo '<option value="'.$row["ID"].'" selected>'.$row["HOBBY_NAME"].'</option>';
                             }else{
-                                echo '<option value="'.$row["ID"].'">'.$row["NOM"].'</option>';
+                                echo '<option value="'.$row["ID"].'">'.$row["HOBBY_NAME"].'</option>';
                             }
                         }else{
-                            echo '<option value="'.$row["ID"].'">'.$row["NOM"].'</option>';
+                            echo '<option value="'.$row["ID"].'">'.$row["HOBBY_NAME"].'</option>';
                         }
                     }
                 ?>
@@ -96,8 +96,8 @@ if($result!=NULL){
     
   echo '<div class="line">
             <div class="fieldpic">';
-                if($result2["avatar"]){
-                    echo '<img class="profilepic" src="./Images/'.$result2["avatar"].'">';
+                if($result2["AVATAR"]){
+                    echo '<img class="profilepic" src="./uploads/'.$result2["AVATAR"].'">';
                 }else{
                     echo '<img class="profilepic" src="./Images/img_avatar.png">';
                 }
@@ -105,7 +105,7 @@ if($result!=NULL){
         echo '
             </div>
             <div class="fieldtext">
-                <a href="./Profile.php?ID='.$row["OWNER"].'">'.$result2["NOM"].'</a>
+                <a href="./Profile.php?ID='.$row["OWNER"].'">'.$result2["NAME"].'</a>
             </div>
             <div class="fieldtext">
                 <p class="tagLightColor"  style="width:85%">'.$row["EXPERIENCE"].'</p>
@@ -198,7 +198,8 @@ function displayOptions(number, connected){
     }else{
         alert("Please log in if you want to access options");
     }
-    
+   
+}
 /*close options modal and return dots to original state */
 function closeOptions(number, connected){
     document.getElementById("dots"+number).style.color = null;
