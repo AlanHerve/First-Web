@@ -1,3 +1,7 @@
+/* Basis for this CSS was taken from : https://www.w3schools.com/howto/howto_js_popup_chat.asp
+ * Modifications were of course added
+ */
+
 .history, .historyComments{
     width: 90%;
     padding: 15px;
