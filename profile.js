@@ -86,10 +86,10 @@ function zoomImage(obj){
    
     document.getElementById("current").value = ID;
     document.getElementById("fileToUpload"+ID).style.display="block";
-    console.log("current");
+    
   }
 
-  console.log(ID);
+
 
   
   window.onclick = function(event){
@@ -121,7 +121,7 @@ function resizeImages(IdOfImages, numberOfImages){
     
 
   /*original container for img is not fit for multiple elements */
-    document.getElementById("potentialGrid"+IdOfImages).className = "gridImage";
+    document.getElementById("potentialGrid"+IdOfImages).className = "gridImage zoomable";
     /*original image class is not fit for the presence of otehr images alongside it */
     for(let i = 1; i<= numberOfImages; i++) document.getElementById("imagePost"+IdOfImages+"&"+i).className = "gridImageComponent";
 
@@ -196,10 +196,13 @@ function deleteComment(number){
 
 }
 
+/*checks if user has already liked a post */
 function initLikes(number){
 
+  /*disable button */
   document.getElementById("button"+number).disabled = true;
 
+  /*get the ID of the user */
   const userId = document.getElementById("idUser");
 
   if(userId){
@@ -207,35 +210,32 @@ function initLikes(number){
   var xmlhttp = new XMLHttpRequest();
 
   xmlhttp.onload = function(){
-    
+    /*if request return liked, the user has already liked the post
+     * thus, the button behaviour is changed
+     */
     if(this.responseText=="liked"){
       document.getElementById("button"+number).innerHTML ="Dislike this post : "+  document.getElementById("post"+number).value;
       
       document.getElementById("button"+number).onclick = function () {dislike(number);}
-    }else{
-      console.log("okay" + number+" | "+this.responseText);
     }
 
     document.getElementById("button"+number).disabled = false;
   }
 
-
-
+  
+/* Could also parse the cookies to access user ID :
   let x = document.cookie; 
 
   const regexFirst = /^.+ ID=/ ;
   const regexLast =/;.+/;
   
   var ID = x.replace(regexFirst, "");
-
-
-
   var ID = ID.replace(regexLast, "");
-
+*/
  
   xmlhttp.open("post", "XMLFunctions.php", true);
   xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  console.log("ID ! "+userId.value);
+ 
   var parameters = "action=initLike&USER_ID="+userId.value+"&POST_ID="+number;
   xmlhttp.send(parameters);
   
@@ -302,12 +302,12 @@ function dislike(number){
 
     if(userId){
       var xmlhttp = new XMLHttpRequest();
-      var xmlhttp = new XMLHttpRequest();
+      
 
     
 
           xmlhttp.onload = function(){
-          console.log(this.responseText);
+          
           /*parses the number of likes of current post stored in HTML*/
           var substract = parseInt(document.getElementById("post"+number).value) - 1;
           /*Reduces the number of likes displayed */
@@ -355,10 +355,10 @@ function closeComments(number){
 function loadComments(number){
   var xmlhttp = new XMLHttpRequest();
 
- 
+  
 
   xmlhttp.onload = function(){
-        
+            
             
             
             /*Sets content of comment container */
@@ -397,6 +397,7 @@ function loadComments(number){
 
 /*Open comments for the first time, loading them from the SQL database */
 function openComments(number){
+ 
   /*If reloading loop not setup, calls function loadCOmments */
   if(document.getElementById("running"+number).value=="false") loadComments(number);
 

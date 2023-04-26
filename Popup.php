@@ -60,10 +60,12 @@ echo '
     xmlhttp.onload = function(){
       
         if(this.responseText != null){
+          /*remove a message and the time of message */
           document.getElementById("message"+number).remove();  
           document.getElementById("time"+number).remove();
+
+          /*if responseText!=null, error is returned */
         }
-        
         else alert(this.responseText);    
       
     }
@@ -76,21 +78,25 @@ echo '
     xmlhttp.send(parameters);
   }
 
+  /*check if interlocutor is already in user's list of interlocutors */
   function checkInterlocutor(interlocutor){
 
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onload = function(){
       
-        
+        /*if not already in, adds it */
         if(this.responseText=="false"){
           var history = document.getElementById("historyMessages");
           history.innerHTML = this.responseText;
           addInterlocutor(interlocutor);
           
+        /*if already in, changes urrent interlocutor to it and open popup */
         }else if(this.responseText=="true"){
           var person = {name:null, value:interlocutor};
           changeInterlocutor(person, null);
           openForm();
+
+         
         }else if(this.responseText=="identity"){
           alert("You can't contact yourself");
         }else{
@@ -106,15 +112,16 @@ echo '
     
   }
   
-  
+/*add interlocutor to the popup */
 function addInterlocutor(interlocutor){
 
 
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onload = function(){
-      
+       /*change the value of people (list of interlocutors) */
         document.getElementById("people").innerHTML += this.responseText;
         var person = {name: null, value: interlocutor};
+        /*change current interlocutor to make the newly added one the current one */
         changeInterlocutor(person);
       
     }
@@ -146,6 +153,7 @@ function addInterlocutor(interlocutor){
     
   }
 
+  /*if the ID of the last interlocutor a user has messaged is still present in the cookies */
   function initInterlocutor(){
    
 <?php
@@ -286,6 +294,7 @@ function addInterlocutor(interlocutor){
   
   }
   
+  /*open popup */
   function openForm() {
     document.getElementById("myForm").style.display = "block";
     /*Returns element with id = myFrom*/
@@ -294,9 +303,8 @@ function addInterlocutor(interlocutor){
 
     
    
-    
+    /*if the loadingMessages loop is not set up */
     if(document.getElementById("runningPopup").value == "false"){
-      
 
       loadMessages();
     }
@@ -316,6 +324,7 @@ function addInterlocutor(interlocutor){
     clearInterval(document.getElementById("closeIntervalPopup").value);
   }
   
+  /*close popup */
   function closeForm() {
     document.getElementById("myForm").style.display = "none";
 
@@ -327,7 +336,7 @@ function addInterlocutor(interlocutor){
   function loadMessages(){
     /*Sets content of comment container */
           
-            /*If the current post's comment section has been closed for a while, stop reloading process */
+            /*If the popupn has been closed for a while, stop reloading process */
             if(document.getElementById("closeConditionPopup").value=="true"){
               
               /*stops the reloading condition*/
@@ -350,6 +359,7 @@ function addInterlocutor(interlocutor){
 
                 
             }else{
+              /*if the popup is open, and the loop is running, display messages */
               displayMessages(document.getElementById("interlocutor"));
             }
   }

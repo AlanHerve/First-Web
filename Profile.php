@@ -139,8 +139,7 @@ switch($_GET["SIDE"]){
                         echo'
                         <h4>Descritpion</h4>
                         <p >'.$row["DESCRIPTION"].'</p>';
-                    }else{
-                        if(isset( $_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE["ID"])){
+                    }elseif(isset( $_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE["ID"])){
                             /*if user has decided to not add a description display message : */
                             if($_GET["ID"]!=$_COOKIE["ID"]){
                                 
@@ -150,7 +149,7 @@ switch($_GET["SIDE"]){
                             }
                         }
                         
-                    }
+                    
                      echo '</div>
                      </div>' ;  
                     /*If post does not have an image : */
@@ -163,7 +162,7 @@ switch($_GET["SIDE"]){
                     $image = $default[1];
 
                     if($error == NULL){
-                        echo '<img class="uniqueImageHobby" src="./Images/'.$image.'" onclick="zoomImage(this)">
+                        echo '<img class="uniqueImageHobby zoomable" src="./Images/'.$image.'" onclick="zoomImage(this)">
                        
                     </div>';
                     }else{
@@ -171,7 +170,7 @@ switch($_GET["SIDE"]){
                     }
                     
                 } else{
-                    echo' <img class="uniqueImageHobby" src="./uploads/'.$row["IMAGE"].'" onclick="zoomImage(this)">
+                    echo' <img class="uniqueImageHobby zoomable" src="./uploads/'.$row["IMAGE"].'" onclick="zoomImage(this)">
                        
                     </div>';
                 }
@@ -284,7 +283,7 @@ switch($_GET["SIDE"]){
                                   
                                   if($row[$image]!=NULL){
                                       $countImage++;
-                                      echo '<img id="imagePost'.$row["ID"].'&'.$countImage.'" class="regularImage" src="./uploads/'.$row[$image].'" onclick="zoomImage(this)">';
+                                      echo '<img id="imagePost'.$row["ID"].'&'.$countImage.'" class="regularImage zoomable" src="./uploads/'.$row[$image].'" onclick="zoomImage(this)">';
                                   }
                               }
                               
@@ -297,7 +296,7 @@ switch($_GET["SIDE"]){
                                   $image = $default[1];
               
                                   if($error == NULL){
-                                      echo '<img id="imagePost'.$row["ID"].'&1" class="regularImage" src="./Images/'.$image.'" onclick="zoomImage(this)">
+                                      echo '<img id="imagePost'.$row["ID"].'&1" class="regularImage zoomable" src="./Images/'.$image.'" onclick="zoomImage(this)">
                                      
                                   ';
                                   }else{
@@ -318,8 +317,10 @@ switch($_GET["SIDE"]){
                           <button id="buttonComments'.$row["ID"].'" class="commentOrLikeButton" onclick="openComments('.$row["ID"].')">Show Comments</button>
                           </div>
                           <div  class="historyComments" name="historyComments'.$row["ID"].'" id="historyComments'.$row["ID"].'"></div>';
+                          /*these values must be set manually to false or they won't be resseted if cache is erased/page reloaded */
+                          echo '<script>document.getElementById("closeCondition'.$row["ID"].'").value = "false";
+                          document.getElementById("running'.$row["ID"].'").value = false</script>';
 
-                          
                           if(isset($_COOKIE["ID"])){
                               echo '<div class="commentUserZone" id="input'.$row["ID"].'" style="display:none" >
                               <textarea maxlength="50" placeholder="Type message.." id="commentZone'.$row["ID"].'" name="commentZone'.$row["ID"].'" required rows="1"></textarea>

@@ -72,9 +72,13 @@ echo ' <div class="conhobby">
         echo'
         <h4>Descritpion</h4>
         <p >'.$row["DESCRIPTION"].'</p>';
-    }else{
-        /*if user has decided to not add a description display message : */
-        echo '<p class="descriptionText" style="color:gray"><i>This user does not seem to have any description for this hobby</i></p>';
+    }elseif(isset($_COOKIE["ID"])){
+            if($_GET["ID"]!=$_COOKIE["ID"])  /*if user has decided to not add a description display message : */
+            echo '<p class="descriptionText" style="color:gray"><i>This user does not seem to have any description for this hobby</i></p>';
+    
+            else echo '<p class="descriptionText" style="color:gray"><i>You do not seem to have any description for this hobby</i></p>';
+        }
+       
     }
      echo '</div>
      </div>' ;  
@@ -129,10 +133,13 @@ echo '<div id="MainContainerProfileSide2" >';
                                 if($row["DESCRIPTION"]){
                                     echo'<h4>Descritpion</h4>
                                          <p class="descriptionText">'.$row["DESCRIPTION"].'</p>';
-                                }else{
-                                    echo '<p class="descriptionText" style="color:gray"><i>This user does not seem to have any description for this post</i></p>';
+                                }elseif(isset($_COOKIE["ID"])){
+                                        if($_GET["ID"]!=$_COOKIE["ID"]) echo '<p class="descriptionText" style="color:gray"><i>This user does not seem to have any description for this hobby</i></p>';
+                                        else echo '<p class="descriptionText" style="color:gray"><i>You do not seem to have any description for this hobby</i></p>';
+                                    }
+                                    
                     
-                                }
+                                
              echo ' 
                             </div>
                         </div>

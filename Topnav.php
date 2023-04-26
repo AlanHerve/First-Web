@@ -33,11 +33,6 @@ visited by the suer -->
             echo '<a href="./Tag.php">Tags</a>';
         }
 
-        if($active == 3){
-            echo '<a class="active" href="">Discover</a>';
-        }else{
-            echo '<a href="">Discover</a>';
-        }
         
         /*If login cookies are set, the navigation bar gets the option to logout */
         if( isset( $_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE["ID"])){

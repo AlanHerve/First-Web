@@ -64,15 +64,17 @@ echo '
         <label for="name">Change password :</label>
         <input class="line" type="password" name="password">
         <label for="name">Confirm new password :</label>
-        <input class="line" type="password" name="confirm">';
-
+        <input class="line" type="password" name="confirm">
+        <label for="imagePost'.$row["ID"].'&1">Click on Image to change it :</label>
+        ';
+        
         if($row["AVATAR"]!=NULL){
-            echo '      <img id="imagePost'.$row["ID"].'&1" class="pic" src="./uploads/'.$row["AVATAR"].'" onclick="zoomImage(this)">
+            echo '      <img id="imagePost'.$row["ID"].'&1" class="pic zoomable" src="./uploads/'.$row["AVATAR"].'" onclick="zoomImage(this)">
                 <input type="hidden" id="default1" name="default1" value="false">
                 <input type="hidden" value="1" name="deleteImage1" id="deleteImage1" form="myForm">';
                     }else {
                         /*If person does not have an avatar, display the default image */
-            echo '      <img id="imagePost'.$row["ID"].'&1" class="pic" src="./Images/img_avatar.png" onclick="zoomImage(this)">
+            echo '      <img id="imagePost'.$row["ID"].'&1" class="pic zoomable" src="./Images/img_avatar.png" onclick="zoomImage(this)">
             <input type="hidden" id="default1" name="default1" value="true">
                 <input type="hidden" value="1" name="deleteImage1" id="deleteImage1" form="myForm">';
                     }
@@ -100,7 +102,7 @@ echo '
         <input type="hidden" id="current" name="current" value="null">
 
         <div class="changePrompt">
-        <label for="img">Changer d'image :</label>
+        <label for="img">Change image :</label>
             <input type="file" name="fileToUpload1" id="fileToUpload1" class="uploadImagePrompt" form="myForm">
             
            

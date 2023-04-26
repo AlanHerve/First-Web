@@ -44,7 +44,7 @@ if(!isset($_GET["connect"])){
 	</form>
 </div>
 
-/*
+
 <div id=MainContainerF>
 <p>You do not already have an account ? Create one <a href="./newAccount.php">here</a></p>
 </div>

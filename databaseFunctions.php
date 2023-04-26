@@ -708,10 +708,10 @@ function getProfile($addToConversationButton){
         echo '
         <div class="con2">';
         if($user["AVATAR"]!=NULL){
-echo '      <img class="pic" src="./uploads/'.$user["AVATAR"].'" onclick="zoomImage(this)">';
+echo '      <img class="pic zoomable" src="./uploads/'.$user["AVATAR"].'" onclick="zoomImage(this)">';
         }else {
             /*If person does not have an avatar, display the default image */
-echo '      <img class="pic" src="./Images/img_avatar.png" onclick="zoomImage(this)">';
+echo '      <img class="pic zoomable" src="./Images/img_avatar.png" onclick="zoomImage(this)">';
         }
 /*TODO : make $var a span */
 echo '      <div class="con">
@@ -936,8 +936,8 @@ function DestroyLoginCookie(){
     setcookie("mail", NULL, -1 );
     setcookie("password", NULL, -1);
     setcookie("ID", NULL, -1);
-    setcookie("interlocutorID", NULL, -1);
-    setcookie("interlocutorName", NULL, -1);
+    setcookie("interLocutorID", NULL, -1);
+    setcookie("interLocutorName", NULL, -1);
     
 }
 

@@ -130,7 +130,7 @@ if(!isset($_GET["ID"]) || !isset($_COOKIE["ID"]) || !isset($_GET["SIDE"])){
                                 </div>
                             </div>
                             <div class="charahobby">
-                                <textarea maxlength="100" class="post" name="content" placeholder="Ecrivez ici une petite description si vous le souhaitez">'.$row["DESCRIPTION"].'</textarea>
+                                <textarea maxlength="100" class="post" name="content" placeholder="write here a little something">'.$row["DESCRIPTION"].'</textarea>
                             </div>
                         </div>' ;  
         
@@ -148,7 +148,7 @@ if(!isset($_GET["ID"]) || !isset($_COOKIE["ID"]) || !isset($_GET["SIDE"])){
             $image = $default[1];
 
             if($error == NULL){
-                echo '<img id="imagePost'.$row["ID"].'&1" name="imagePost'.$row["ID"].'&1" class="uniqueImageHobby" src="./Images/'.$image.'" onclick="zoomImage(this)">
+                echo '<img id="imagePost'.$row["ID"].'&1" name="imagePost'.$row["ID"].'&1" class="uniqueImageHobby zoomable" src="./Images/'.$image.'" onclick="zoomImage(this)">
                 <input type="hidden" id="default1" name="default1" value="true">
                 <input type="hidden" value="1" name="deleteImage1" id="deleteImage1" form="myForm">';
                
@@ -158,7 +158,7 @@ if(!isset($_GET["ID"]) || !isset($_COOKIE["ID"]) || !isset($_GET["SIDE"])){
             }
             
         } else{
-            echo' <img id="imagePost'.$row["ID"].'&1" name="imagePost'.$row["ID"].'&1" class="uniqueImageHobby" src="./uploads/'.$row["IMAGE"].'" onclick="zoomImage(this)">
+            echo' <img id="imagePost'.$row["ID"].'&1" name="imagePost'.$row["ID"].'&1" class="uniqueImageHobby zoomable" src="./uploads/'.$row["IMAGE"].'" onclick="zoomImage(this)">
             <input type="hidden" id="default1" name="default1" value="false">
             <input type="hidden" value="1" name="deleteImage1" id="deleteImage1" form="myForm">';
         }
@@ -173,7 +173,7 @@ if(!isset($_GET["ID"]) || !isset($_COOKIE["ID"]) || !isset($_GET["SIDE"])){
                 <input type="hidden" name="processForm" value="2">
                 <div id="MainContainerProfileSide2" >';
                 echo '
-                    <div class="divFlexRow" style="border:solid">
+                    <div class="divFlexRow">
                         <div class="conhobby">';
                         if($row["MODIFIED"]==1){
                             echo '<p style="color:gray"><i>Modified '.formatDate($row["TIME"]).'</i></p>';
@@ -182,9 +182,7 @@ if(!isset($_GET["ID"]) || !isset($_COOKIE["ID"]) || !isset($_GET["SIDE"])){
                          }
                               echo' <div class="titlehobby" >
                                         <h1>'.$row["HOBBY_NAME"].'</h1>';
-                                        if($row["MODIFIED"]==1){
-                                            echo '<h2>(Modifié le AJOUTER DATE)</h2>';
-                                        }
+                                        
                     echo '
                                     </div>
                                     <div class="charahobby">';

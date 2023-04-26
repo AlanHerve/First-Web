@@ -145,21 +145,25 @@ function displayComments(){
         
         while($row = $result->fetch_assoc()){
             $count++;
-            
+            /* displays time of post (formatted) 
+             * then displays content of comment inside a container
+             * use a span to give the user the option to delte their own comment
+             * messageContainer2 is the kind of container a user will see if the comment belong to them
+             */
             if(isset( $_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE["ID"])){
                 if($row["OWNERID"]!=$_COOKIE["ID"]){
-                    echo '<p class="timeContainer1">'.formatDate($row["TIME"]).'</p>';
+                    echo '<p class="timeContainer1">'.formatDate($row["TIME"]).' <a href="./Profile.php?ID='.$row["OWNERID"].'">'.$row["OWNER_NAME"].'</a></p>';
                     echo '<div class="messageContainer1">
                     <p class="paragraph">'.$row["CONTENT"].'</p>
                   </div>';
                 }else{
-                    echo '<p class="timeContainer2">'.formatDate($row["TIME"]).'</p>';
+                    echo '<p class="timeContainer2"><a href="./Profile.php?ID='.$row["OWNERID"].'">'.$row["OWNER_NAME"].'</a> '.formatDate($row["TIME"]).'</p>';
                     echo '<div class="messageContainer2" id="comment'.$row["ID"].'" name="comment'.$row["ID"].'">
                     <p class="paragraph">'.$row["CONTENT"].'</p><span class="destroyButton" onclick="deleteComment('.$row["ID"].')">&#215;</span>
                   </div>';
                 }
             }else{
-                echo '<p class="timeContainer1">'.formatDate($row["TIME"]).'</p>';
+                echo '<p class="timeContainer1">'.formatDate($row["TIME"]).' <a href="./Profile.php?ID='.$row["OWNERID"].'">'.$row["OWNER_NAME"].'</a></p>';
                 echo '<div class="messageContainer1">
                     <p class="paragraph">'.$row["CONTENT"].'</p>
                   </div>';
@@ -178,14 +182,16 @@ function displayComments(){
     }
 }
 
+/*checks if user has already liked a post */
 function initLike(){
 
     global $conn;
     $error = NULL;
-
+ /*looks ofr ID of user and ID of post */
     $query = "SELECT ID FROM likes WHERE USER_ID=".$_REQUEST["USER_ID"]." AND POST_ID=".$_REQUEST["POST_ID"];
     $result = $conn->query($query);
 
+    /*if result extist, echo "liked" (will be accessed via response.Text) */
     if(mysqli_num_rows($result)>0){
         echo 'liked';
     }else{
@@ -243,51 +249,50 @@ function getName(){
 
 function sendComment(){
 
-    $servername = "localhost";
-    $username = "root";
-    $password = "root";
-    $dbname = "hobbysharedatabase";
-
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+    global $conn;
 
     $error = NULL;
 
     if(isset($_REQUEST["msg"])){
-        $query = "INSERT INTO comments (ID, CONTENT, POST, OWNERID) VALUES (NULL, '".SecurizeString_ForSQL($_REQUEST["msg"])."', ".$_REQUEST["ID"].", ".$_COOKIE["ID"].")";
-
+        /*get name of suer to display above comment */
+        $query = "SELECT NAME FROM users WHERE ID=".$_COOKIE["ID"];
         $result = $conn->query($query);
+
+        if(!$result){
+            $error = "COULDN'T RETIREVE YOUR NAME";
+                echo $error;
+
+        }else{
+
         
-    if(!$result){
-        $error = "COULDN'T SEND COMMENT";
-        echo $error;
-    }else{
-        /*echoes the comment posted to avoid reloading each time a comment is posted */
-        date_default_timezone_set('Europe/Paris');
-        echo '<p class="timeContainer2">'.date("h:i", time()).'</p>';
-        echo '<div class="messageContainer2" id="comment'.$_REQUEST["ID"].'" name="comment'.$_REQUEST["ID"].'">
-                <p class="paragraph">'.$_REQUEST["msg"].'</p><span class="destroyButton" onclick="deleteComment('.$conn->insert_id.')">&#215;</span>
-              </div>';
-    }
+            $row = $result->fetch_assoc();
+            $name = $row["NAME"];
+            /*insert comment into database, with content, Id of post, id of owner, name of owner */
+            $query = "INSERT INTO comments (ID, CONTENT, POST, OWNERID, OWNER_NAME) VALUES (NULL, '".SecurizeString_ForSQL($_REQUEST["msg"])."', ".$_REQUEST["ID"].", ".$_COOKIE["ID"].", '".$name."')";
+
+            $result = $conn->query($query);
+        
+            if(!$result){
+                $error = "COULDN'T SEND COMMENT";
+                echo $error;
+            }else{
+                /*echoes the comment posted to avoid reloading each time a comment is posted */
+                date_default_timezone_set('Europe/Paris');
+                echo '<p class="timeContainer2"><a href="./Profile.php?ID='.$_COOKIE["ID"].'">'.$name.'</a> '.date("h:i", time()).'</p>';
+                echo '<div class="messageContainer2" id="comment'.$_REQUEST["ID"].'" name="comment'.$_REQUEST["ID"].'">
+                        <p class="paragraph">'.$_REQUEST["msg"].'</p><span class="destroyButton" onclick="deleteComment('.$conn->insert_id.')">&#215;</span>
+                      </div>';
+            }
+        }
+
+        
     }
 }
 
 function sendMessage(){
 
-    $servername = "localhost";
-    $username = "root";
-    $password = "root";
-    $dbname = "hobbysharedatabase";
-    
-    $conn = new mysqli($servername, $username, $password, $dbname);
+    global $conn;
 
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-    
     $error = NULL;
 
     if(isset($_REQUEST["msg"])){
@@ -347,7 +352,7 @@ function getMessages(){
 
 function displayMessages(){
 
-    
+    /*call function to get all the messages */
     $result = getMessages($_REQUEST["ID"]);
     $message = $result[1];
 

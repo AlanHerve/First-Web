@@ -143,7 +143,7 @@ echo '
                     </select></h1>
                 </div>
                 <div class="charahobby">
-                    <textarea maxlength="100" class="post" name="content" placeholder="Ecrivez ici une petite description si vous le souhaitez"></textarea>
+                    <textarea maxlength="100" class="post" name="content" placeholder="write here a little note"></textarea>
                 </div>
             </div>
             <div>
