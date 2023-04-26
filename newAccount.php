@@ -30,16 +30,16 @@ if($newAccount[2]!=NULL){
 
 <form action="./newAccount.php" class="formF" method="POST">
     <input class="line" type="hidden" name="new" value="new">
-    <label for="name">Nom d'utilisateur</label>
-    <input class="line" type="text" name="name" placeholder="Name" required>
-    <label for="nickName">Surnom</label>
-    <input class="line" type="text" name="nickName" placeholder="NickName">
+    <label for="name">Username</label>
+    <input class="line" type="text" name="name" placeholder="Name" maxlength="30" required>
+    <label for="nickName">Nickname</label>
+    <input class="line" type="text" name="nickName" placeholder="NickName" maxlength="30">
     <label for="mail">Email</label>
-    <input class="line" name="mail" placeholder="email" type="email" required />
-    <label for="password">Mot de Passe</label>
-    <input class="line" type="password" name="password" placeholder="Password" required>
-    <label for="confirm">Confirmation du Mot de Passe</label>
-    <input class="line" type="password" name="confirm" placeholder="Confirm Password" required>
+    <input class="line" name="mail" placeholder="email" type="email" maxlength="60" required />
+    <label for="password">Password</label>
+    <input class="line" type="password" name="password" placeholder="Password" maxlength="20" required>
+    <label for="confirm">Confirm password</label>
+    <input class="line" type="password" name="confirm" placeholder="Confirm Password" maxlength="30" required>
     <input class="line" type="submit" value="Submit">
 </form>
 

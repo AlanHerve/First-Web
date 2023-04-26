@@ -56,13 +56,13 @@ echo '
         <input type="hidden" value="1" name = "processForm" id="processForm">
         <input class="line" type="hidden" name="new" value="present">
         <label for="name">Change name :</label>
-        <input class="line" type="text" name="name" placeholder="'.$row["NAME"].'">
+        <input class="line" type="text" name="name" placeholder="'.$row["NAME"].'" maxlength="30">
         <label for="name">Change nickname :</label>
-        <input class="line" type="text" name="nickName" placeholder="'.$row["NICKNAME"].'">
+        <input class="line" type="text" name="nickName" placeholder="'.$row["NICKNAME"].'" maxlength="30">
         <label for="name">Current password (necessary to change password):</label>
-        <input class="line" type="password" name="current_password">
+        <input class="line" type="password" name="current_password" maxlength="30">
         <label for="name">Change password :</label>
-        <input class="line" type="password" name="password">
+        <input class="line" type="password" name="password" maxlength="30">
         <label for="name">Confirm new password :</label>
         <input class="line" type="password" name="confirm">
         <label for="imagePost'.$row["ID"].'&1">Click on Image to change it :</label>
