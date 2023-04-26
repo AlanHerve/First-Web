@@ -116,11 +116,16 @@ if($_GET["SIDE"]==1){
     $status = getAvailableTags(1);
     $tag_array = $status[0];
     $ID_array = $status[1];
+    $found = $status[2];
     $error = $status[3];
 
     if($error==NULL){
         
-  
+        if($found==0){
+            exit('<div id=ErrorContainer>
+			<p>YOU HAVENT POSTED ANY HOBBY YET, GO BACK TO YOUR PROFILE PLEASE</p>
+		</div>');
+        }
 
 echo '
 <div id="MainContainerProfileSide2">

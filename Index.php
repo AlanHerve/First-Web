@@ -14,10 +14,14 @@ include("Topnav.php");
     </div>
 
     <div id="MainContainerI">
-        <h2>Hobby-Share : le meilleur moyen de trouver un groupe pour vivre son hobby</h2>
-        
-        
+        <h2>Hobby-Share : The best way to share your hobbies</h2>
+    </div>
 
+    <div id="MainContainerF">
+     <p>Hobby-Shares allow you to share your hobbies on your profile for the entire website to see</p>
+     <p>Users will be able to see wether or not you are available for a group and may contact you</p>
+
+     <p>You can also post about something related to one of your hobbies !</p>
     </div>
 
 

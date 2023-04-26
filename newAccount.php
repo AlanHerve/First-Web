@@ -8,9 +8,8 @@ include("Topnav.php");
 
 
 if($newAccount[1]){
-    $redirect = "Location:Profile.php?ID=".$newAccount[3];
-    session_start();
-    $_SESSION["inscription"]=1;
+    $redirect = "Location:Profile.php?ID=".$newAccount[3]."&SIDE=1";
+    setcookie("inscription", 1, time() + 24*3600);
     header($redirect);
    
     

@@ -426,7 +426,7 @@ function checkInterlocutor(){
 
     }
 }
-
+/*get the list of person you've sent a message to */
 function getInterlocutors(){
 
     global $conn;

@@ -13,6 +13,13 @@ ConnectDatabase();
 /*Allows topnav to know which link to highlight */
 $active = 0;
 
+if(isset($_COOKIE["inscription"])){
+    echo '<div id=ErrorContainer style="background-color:lightblue;border-color:white">
+    <p> Congrats on creating you new Account ! </p>
+</div>';
+setcookie("inscription", NULL, -1);
+}
+
 /*If a user is connected but no ID is specified in the URL, redirect to user's own page */
 if(isset( $_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE["ID"]) && !isset($_GET["ID"])){
 
@@ -62,12 +69,7 @@ if(isset( $_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE[
    
 }
 
-if(isset($_SESSION["inscription"])){
-    echo '<div id=ErrorContainer style="background-color:lightblue;border-color:white">
-    <p> Congrats on creating you new Account ! </p>
-</div>';
-unset($_SESSION["inscription"]);
-}
+
 
 include("Topnav.php");
 

@@ -30,7 +30,7 @@ function deleteImage(){
     document.getElementById("Modal").style.display = "none";
     document.getElementById("default"+current).value = "true";
   }
-    xmlhttp.open("post", "XMLFunctions.php", true);
+    xmlhttp.open("post", "./XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
     var parameters = "action=default&type="+type.value;
@@ -154,7 +154,7 @@ function uploadComment(number){
         
       }
       /*Sends the request via post to avoid cluttering url with useless information */
-      xmlhttp.open("post", "XMLFunctions.php", true);
+      xmlhttp.open("post", "./XMLFunctions.php", true);
       xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
       /*Parameters allows us to pass information to a "post" request
@@ -188,7 +188,7 @@ function deleteComment(number){
       
     }
 
-    xmlhttp.open("post", "XMLFunctions.php", true);
+    xmlhttp.open("post", "./XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
    
     var parameters = "action=deleteComment&ID="+number;
@@ -233,7 +233,7 @@ function initLikes(number){
   var ID = ID.replace(regexLast, "");
 */
  
-  xmlhttp.open("post", "XMLFunctions.php", true);
+  xmlhttp.open("post", "./XMLFunctions.php", true);
   xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
  
   var parameters = "action=initLike&USER_ID="+userId.value+"&POST_ID="+number;
@@ -272,7 +272,7 @@ function like(number){
       
     }
 
-    xmlhttp.open("post", "XMLFunctions.php", true);
+    xmlhttp.open("post", "./XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     
     var parameters = "action=like&ID="+number+"&USER_ID="+userId.value;
@@ -320,7 +320,7 @@ function dislike(number){
         
     }
 
-    xmlhttp.open("post", "XMLFunctions.php", true);
+    xmlhttp.open("post", "./XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     
     var parameters = "action=dislike&ID="+number+"&USER_ID="+userId.value;
@@ -387,7 +387,7 @@ function loadComments(number){
         
     }
 
-    xmlhttp.open("post", "XMLFunctions.php", true);
+    xmlhttp.open("post", "./XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     
     var parameters = "action=displayComments&ID="+number;

@@ -79,7 +79,7 @@ echo ' <div class="conhobby">
             else echo '<p class="descriptionText" style="color:gray"><i>You do not seem to have any description for this hobby</i></p>';
         }
        
-    }
+    
      echo '</div>
      </div>' ;  
     /*If post does not have an image : */

@@ -55,8 +55,9 @@ echo '
 
 <script>
   function deleteMessage(number){
-   
+   /*request to run php page in background */
     var xmlhttp = new XMLHttpRequest();
+
     xmlhttp.onload = function(){
       
         if(this.responseText != null){
@@ -69,12 +70,12 @@ echo '
         else alert(this.responseText);    
       
     }
-    xmlhttp.open("post", "XMLFunctions.php", true);
+    xmlhttp.open("post", "./XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
    
+    /*set $_RESQUEST variables */
     var parameters = "action=deleteMessage&ID="+number;
-   
-   
+    /*sends request */
     xmlhttp.send(parameters);
   }
 
@@ -87,10 +88,12 @@ echo '
         /*if not already in, adds it */
         if(this.responseText=="false"){
           var history = document.getElementById("historyMessages");
+          /*changes contents of messages */
           history.innerHTML = this.responseText;
+          /*add Interlocutor */
           addInterlocutor(interlocutor);
           
-        /*if already in, changes urrent interlocutor to it and open popup */
+        /*if already in, changes current interlocutor to it and open popup */
         }else if(this.responseText=="true"){
           var person = {name:null, value:interlocutor};
           changeInterlocutor(person, null);
@@ -105,7 +108,7 @@ echo '
 
       
     }
-    xmlhttp.open("post", "XMLFunctions.php", true);
+    xmlhttp.open("post", "./XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     
     xmlhttp.send("action=check&tocheck="+interlocutor);
@@ -118,6 +121,7 @@ function addInterlocutor(interlocutor){
 
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onload = function(){
+      
        /*change the value of people (list of interlocutors) */
         document.getElementById("people").innerHTML += this.responseText;
         var person = {name: null, value: interlocutor};
@@ -125,22 +129,30 @@ function addInterlocutor(interlocutor){
         changeInterlocutor(person);
       
     }
-    xmlhttp.open("post", "XMLFunctions.php", true);
+    xmlhttp.open("post", "./XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     
     xmlhttp.send("action=add&toadd="+interlocutor);
     openForm();
   }
   
+  /*get the list of interlocutors of an user */
   function getInterlocutor(value){
 
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onload = function(){
-      
+
+      if(this.responseText!=null){
+        /*fils their contact list with buttons */
         document.getElementById("people").innerHTML = this.responseText;
+      }else{
+        document.getElementById("people").innerHTML = '<p style="color:lightgray"><i>No contacts yet</i></p>';
+      }
+      
+        
       
     }
-    xmlhttp.open("post", "XMLFunctions.php", true);
+    xmlhttp.open("post", "./XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     
     
@@ -201,7 +213,7 @@ function addInterlocutor(interlocutor){
         
       }
       
-      xmlhttp.open("post", "XMLFunctions.php", true);
+      xmlhttp.open("post", "./XMLFunctions.php", true);
       xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
       
       /*Identify the name of the interlocutor */
@@ -261,7 +273,7 @@ function addInterlocutor(interlocutor){
     }
 
 
-    xmlhttp.open("post", "XMLFunctions.php", true);
+    xmlhttp.open("post", "./XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
     /*parameters are the ID of the interlocutor as well as the content of the message you're sending */
@@ -282,7 +294,7 @@ function addInterlocutor(interlocutor){
       
     }
 
-    xmlhttp.open("post", "XMLFunctions.php", true);
+    xmlhttp.open("post", "./XMLFunctions.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     
     xmlhttp.send("action=display&ID="+document.getElementById("interlocutor").value);
