@@ -120,7 +120,7 @@ if($result!=NULL){
                 }else{
                     echo '<p class="tagLightColor"  style="width:85%">Not Available</p>';
                 }
-                //TODO : fieldots
+                
                 /*Modal giving additionnal options to the user */
         echo '        
             

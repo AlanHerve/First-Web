@@ -167,8 +167,6 @@ switch($_GET["SIDE"]){
                         echo '<img class="uniqueImageHobby zoomable" src="./Images/'.$image.'" onclick="zoomImage(this)">
                        
                     </div>';
-                    }else{
-                        /*TODO */
                     }
                     
                 } else{
@@ -301,8 +299,6 @@ switch($_GET["SIDE"]){
                                       echo '<img id="imagePost'.$row["ID"].'&1" class="regularImage zoomable" src="./Images/'.$image.'" onclick="zoomImage(this)">
                                      
                                   ';
-                                  }else{
-                                      /*TODO */
                                   }
                               }
                               echo '</div>
@@ -362,7 +358,7 @@ if(isset( $_COOKIE["mail"] ) && isset( $_COOKIE["password"] ) && isset($_COOKIE[
 
         echo '';
     
-    /*TODO */
+    
     
     }
     

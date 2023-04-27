@@ -672,7 +672,7 @@ function getProfile($addToConversationButton){
 
         $found = 1;
         
-        /*TODO : MAKE A BETTER SQL REQUEST */
+        
 
         /*Selects all the hobbies of the current page owner */
         $query = 'SELECT * FROM hobby_post WHERE OWNER='.$_GET["ID"];
@@ -717,7 +717,7 @@ echo '      <img class="pic zoomable" src="./uploads/'.$user["AVATAR"].'" onclic
             /*If person does not have an avatar, display the default image */
 echo '      <img class="pic zoomable" src="./Images/img_avatar.png" onclick="zoomImage(this)">';
         }
-/*TODO : make $var a span */
+
 echo '      <div class="con">
                 <div class="name">
                     '.$user["NAME"].' '.$addToConversationButton.'
@@ -970,7 +970,7 @@ function CheckNewAccountForm(){
         elseif ( $_POST["password"] != $_POST["confirm"] ){
             $error = "Password and confirmation password are different";
         }
-        elseif($_POST["mail"]==" "){ /*TODO */
+        elseif($_POST["mail"]==" "){ 
             $error = "E-Mail is not valid";
         }
         else {

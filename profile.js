@@ -243,9 +243,7 @@ function initLikes(number){
 
 }
 
-/* Allow user to like a post
- * TODO toggle likes button, and checks if user hasn't already liked, disable button until function is done
- */
+/* Allow user to like a post*/
 function like(number){
   document.getElementById("button"+number).disabled = true;
   const userId = document.getElementById("idUser");
@@ -289,9 +287,7 @@ function like(number){
 
 }
 
-/* Allow user to dislike a post
- * TODO toggle likes button, and checks if user hasn't already liked, disable button until function is done
- */
+/* Allow user to dislike a post*/
 function dislike(number){
 
     /*Disable button to prevent bug where user can like multiple times by clicking the button

@@ -36,8 +36,7 @@ switch($_GET["SIDE"]){
 case 1:
 /*Confirmation for deleting a hobby */
 echo '<div id="MainContainerProfileSide1" >';
-/* TODO : MAKE LINKS SPANS ? 
- * If user is the owner of the page, they get the option to edit or delete their posts
+/* If user is the owner of the page, they get the option to edit or delete their posts
  */
 if(isset($_COOKIE["ID"])){
     if($_COOKIE["ID"]==$_GET["ID"]){
@@ -95,8 +94,6 @@ if(!$row["IMAGE"]){
         echo '<img class="uniqueImageHobby" src="./Images/'.$image.'" onclick="zoomImage(this)">
        
     </div>';
-    }else{
-        /*TODO */
     }
     
 } else{
@@ -168,8 +165,6 @@ echo '<div id="MainContainerProfileSide2" >';
                             echo '<img id="imagePost'.$row["ID"].'&1" class="regularImage" src="./Images/'.$image.'" onclick="zoomImage(this)">
                            
                         ';
-                        }else{
-                            /*TODO */
                         }
                     }
                     echo '</div>

@@ -153,8 +153,6 @@ if(!isset($_GET["ID"]) || !isset($_COOKIE["ID"]) || !isset($_GET["SIDE"])){
                 <input type="hidden" value="1" name="deleteImage1" id="deleteImage1" form="myForm">';
                
             
-            }else{
-                /*TODO */
             }
             
         } else{
@@ -221,8 +219,6 @@ if(!isset($_GET["ID"]) || !isset($_COOKIE["ID"]) || !isset($_GET["SIDE"])){
                                         /*allows user to zoom on image */
                                         echo '<img id="imagePost'.$row["ID"].'&1" class="regularImage" src="./Images/'.$image.'" onclick="zoomImage(this)">
                                              <input type="hidden" id="default1" name="default1" value="true">';
-                                    }else{
-                                        /*TODO */
                                     }
                                 }
                           echo '</div>
