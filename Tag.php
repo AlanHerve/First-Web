@@ -116,9 +116,9 @@ if($result!=NULL){
         
             <div class="fieldtext">';
                 if($row["AVAILABLE"]==1){
-                    echo '<p class="tagAvailabiliy"  style="width:85%">Available</p>';
+                    echo '<p class="tagLightColor"  style="width:85%">Available</p>';
                 }else{
-                    echo '<p class="tagUnAvailable"  style="width:85%">Not Available</p>';
+                    echo '<p class="tagLightColor"  style="width:85%">Not Available</p>';
                 }
                 //TODO : fieldots
                 /*Modal giving additionnal options to the user */

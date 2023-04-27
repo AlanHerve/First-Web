@@ -10,3 +10,7 @@ Javascript est utilisé pour les bouttons et les commenaires, et pour modifier l
 Le CSS du site ne réagit pas très bien aux changements de taille de la fenêtre. L'apparence du site est bien meilleure si la fenêtre occupe seulement une moitié de l'écran.
 
 Le code à été exporté sur deux machines différentes, une tournant sur xamp et l'autre sur Uwamp, aucun problème de fichier ne semble avoir été rencontré (juste des problèmes dans le code qui ont été réparées).
+
+Si vous le souhaitez, il existe 2 utilisateurs type :
+    1- Hobby: mail=hobby@gmail password=Hobby
+    2- User1: mail=first@gmail.com password=First

@@ -22,7 +22,10 @@ if($newAccount[2]!=NULL){
 }
 ?>
 
-
+<div id="MainContainerF">
+    Welcome to the Account Creation page !
+    you will be able to add a profile picture later when editing your profile
+</div>
 
 
 <div id="MainContainerF">

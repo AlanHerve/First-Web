@@ -44,7 +44,9 @@ if(!$row){
 
 ?>
 
-
+<div id="MainContainerF">
+    Welcome to the Profile Edition page !
+</div>
 
 
 <div id=confirmPrompt>

@@ -47,8 +47,12 @@ if($_GET["SIDE"]==1){
             </div>';
 }
     
-
-      echo '<div id="MainContainerProfileSide1">
+    
+      echo '
+      <div id="MainContainerF">
+      Choose a hobby to add to your profile ! You can only have each hobby once.
+      </div>
+      <div id="MainContainerProfileSide1">
                 <div>
                     <form id="myForm" action="./newPost.php?ID='.$_GET["ID"].'&SIDE=1" method="POST" enctype="multipart/form-data">
                         <input type="hidden" value="1" name = "processForm" id="processForm">
