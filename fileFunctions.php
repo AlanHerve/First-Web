@@ -58,11 +58,11 @@ function checkFile($file_name){
         // if everything is ok, try to upload file
       } else {
         if (move_uploaded_file($_FILES[$file_name]["tmp_name"], $target_file) && $already==0) {
-          echo "<p>The file ". htmlspecialchars( basename( $_FILES[$file_name]["name"])). " has been uploaded.</p>";
+          
           /*return the name of the file */
           $return_value = htmlspecialchars( basename( $_FILES[$file_name]["name"]));
         }elseif($already == 1){
-          echo 'already';
+          
           
           $return_value = $_FILES[$file_name]["tmp_name"];
         } else {

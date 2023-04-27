@@ -249,7 +249,7 @@ function newPost($mode){
 
         }
 
-        echo $query;
+       
 
         return $error;
  
@@ -624,7 +624,7 @@ function editProfile(){
                 $success = true;
             }
 
-            echo $_FILES["fileToUpload1"]["name"].'<br>';
+            
     
 
                 if($success){
