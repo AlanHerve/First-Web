@@ -421,12 +421,9 @@ function editPost($mode){
  */
 function hobbiesRemaining(){
 
-    $servername = "localhost";
-    $username = "root";
-    $password = "root";
-    $dbname = "hobbysharedatabase";
+    
 
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
+    global $conn;
 
     $error = NULL;
 
@@ -484,7 +481,7 @@ function hobbiesRemaining(){
             $error = "COULD NOT RETRIEVE HOBBY LIST"; 
         }
     }
-    mysqli_close($conn);
+    
 
     return array($result, $error, $query);
 
@@ -666,6 +663,8 @@ function getProfile($addToConversationButton){
     
     $query = 'SELECT * FROM users WHERE ID='.$_GET["ID"];
 
+    $hobbies = false;
+
     /*checks database if user with ID mentionned in webpage url exists */
     if ( $guy = $conn->query($query) ){
 
@@ -687,12 +686,17 @@ function getProfile($addToConversationButton){
             $to_add = "'".$row["TYPEID"]."'";
             $query = $query.$to_add.",";
         }
-
+        
         $length = strlen($query) - 1;
-        $query[$length] = ")";
+        if($query[$length]!="("){
+            $query[$length] = ")";
+            $result = $conn->query($query);
+            $hobbies=true;
+        }
+        
 
        
-        $result = $conn->query($query);
+        
         
         /*Container of the user's profile */
         echo ' 
@@ -724,7 +728,7 @@ echo '      <div class="con">
                 <div class="tagArea">';
 /*If query returned something, the user has already published hobbies on the website
 Each hobby tag is a link to the Tag.php page */
-                if($result){
+                if($hobbies){
                     while($row = $result->fetch_assoc()){
         echo'       <div class="tag">
                         <a class="tag" href="Tag.php?TAG='.$row["ID"].'">'.$row["HOBBY_NAME"].'</a>

@@ -180,14 +180,6 @@ echo '
 }
 
 
-?>
-
-
-
-
-
-
-<?php
 include("Footer.php");
 DisconnectDatabase();
 ?>
