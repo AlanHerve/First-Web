@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 26, 2023 at 06:39 PM
+-- Generation Time: Apr 27, 2023 at 06:27 PM
 -- Server version: 5.7.11
 -- PHP Version: 5.6.18
 
@@ -71,9 +71,9 @@ INSERT INTO `hobby_list` (`ID`, `HOBBY_NAME`, `IMAGE`) VALUES
 (7, 'Cooking', 'Cooking.jpg'),
 (8, 'Sculpture', 'Sculpture.jpg'),
 (9, 'Board Games', 'Jeux.jpg'),
-(10, 'Photo', 'Photo.PNG'),
+(10, 'Photo', 'Photo.jpg'),
 (11, 'Painting', 'Painting.jpg'),
-(12, 'Biking', 'Biking'),
+(12, 'Biking', 'Biking.jpg'),
 (13, 'Video Games', 'videogame.jpg'),
 (14, 'Climbing', 'Climbing.jpg'),
 (15, 'Geocache', 'Geocache.jpg'),
@@ -127,7 +127,8 @@ INSERT INTO `hobby_post` (`ID`, `HOBBY_NAME`, `EXPERIENCE`, `FREQUENCY`, `AVAILA
 (18, 'Couture', 'Beginner', 'Beginner', 1, NULL, 2, '', 16, '2023-04-26 11:20:18', 0),
 (19, 'Embroidery', 'Beginner', 'Beginner', 1, NULL, 2, '', 17, '2023-04-26 11:20:22', 0),
 (20, 'Scrapbooking', 'Beginner', 'Beginner', 1, NULL, 2, '', 18, '2023-04-26 11:20:25', 0),
-(21, 'Reading', 'Beginner', 'Beginner', 1, NULL, 2, '', 19, '2023-04-26 11:20:28', 0);
+(21, 'Reading', 'Beginner', 'Beginner', 1, NULL, 2, '', 19, '2023-04-26 11:20:28', 0),
+(22, 'Pottery', 'Beginner', 'Beginner', 1, NULL, 1, '', 1, '2023-04-27 18:14:31', 0);
 
 -- --------------------------------------------------------
 
@@ -147,8 +148,7 @@ CREATE TABLE `likes` (
 
 INSERT INTO `likes` (`ID`, `USER_ID`, `POST_ID`) VALUES
 (1, 1, 1),
-(2, 2, 1),
-(3, 1, 2);
+(2, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -202,7 +202,7 @@ CREATE TABLE `regular_post` (
 
 INSERT INTO `regular_post` (`ID`, `HOBBY_NAME`, `DESCRIPTION`, `IMAGE1`, `IMAGE2`, `IMAGE3`, `IMAGE4`, `OWNER`, `TYPEID`, `MODIFIED`, `LIKES`, `TIME`) VALUES
 (1, 'Video Games', 'Hey guys, I just played one of the best games of all times : Outer Wilds !', 'outer-wilds-echoes-of-the-eye.jpg', NULL, NULL, NULL, 1, 13, 0, 2, '2023-04-26 11:22:19'),
-(2, 'Cooking', 'change description', NULL, NULL, NULL, NULL, 1, 7, 1, 1, '2023-04-26 13:23:20');
+(2, 'Cooking', 'This description was modified via the edit page', NULL, NULL, NULL, NULL, 1, 7, 1, 0, '2023-04-27 18:19:29');
 
 -- --------------------------------------------------------
 
@@ -291,7 +291,7 @@ ALTER TABLE `hobby_list`
 -- AUTO_INCREMENT for table `hobby_post`
 --
 ALTER TABLE `hobby_post`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 --
 -- AUTO_INCREMENT for table `likes`
 --
